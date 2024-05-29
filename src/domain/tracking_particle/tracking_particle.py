@@ -20,8 +20,6 @@ class TrackingParticle:
         self.__estimation_particles: List[EstimatedParticle] = []
         self.__walking_parameter_collection = WalkingParameterCollection()
 
-    
-
     def reset(self) -> None:
         self.__tracking_count = 0
         self.__coverage_count = 0

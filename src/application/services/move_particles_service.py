@@ -20,13 +20,10 @@ class MoveParticlesService:
 
     def run(self, walking_parameter: WalkingParameter) -> WalkingParameter:
         tracking_particle.track(walking_parameter)
-        particle_floor_map = ParticleFloorMap.generate_image(
+
+        ParticleFloorMap.generate_image(
             floor_map=floor_map,
             estimated_particle=tracking_particle.last_estimation_particles(),
         )
 
         return walking_parameter
-
-    def reset(self):
-        tracking_particle.reset()
-        return tracking_particle
