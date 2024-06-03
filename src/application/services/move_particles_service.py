@@ -6,11 +6,6 @@ from domain.particle_floor_map.particle_floor_map import ParticleFloorMap
 from domain.tracking_particle.tracking_particle import TrackingParticle
 from domain.walking_parameter.walking_parameter import WalkingParameter
 
-floor_image_path = f"{IMAGE_PATH}/floor1.png"
-floor_image = Image.open(floor_image_path)
-floor_map = FloorMap(floor_image)
-tracking_particle = TrackingParticle(floor_map=floor_map)
-
 
 class MoveParticlesService:
     def __init__(
@@ -19,6 +14,10 @@ class MoveParticlesService:
         pass
 
     def run(self, walking_parameter: WalkingParameter) -> WalkingParameter:
+        floor_image_path = f"{IMAGE_PATH}/floor1.png"
+        floor_image = Image.open(floor_image_path)
+        floor_map = FloorMap(floor_image)
+        tracking_particle = TrackingParticle(floor_map=floor_map)
         tracking_particle.track(walking_parameter)
 
         ParticleFloorMap.generate_image(

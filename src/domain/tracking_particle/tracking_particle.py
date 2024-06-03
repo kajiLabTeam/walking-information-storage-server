@@ -12,13 +12,24 @@ from utils.angle import reverse_angle
 
 
 class TrackingParticle:
+    _instance = None
+
+    def __new__(cls, floor_map: FloorMap) -> "TrackingParticle":
+        if cls._instance is None:
+            cls._instance = super(TrackingParticle, cls).__new__(cls)
+            cls._instance.__init__(floor_map)
+        return cls._instance
+
     def __init__(self, floor_map: FloorMap) -> None:
+        if hasattr(self, "_initialized") and self._initialized:
+            return
         self.__floor_map = floor_map
         self.__tracking_count = 0
         self.__coverage_count = 0
         self.__coverage_position: Optional[EstimatedPosition] = None
         self.__estimation_particles: List[EstimatedParticle] = []
         self.__walking_parameter_collection = WalkingParameterCollection()
+        self._initialized = True
 
     def reset(self) -> None:
         self.__tracking_count = 0
@@ -26,6 +37,11 @@ class TrackingParticle:
         self.__coverage_position = None
         self.__estimation_particles = []
         self.__walking_parameter_collection = WalkingParameterCollection()
+
+    @classmethod
+    def reset_instance(cls, floor_map: FloorMap) -> None:
+        cls._instance = None
+        cls._instance = cls(floor_map)
 
     def get_tracking_count(self) -> int:
         return self.__tracking_count
@@ -44,9 +60,6 @@ class TrackingParticle:
         return walking_positions
 
     def get_coverage_position(self) -> Optional[Tuple[EstimatedPosition, int]]:
-        """
-        ## 収束地点を取得する
-        """
         if self.__coverage_position is None:
             return None
 
@@ -80,9 +93,6 @@ class TrackingParticle:
         self.__estimation_particles.append(estimation_particles)
 
     def track(self, walking_parameter: WalkingParameter) -> None:
-        """
-        ## パーティクルフィルタによるトラッキングを実行する
-        """
         if self.__estimation_particles == []:
             estimated_particle = EstimatedParticleFactory().create(
                 floor_map=self.__floor_map, initial_walking_parameter=walking_parameter
