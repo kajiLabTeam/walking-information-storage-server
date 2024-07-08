@@ -11,12 +11,15 @@ from config.const.circle import REVERSE_RADIUS
 from config.const.error import (PARTICLES_ANGLE_ERROR,
                                 PARTICLES_DIRECTION_ERROR,
                                 PARTICLES_STEP_ERROR)
-from domain.estimated_particle.convergence_judgment import ConvergenceJudgment
-from domain.estimated_position.estimated_position import EstimatedPosition
-from domain.floor_map.floor_map import FloorMap
-from domain.particle.particle import Particle
-from domain.particle_collection.particle_collection import ParticleCollection
-from domain.walking_parameter.walking_parameter import WalkingParameter
+from domain.models.estimated_particle.convergence_judgment import \
+    ConvergenceJudgment
+from domain.models.estimated_position.estimated_position import \
+    EstimatedPosition
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.particle.particle import Particle
+from domain.models.particle_collection.particle_collection import \
+    ParticleCollection
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from utils.angle import get_random_angle
 
 
@@ -141,30 +144,19 @@ class EstimatedParticle:
             direction=estimated_direction,
         )
 
-    def update_weight(self) -> "EstimatedParticle":
+    def update_weight(self, rssi: float) -> "EstimatedParticle":
         """
         ## パーティクルの重みを更新する
         """
-        normalized_weights = self.__particle_collection.get_normalized_distances()
-        particles = [
-            Particle(
-                x=particle.get_x(),
-                y=particle.get_y(),
-                weight=normalized_weight,
-                direction=particle.get_direction(),
-            )
-            for particle, normalized_weight in zip(
-                self.__particle_collection, normalized_weights
-            )
-        ]
-
-        particle_collection = ParticleCollection()
-        particle_collection.add_all(particles)
+        self.__particle_collection.set_weights(
+            rssi_input=rssi,
+            likelihood=likelihood,
+        )
 
         return EstimatedParticle(
             floor_map=self.__floor_map,
-            current_walking_parameter=self.__current_walking_parameter,
-            particle_collection=particle_collection,
+            current_position=self.__current_position,
+            particle_collection=self.__particle_collection,
         )
 
     def remove_by_floor_map(self):
@@ -235,6 +227,34 @@ class EstimatedParticle:
                     if placeable_count == 0:
                         break
 
+        self.__particle_collection.add_all(new_particles)
+
+    def resampling_by_weight(self):
+        num_particles = len(self.__particle_collection)
+        weights = np.array([p.get_weight() for p in self.__particle_collection])
+
+        # TODO 重みの正規化のロジックここじゃない
+        weights /= np.sum(weights)
+
+        # 累積分布関数（CDF）の計算
+        cdf = np.cumsum(weights)
+
+        # リサンプリング位置の決定
+        positions = (np.arange(num_particles) + np.random.uniform(0, 1)) / num_particles
+
+        new_particles: List[Particle] = []
+        index = 0
+        for pos in positions:
+            while pos > cdf[index]:
+                index += 1
+            new_particle = self.__particle_collection[index].new(
+                weight=1 / num_particles,
+                step=1,
+                direction_error=PARTICLES_ANGLE_ERROR(),
+            )
+            new_particles.append(new_particle)
+
+        self.__particle_collection.reset()
         self.__particle_collection.add_all(new_particles)
 
     def __count_placeable(self) -> int:

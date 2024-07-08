@@ -1,12 +1,14 @@
 from typing import List, Optional, Tuple
 
 from config.const.amount import CONVERGENCE_JUDGEMENT_NUMBER
-from domain.estimated_particle.estimated_particle import (
+from config.const.path import RSSI_MODEL_PATH
+from domain.models.estimated_particle.estimated_particle import (
     EstimatedParticle, EstimatedParticleFactory)
-from domain.estimated_position.estimated_position import EstimatedPosition
-from domain.floor_map.floor_map import FloorMap
-from domain.walking_parameter.walking_parameter import WalkingParameter
-from domain.walking_parameter_collection.walking_parameter_collection import \
+from domain.models.estimated_position.estimated_position import \
+    EstimatedPosition
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
+from domain.models.walking_parameter_collection.walking_parameter_collection import \
     WalkingParameterCollection
 from utils.angle import reverse_angle
 
@@ -14,13 +16,21 @@ from utils.angle import reverse_angle
 class TrackingParticle:
     _instance = None
 
-    def __new__(cls, floor_map: FloorMap) -> "TrackingParticle":
+    def __new__(
+        cls,
+        floor_map: FloorMap,
+        model_path: str = RSSI_MODEL_PATH,
+    ) -> "TrackingParticle":
         if cls._instance is None:
             cls._instance = super(TrackingParticle, cls).__new__(cls)
             cls._instance.__init__(floor_map)
         return cls._instance
 
-    def __init__(self, floor_map: FloorMap) -> None:
+    def __init__(
+        self,
+        floor_map: FloorMap,
+        model_path: str = RSSI_MODEL_PATH,
+    ) -> None:
         if hasattr(self, "_initialized") and self._initialized:
             return
         self.__floor_map = floor_map
@@ -109,7 +119,11 @@ class TrackingParticle:
         move_estimation_particles.remove_by_direction(
             step=walking_parameter.get_stride()
         )
-        move_estimation_particles.update_weight()
+        if self.__tracking_count % 10 == 0:
+            move_estimation_particles.update_weight(
+                likelihood=self.__likelihood, rssi=walking_parameter.get_rssi()
+            )
+            move_estimation_particles.resampling_by_weight()
         move_estimation_particles.resampling(step=walking_parameter.get_stride())
 
         if (

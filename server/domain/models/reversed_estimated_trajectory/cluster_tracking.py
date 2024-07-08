@@ -1,8 +1,9 @@
 from typing import List
 
 from config.const.circle import REVERSE_RADIUS
-from domain.estimated_position.estimated_position import EstimatedPosition
-from domain.tracking_particle.tracking_particle import TrackingParticle
+from domain.models.estimated_position.estimated_position import \
+    EstimatedPosition
+from domain.models.tracking_particle.tracking_particle import TrackingParticle
 
 
 class ClusterTracking:

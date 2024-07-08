@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-from domain.particle.particle import Particle
+from domain.models.particle.particle import Particle
 
 
 class Likelihood:

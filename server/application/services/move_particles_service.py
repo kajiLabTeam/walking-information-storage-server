@@ -1,10 +1,11 @@
 from PIL import Image
 
 from config.const.path import IMAGE_PATH
-from domain.floor_map.floor_map import FloorMap
-from domain.particle_floor_map.particle_floor_map import ParticleFloorMap
-from domain.tracking_particle.tracking_particle import TrackingParticle
-from domain.walking_parameter.walking_parameter import WalkingParameter
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.particle_floor_map.particle_floor_map import \
+    ParticleFloorMap
+from domain.models.tracking_particle.tracking_particle import TrackingParticle
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
 class MoveParticlesService:
@@ -17,6 +18,7 @@ class MoveParticlesService:
         floor_image_path = f"{IMAGE_PATH}/floor1.png"
         floor_image = Image.open(floor_image_path)
         floor_map = FloorMap(floor_image)
+        print("😀", floor_image_path)
         tracking_particle = TrackingParticle(floor_map=floor_map)
         tracking_particle.track(walking_parameter)
 

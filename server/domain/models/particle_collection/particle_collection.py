@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 import numpy as np
 
-from domain.particle.particle import Particle
+from domain.models.particle.particle import Particle
 
 
 class ParticleCollection:
@@ -149,3 +149,6 @@ class ParticleCollection:
 
     def __len__(self):
         return len(self.__particles)
+
+    def __getitem__(self, index):
+        return self.__particles[index]

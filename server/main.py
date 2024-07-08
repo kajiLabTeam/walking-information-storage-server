@@ -5,8 +5,8 @@ from PIL import Image
 from starlette.requests import Request
 
 from config.const.path import IMAGE_PATH
-from domain.floor_map.floor_map import FloorMap
-from domain.tracking_particle.tracking_particle import TrackingParticle
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.tracking_particle.tracking_particle import TrackingParticle
 from presentation.handlers.get_particles_floor_map_handler import \
     router as get_image_router
 from presentation.handlers.move_particles_handler import \

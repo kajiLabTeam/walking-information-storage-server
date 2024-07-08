@@ -3,8 +3,8 @@ from PIL import Image
 from pydantic import BaseModel
 
 from config.const.path import IMAGE_PATH
-from domain.floor_map.floor_map import FloorMap
-from domain.tracking_particle.tracking_particle import TrackingParticle
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.tracking_particle.tracking_particle import TrackingParticle
 
 
 class MoveParticlesRequest(BaseModel):

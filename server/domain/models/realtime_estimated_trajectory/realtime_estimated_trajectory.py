@@ -1,7 +1,8 @@
 from typing import List
 
-from domain.estimated_position.estimated_position import EstimatedPosition
-from domain.tracking_particle.tracking_particle import TrackingParticle
+from domain.models.estimated_position.estimated_position import \
+    EstimatedPosition
+from domain.models.tracking_particle.tracking_particle import TrackingParticle
 
 
 class RealtimeEstimatedTrajectory:

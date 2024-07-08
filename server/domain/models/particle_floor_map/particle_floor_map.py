@@ -1,7 +1,8 @@
 from config.const.color import (CANDIDATE_PARTICLES_COLOR,
                                 PARTICLE_OUTLINE_COLOR)
-from domain.estimated_particle.estimated_particle import EstimatedParticle
-from domain.floor_map.floor_map import FloorMap
+from domain.models.estimated_particle.estimated_particle import \
+    EstimatedParticle
+from domain.models.floor_map.floor_map import FloorMap
 
 
 class ParticleFloorMap:

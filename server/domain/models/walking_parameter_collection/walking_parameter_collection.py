@@ -1,6 +1,6 @@
 from typing import List
 
-from domain.walking_parameter.walking_parameter import WalkingParameter
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
 class WalkingParameterCollection:

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from application.services.move_particles_service import MoveParticlesService
-from domain.walking_parameter.walking_parameter import WalkingParameter
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
 class MoveParticlesRequest(BaseModel):

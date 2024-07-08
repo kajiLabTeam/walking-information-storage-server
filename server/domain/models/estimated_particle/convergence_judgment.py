@@ -5,7 +5,7 @@ from numpy.typing import NDArray
 from scipy import stats
 from sklearn.cluster import KMeans
 
-from domain.estimated_particle.cluster import Cluster
+from domain.models.estimated_particle.cluster import Cluster
 
 
 class ConvergenceJudgment:
