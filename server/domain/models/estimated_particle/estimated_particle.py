@@ -144,21 +144,6 @@ class EstimatedParticle:
             direction=estimated_direction,
         )
 
-    def update_weight(self, rssi: float) -> "EstimatedParticle":
-        """
-        ## パーティクルの重みを更新する
-        """
-        self.__particle_collection.set_weights(
-            rssi_input=rssi,
-            likelihood=likelihood,
-        )
-
-        return EstimatedParticle(
-            floor_map=self.__floor_map,
-            current_position=self.__current_position,
-            particle_collection=self.__particle_collection,
-        )
-
     def remove_by_floor_map(self):
         """
         ## パーティクルが歩行可能領域外に存在する場合、パーティクルを削除する

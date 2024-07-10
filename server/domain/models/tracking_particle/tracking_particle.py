@@ -119,11 +119,6 @@ class TrackingParticle:
         move_estimation_particles.remove_by_direction(
             step=walking_parameter.get_stride()
         )
-        if self.__tracking_count % 10 == 0:
-            move_estimation_particles.update_weight(
-                likelihood=self.__likelihood, rssi=walking_parameter.get_rssi()
-            )
-            move_estimation_particles.resampling_by_weight()
         move_estimation_particles.resampling(step=walking_parameter.get_stride())
 
         if (

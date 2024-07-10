@@ -1,7 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from typing import Annotated
+
+from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel
 
 from application.services.move_particles_service import MoveParticlesService
+from domain.models.angle_converter.angle_converter import AngleConverter
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
@@ -19,18 +22,27 @@ router = APIRouter()
 
 
 @router.post("/api/walk", response_model=MoveParticlesResponse, status_code=201)
-async def move_particles(move_particles_request: MoveParticlesRequest):
+async def move_particles(
+    rawDataFile: Annotated[UploadFile, File()],
+):
     try:
+        raw_data_file = await rawDataFile.read()
+        angle_converter = AngleConverter(raw_data_file=raw_data_file)
+        # print(raw_data_file)
+
+        angle_variation = angle_converter.generate_correct_trajectory()
+
         move_particles_service = MoveParticlesService()
         walking_parameter = WalkingParameter(
-            stride=move_particles_request.stride,
-            angle_variation=move_particles_request.angleVariation,
+            stride=60,
+            angle_variation=angle_variation,
         )
         move_particles_service.run(walking_parameter=walking_parameter)
         return MoveParticlesResponse(
-            stride=move_particles_request.stride,
-            angleVariation=move_particles_request.angleVariation,
+            stride=walking_parameter.get_stride(),
+            angleVariation=walking_parameter.get_angle_variation(),
         )
+        # return {"stride": 1, "angleVariation": 1}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
