@@ -25,7 +25,6 @@ class FloorMapImageRepository(FloorMapImageRepositoryImpl):
                     "INSERT INTO floor_map_image (id, floor_map_id) VALUES (%s, %s, %s)",
                     (floor_map_id, floor_map_image),
                 )
-                # TODO : 画像の保存処理を追加する
 
     def find_for_floor_map_id(self, conn: connection, floor_map_id: str) -> bytes:
         with conn as conn:

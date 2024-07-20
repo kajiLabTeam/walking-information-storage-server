@@ -17,5 +17,3 @@ class RawDataRepository(RawDataRepositoryImpl):
                     "INSERT INTO raw_data (id, realtime_walking_sample_id, data) VALUES (%s, %s, %s)",
                     (str(ulid), realtime_walking_sample_id, raw_data_file),
                 )
-
-                # TODO : ファイルの保存処理を追加する
