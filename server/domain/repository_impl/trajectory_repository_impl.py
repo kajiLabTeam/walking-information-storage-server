@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Dict
+from typing import Tuple
 
 from psycopg2.extensions import connection
 
@@ -18,7 +18,7 @@ class RealtimeTrajectoryRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def find_for_trajectory_id(
         self, conn: connection, trajectory_id: str
-    ) -> Dict[str, str]:
+    ) -> Tuple[str, str]:
         pass
 
 

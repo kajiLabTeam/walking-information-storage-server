@@ -11,7 +11,7 @@ class FloorMapRepositoryImpl(metaclass=ABCMeta):
 
 class FloorMapImageRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save(self, conn: connection, pedestrian_id: str) -> None:
+    def save(self, conn: connection, floor_map_id: str, floor_map_image: bytes) -> None:
         pass
 
     @abstractmethod

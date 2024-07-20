@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from typing import Any, List
 
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from psycopg2.extensions import connection
@@ -8,26 +7,24 @@ from psycopg2.extensions import connection
 class RealtimeWalkingSampleRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, walking_sample: WalkingParameter
+        self, conn: connection, realtime_id: str, walking_sample: WalkingParameter
     ) -> WalkingParameter:
         pass
 
     @abstractmethod
-    def find_latest_for_realtime_trajectory_id(
-        self, conn: connection, realtime_trajectory_id: str
+    def find_latest_for_realtime_id(
+        self, conn: connection, realtime_id: str
     ) -> WalkingParameter:
         pass
 
     @abstractmethod
-    def find_latest_id_for_realtime_trajectory_id(
-        self, conn: connection, realtime_trajectory_id: str
-    ) -> str:
+    def find_latest_id_for_realtime_id(self, conn: connection, realtime_id: str) -> str:
         pass
 
 
 class ModifiedWalkingSampleRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, walking_sample: WalkingParameter
+        self, conn: connection, modified_id: str, walking_sample: WalkingParameter
     ) -> WalkingParameter:
         pass
