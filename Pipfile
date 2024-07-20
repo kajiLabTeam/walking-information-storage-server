@@ -14,6 +14,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 python-dotenv = "*"
 requests = "*"
 psycopg2-binary = "*"
+python-ulid = "*"
 
 [dev-packages]
 
