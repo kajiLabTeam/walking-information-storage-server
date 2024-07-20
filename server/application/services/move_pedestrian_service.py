@@ -45,13 +45,15 @@ class CreateWalkingSampleService:
         conn = DBConnection.connect()
 
         # 引数のidを元に、必要な情報を取得
-        realtime_trajectory_id, floor_map_id = (
+        realtime_id, floor_map_id = (
             self.__realtime_trajectory_repo.find_for_trajectory_id(
                 conn=conn, trajectory_id=trajectory_id
             )
         )
-        realtime_walking_sample_id = self.__realtime_walking_sample_repo.find_latest_id_for_realtime_trajectory_id(
-            conn=conn, realtime_trajectory_id=realtime_trajectory_id
+        realtime_walking_sample_id = (
+            self.__realtime_walking_sample_repo.find_latest_id_for_realtime_id(
+                conn=conn, realtime_id=realtime_id
+            )
         )
 
         # 最新のパーティクルの状態を取得
@@ -89,7 +91,7 @@ class CreateWalkingSampleService:
         # パーティクルフィルタの結果を保存
         realtime_walking_sample_insert_result = (
             self.__realtime_walking_sample_repo.save(
-                conn=conn, walking_sample=walking_parameter
+                conn=conn, realtime_id=realtime_id, walking_sample=walking_parameter
             )
         )
         _ = self.__particle_repo.save_all(

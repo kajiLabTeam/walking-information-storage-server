@@ -12,7 +12,7 @@ class StartWalkingService:
         self.__trajectory_repo = trajectory_repo
         self.__realtime_trajectory_repo = realtime_trajectory_repo
 
-    def run(self, pedestrian_id: str, floor_map_id: str) -> None:
+    def run(self, pedestrian_id: str, floor_map_id: str) -> str:
         conn = DBConnection.connect()
 
         trajectory_id = self.__trajectory_repo.save(
@@ -20,3 +20,5 @@ class StartWalkingService:
         )
 
         self.__realtime_trajectory_repo.save(conn=conn, trajectory_id=trajectory_id)
+
+        return trajectory_id
