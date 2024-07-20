@@ -1,10 +1,16 @@
+from typing import Optional
+
+
 class WalkingParameter:
-    def __init__(self, id: str, step: int, angle_changed: int):
+    def __init__(self, id: Optional[str], step: int, angle_changed: int):
         self.__id = id
         self.__step = step
         self.__angle_changed = round(angle_changed, 0)
 
     def get_id(self) -> str:
+        if self.__id is None:
+            raise ValueError("Not found")
+
         return self.__id
 
     def get_step(self) -> int:
