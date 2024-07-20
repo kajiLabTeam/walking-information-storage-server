@@ -1,10 +1,14 @@
 class WalkingParameter:
-    def __init__(self, step: int, angle_variation: int):
+    def __init__(self, id: str, step: int, angle_changed: int):
+        self.__id = id
         self.__step = step
-        self.__angle_variation = round(angle_variation, 0)
+        self.__angle_changed = round(angle_changed, 0)
+
+    def get_id(self) -> str:
+        return self.__id
 
     def get_step(self) -> int:
         return self.__step
 
-    def get_angle_variation(self) -> int:
-        return self.__angle_variation
+    def get_angle_changed(self) -> int:
+        return self.__angle_changed

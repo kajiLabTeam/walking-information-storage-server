@@ -103,7 +103,7 @@ class EstimatedParticle:
         ## ベクトルの向きに合わせてパーティクルを移動させる
         """
         step = current_walking_parameter.get_step()
-        changed_angle = current_walking_parameter.get_angle_variation()
+        changed_angle = current_walking_parameter.get_angle_changed()
 
         move_particle_collection = ParticleCollection()
 
