@@ -26,6 +26,7 @@ CREATE TABLE floor_map_images (
 
 CREATE TABLE trajectories (
     id VARCHAR(26) PRIMARY KEY,
+    is_walking BOOLEAN NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE,
     deleted_at TIMESTAMP WITH TIME ZONE,
