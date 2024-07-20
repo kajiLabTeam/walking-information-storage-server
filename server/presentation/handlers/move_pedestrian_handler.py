@@ -4,15 +4,17 @@ from config.const.amount import STEP
 from domain.models.angle_converter.angle_converter import AngleConverter
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from fastapi import APIRouter, File, HTTPException, UploadFile
-from infrastructure.repository.coordinate_repository import \
+from infrastructure.persistence.repository.coordinate_repository import \
     RealtimeCoordinateRepository
-from infrastructure.repository.floor_map_repository import \
+from infrastructure.persistence.repository.floor_map_repository import \
     FloorMapImageRepository
-from infrastructure.repository.particle_repository import ParticleRepository
-from infrastructure.repository.raw_data_repository import RawDataRepository
-from infrastructure.repository.trajectory_repository import \
+from infrastructure.persistence.repository.particle_repository import \
+    ParticleRepository
+from infrastructure.persistence.repository.raw_data_repository import \
+    RawDataRepository
+from infrastructure.persistence.repository.trajectory_repository import \
     RealtimeTrajectoryRepository
-from infrastructure.repository.walking_sample_repository import \
+from infrastructure.persistence.repository.walking_sample_repository import \
     RealtimeWalkingSampleRepository
 from pydantic import BaseModel
 
