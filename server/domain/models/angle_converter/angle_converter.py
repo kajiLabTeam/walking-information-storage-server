@@ -3,7 +3,6 @@ from typing import List
 
 import numpy as np
 import pandas as pd
-
 from domain.models.trajectory.trajectory import Trajectory
 
 
@@ -20,9 +19,6 @@ class AngleConverter:
         )
 
         return angle
-
-      
-      
 
     def __calculate_cumulative_angle(
         self, gyro_df: pd.DataFrame, time_unit: float = 0.7
@@ -42,8 +38,6 @@ class AngleConverter:
             window=window_gayo, center=True
         ).mean() * (180 / np.pi)
 
-      
-
         angle_df = (
             gyro_df.groupby("time_unit")
             .apply(
@@ -58,5 +52,3 @@ class AngleConverter:
         )
 
         return gyro_df["angle_x"].max()
-
-     

@@ -1,7 +1,6 @@
 from typing import List, Literal
 
 import numpy as np
-
 from config.const.amount import (CLUSTER_AMOUNT_THRESHOLD,
                                  CONVERGENCE_DECENTRALIZATION_THRESHOLD,
                                  INITIAL_PARTICLES_AMOUNT,
@@ -103,7 +102,7 @@ class EstimatedParticle:
         """
         ## ベクトルの向きに合わせてパーティクルを移動させる
         """
-        step = current_walking_parameter.get_stride()
+        step = current_walking_parameter.get_step()
         changed_angle = current_walking_parameter.get_angle_variation()
 
         move_particle_collection = ParticleCollection()

@@ -52,11 +52,11 @@ class ReversedEstimationParticleFilter:
 
             estimation_particles.remove_by_floor_map()
             estimation_particles.remove_by_direction(
-                step=reversed_walking_parameter.get_stride()
+                step=reversed_walking_parameter.get_step()
             )
-            estimation_particles.update_weight()
+            # estimation_particles.update_weight()
             move_estimation_particles.resampling(
-                step=reversed_walking_parameter.get_stride(), mode="reversed"
+                step=reversed_walking_parameter.get_step(), mode="reversed"
             )
 
             reversed_estimation_particles.append(move_estimation_particles)

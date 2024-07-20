@@ -1,19 +1,18 @@
+from config.const.path import IMAGE_PATH
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.tracking_particle.tracking_particle import TrackingParticle
 from fastapi import APIRouter
 from PIL import Image
 from pydantic import BaseModel
 
-from config.const.path import IMAGE_PATH
-from domain.models.floor_map.floor_map import FloorMap
-from domain.models.tracking_particle.tracking_particle import TrackingParticle
-
 
 class MoveParticlesRequest(BaseModel):
-    stride: int
+    step: int
     angleVariation: int
 
 
 class MoveParticlesResponse(BaseModel):
-    stride: int
+    step: int
     angleVariation: int
 
 

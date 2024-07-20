@@ -1,18 +1,17 @@
+from config.const.path import IMAGE_PATH
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.tracking_particle.tracking_particle import TrackingParticle
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from PIL import Image
-from starlette.requests import Request
-
-from config.const.path import IMAGE_PATH
-from domain.models.floor_map.floor_map import FloorMap
-from domain.models.tracking_particle.tracking_particle import TrackingParticle
 from presentation.handlers.get_particles_floor_map_handler import \
     router as get_image_router
 from presentation.handlers.move_particles_handler import \
     router as move_particles_router
 from presentation.handlers.reset_particle import \
     router as reset_particle_router
+from starlette.requests import Request
 
 app = FastAPI()
 

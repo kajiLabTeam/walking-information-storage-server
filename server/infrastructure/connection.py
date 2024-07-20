@@ -1,9 +1,8 @@
 from typing import Any
 
+from config.env import PostgresEnv
 from psycopg2 import connect
 from psycopg2.extensions import connection
-
-from config.env import PostgresEnv
 
 
 class DBConnection:

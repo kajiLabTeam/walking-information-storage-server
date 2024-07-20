@@ -1,11 +1,10 @@
-from fastapi import APIRouter, HTTPException
-from PIL import Image
-from pydantic import BaseModel
-
 from config.const.path import IMAGE_PATH
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.tracking_particle.tracking_particle import TrackingParticle
+from fastapi import APIRouter, HTTPException
 from infrastructure.repository.trajectory import TrajectoryRepository
+from PIL import Image
+from pydantic import BaseModel
 
 
 class StartWalkingResponse(BaseModel):

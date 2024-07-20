@@ -1,6 +1,5 @@
 from abc import ABCMeta, abstractmethod
 
-
 from psycopg2.extensions import connection
 
 
