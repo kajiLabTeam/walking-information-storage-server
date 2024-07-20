@@ -7,15 +7,27 @@ from psycopg2.extensions import connection
 
 class RealtimeWalkingSampleRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save_realtime(
+    def save(
         self, conn: connection, walking_sample: WalkingParameter
     ) -> WalkingParameter:
+        pass
+
+    @abstractmethod
+    def find_latest_for_realtime_trajectory_id(
+        self, conn: connection, realtime_trajectory_id: str
+    ) -> WalkingParameter:
+        pass
+
+    @abstractmethod
+    def find_latest_id_for_realtime_trajectory_id(
+        self, conn: connection, realtime_trajectory_id: str
+    ) -> str:
         pass
 
 
 class ModifiedWalkingSampleRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save_modified(
+    def save(
         self, conn: connection, walking_sample: WalkingParameter
     ) -> WalkingParameter:
         pass

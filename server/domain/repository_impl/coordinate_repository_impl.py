@@ -8,7 +8,12 @@ from psycopg2.extensions import connection
 
 class RealtimeCoordinateRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save(self, conn: connection, estimated_position: EstimatedPosition) -> None:
+    def save(
+        self,
+        conn: connection,
+        realtime_walking_sample_id: str,
+        estimated_position: EstimatedPosition,
+    ) -> None:
         pass
 
 
