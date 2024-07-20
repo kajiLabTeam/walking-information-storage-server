@@ -1,9 +1,7 @@
 from io import BytesIO
-from typing import List
 
 import numpy as np
 import pandas as pd
-from domain.models.trajectory.trajectory import Trajectory
 
 
 class AngleConverter:
@@ -33,7 +31,7 @@ class AngleConverter:
                 lambda df: pd.Series(
                     {
                         "t": df["t"].iloc[0],  # 各グループの開始時間
-                        "angle_x": np.trapz(df[f"angle_x"], df["t"]),
+                        "angle_x": np.trapz(df[f"angle_x"], df["t"]),  # type: ignore
                     }
                 )
             )

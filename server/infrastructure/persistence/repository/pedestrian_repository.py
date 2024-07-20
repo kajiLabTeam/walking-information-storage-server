@@ -1,7 +1,8 @@
-from domain.repository_impl.pedestrian_repository_impl import \
-    PedestrianRepositoryImpl
 from psycopg2.extensions import connection
 from ulid import ULID
+
+from domain.repository_impl.pedestrian_repository_impl import \
+    PedestrianRepositoryImpl
 
 
 class PedestrianRepository(PedestrianRepositoryImpl):

@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
 
-from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from psycopg2.extensions import connection
+
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
 class RealtimeWalkingSampleRepositoryImpl(metaclass=ABCMeta):

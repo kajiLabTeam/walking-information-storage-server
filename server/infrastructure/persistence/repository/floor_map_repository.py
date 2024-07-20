@@ -1,7 +1,8 @@
-from domain.repository_impl.floor_map_repository_impl import (
-    FloorMapImageRepositoryImpl, FloorMapRepositoryImpl)
 from psycopg2.extensions import connection
 from ulid import ULID
+
+from domain.repository_impl.floor_map_repository_impl import (
+    FloorMapImageRepositoryImpl, FloorMapRepositoryImpl)
 
 
 class FloorMapRepository(FloorMapRepositoryImpl):

@@ -2,10 +2,11 @@ import math
 from io import BytesIO
 from typing import Tuple
 
-from config.const.amount import PEDESTRIAN_SIZE
-from config.const.color import INSIDE_PARTICLE_COLOR
 from PIL import Image, ImageDraw
 from PIL.Image import Image as ImageType
+
+from config.const.amount import PEDESTRIAN_SIZE
+from config.const.color import INSIDE_PARTICLE_COLOR
 
 
 class FloorMap:

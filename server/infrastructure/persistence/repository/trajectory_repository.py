@@ -1,10 +1,11 @@
 from typing import Tuple
 
+from psycopg2.extensions import connection
+from ulid import ULID
+
 from domain.repository_impl.trajectory_repository_impl import (
     ModifiedTrajectoryRepositoryImpl, RealtimeTrajectoryRepositoryImpl,
     TrajectoryRepositoryImpl)
-from psycopg2.extensions import connection
-from ulid import ULID
 
 
 class TrajectoryRepository(TrajectoryRepositoryImpl):

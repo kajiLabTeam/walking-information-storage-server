@@ -1,6 +1,7 @@
 from typing import List, Literal
 
 import numpy as np
+
 from config.const.amount import (CLUSTER_AMOUNT_THRESHOLD,
                                  CONVERGENCE_DECENTRALIZATION_THRESHOLD,
                                  INITIAL_PARTICLES_AMOUNT,

@@ -2,6 +2,7 @@ import random
 from typing import List, Tuple
 
 import numpy as np
+
 from domain.models.particle.particle import Particle
 
 

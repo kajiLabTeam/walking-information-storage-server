@@ -1,6 +1,7 @@
 from typing import List
 
 import numpy as np
+
 from domain.models.particle.particle import Particle
 
 

@@ -1,8 +1,9 @@
+from psycopg2.extensions import connection
+from ulid import ULID
+
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from domain.repository_impl.walking_sample_repository_impl import (
     ModifiedWalkingSampleRepositoryImpl, RealtimeWalkingSampleRepositoryImpl)
-from psycopg2.extensions import connection
-from ulid import ULID
 
 
 class RealtimeWalkingSampleRepository(RealtimeWalkingSampleRepositoryImpl):
