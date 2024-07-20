@@ -1,14 +1,18 @@
 import math
+from io import BytesIO
 from typing import Tuple
 
 from config.const.amount import PEDESTRIAN_SIZE
 from config.const.color import INSIDE_PARTICLE_COLOR
-from PIL import ImageDraw
+from PIL import Image, ImageDraw
 from PIL.Image import Image as ImageType
 
 
 class FloorMap:
-    def __init__(self, floor_map_image: ImageType) -> None:
+    def __init__(self, floor_map_image_bytes: bytes) -> None:
+        image_stream = BytesIO(floor_map_image_bytes)
+        floor_map_image = Image.open(image_stream)
+
         self.__floor_map = floor_map_image
         self.__draw = ImageDraw.Draw(self.__floor_map)
         self.__map_width, self.__map_height = self.__floor_map.size
@@ -21,9 +25,6 @@ class FloorMap:
 
     def get_map_height(self) -> int:
         return self.__map_height
-
-    def clone(self) -> "FloorMap":
-        return FloorMap(self.__floor_map.copy())
 
     def depict(
         self, position: Tuple[int, int], color: Tuple[int, int, int, int]
@@ -81,20 +82,6 @@ class FloorMap:
         except Exception:
             pass
 
-    # def depict_batch(self, positions: List[Tuple[int, int]], color: Tuple[int, int, int, int]) -> None:
-    #     """
-    #     ## 複数の座標位置を一括で描画する
-    #     """
-    #     for x, y in positions:
-    #         try:
-    #             self.__floor_map.putpixel((x, y), color)
-    #             # もし必要であれば、複数のピクセルを一括で描画する処理を追加
-    #             # for i in range(-PEDESTRIAN_SIZE, PEDESTRIAN_SIZE):
-    #             #     for j in range(-PEDESTRIAN_SIZE, PEDESTRIAN_SIZE):
-    #             #         self.__floor_map.putpixel((x + i, y + j), color)
-    #         except Exception:
-    #             pass
-
     def depict_cross(self, x: int, y: int, color: Tuple[int, int, int, int]) -> None:
         """
         ## 指定した座標位置を十字形に描画する
@@ -104,12 +91,6 @@ class FloorMap:
         self.__floor_map.putpixel((x - 1, y), color)
         self.__floor_map.putpixel((x, y + 1), color)
         self.__floor_map.putpixel((x, y - 1), color)
-
-        # self.depict(x, y, color)
-        # self.depict(x + PEDESTRIAN_SIZE, y, color)
-        # self.depict(x - PEDESTRIAN_SIZE, y, color)
-        # self.depict(x, y + PEDESTRIAN_SIZE, color)
-        # self.depict(x, y - PEDESTRIAN_SIZE, color)
 
     def depict_correct_trajectory(self, x: int, y: int) -> None:
         """
