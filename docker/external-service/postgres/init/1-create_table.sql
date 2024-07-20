@@ -52,7 +52,7 @@ CREATE TABLE modified (
 CREATE TABLE realtime_walking_samples (
     id VARCHAR(26) PRIMARY KEY,
     step INT NOT NULL,
-    change_angle DECIMAL(5, 2) NOT NULL,
+    angle_changed DECIMAL(5, 2) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     realtime_id VARCHAR(26) REFERENCES realtime(id)
 );
@@ -60,7 +60,7 @@ CREATE TABLE realtime_walking_samples (
 CREATE TABLE modified_walking_samples (
     id VARCHAR(26) PRIMARY KEY,
     step INT NOT NULL,
-    change_angle DECIMAL(5, 2) NOT NULL,
+    angle_changed DECIMAL(5, 2) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     walking_at TIMESTAMP WITH TIME ZONE,
     modified_id VARCHAR(26) REFERENCES modified(id)
@@ -91,12 +91,21 @@ CREATE TABLE access_points (
 CREATE TABLE finger_prints (
     id VARCHAR(26) PRIMARY KEY,
     rssi DECIMAL(5, 2),
-    realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id),
-    access_point_id VARCHAR(26) REFERENCES access_points(id)
+    access_point_id VARCHAR(26) REFERENCES access_points(id),
+    realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id)
 );
 
 CREATE TABLE raw_data (
     id VARCHAR(26) PRIMARY KEY,
-    realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id)
+);
+
+CREATE TABLE particles (
+    id VARCHAR(26) PRIMARY KEY,
+    x DECIMAL(10, 2) NOT NULL,
+    y DECIMAL(10, 2) NOT NULL,
+    weight DECIMAL(5, 2) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id)
 );
