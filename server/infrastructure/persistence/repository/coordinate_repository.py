@@ -1,6 +1,3 @@
-from abc import ABCMeta, abstractmethod
-from typing import Any
-
 from domain.models.estimated_position.estimated_position import \
     EstimatedPosition
 from domain.repository_impl.coordinate_repository_impl import (

@@ -1,7 +1,3 @@
-from typing import Any
-
-from domain.models.estimated_position.estimated_position import \
-    EstimatedPosition
 from domain.models.particle.particle import Particle
 from domain.models.particle_collection.particle_collection import \
     ParticleCollection

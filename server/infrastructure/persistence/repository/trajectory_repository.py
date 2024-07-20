@@ -1,4 +1,3 @@
-from abc import ABCMeta, abstractmethod
 from typing import Tuple
 
 from domain.repository_impl.trajectory_repository_impl import (
@@ -12,9 +11,10 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
     def save(self, conn: connection, pedestrian_id: str, floor_map_id: str) -> str:
         with conn as conn:
             with conn.cursor() as cursor:
+                ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO trajectories (pedestrian_id, floor_map_id) VALUES (%s, %s) RETURNING id",
-                    (pedestrian_id, floor_map_id),
+                    "INSERT INTO trajectories (id, is_walking, pedestrian_id, floor_map_id) VALUES (%s.%s,%s, %s) RETURNING id",
+                    (ulid, True, pedestrian_id, floor_map_id),
                 )
 
                 result = cursor.fetchone()
@@ -24,6 +24,14 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
                     raise ValueError("Not found")
 
                 return trajectory_id
+
+    def update(self, conn: connection, trajectory_id: str) -> None:
+        with conn as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    "UPDATE trajectories SET is_walking = %s WHERE id = %s",
+                    (False, trajectory_id),
+                )
 
 
 class RealtimeTrajectoryRepository(RealtimeTrajectoryRepositoryImpl):

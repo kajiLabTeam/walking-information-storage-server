@@ -9,6 +9,10 @@ class TrajectoryRepositoryImpl(metaclass=ABCMeta):
     def save(self, conn: connection, pedestrian_id: str, floor_map_id: str) -> str:
         pass
 
+    @abstractmethod
+    def update(self, conn: connection, trajectory_id: str) -> None:
+        pass
+
 
 class RealtimeTrajectoryRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod

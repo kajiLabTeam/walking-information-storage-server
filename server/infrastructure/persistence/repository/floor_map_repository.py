@@ -1,5 +1,3 @@
-from abc import ABCMeta, abstractmethod
-
 from domain.repository_impl.floor_map_repository_impl import (
     FloorMapImageRepositoryImpl, FloorMapRepositoryImpl)
 from psycopg2.extensions import connection

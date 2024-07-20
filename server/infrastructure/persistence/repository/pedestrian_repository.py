@@ -1,5 +1,3 @@
-from abc import ABCMeta, abstractmethod
-
 from domain.repository_impl.pedestrian_repository_impl import \
     PedestrianRepositoryImpl
 from psycopg2.extensions import connection
