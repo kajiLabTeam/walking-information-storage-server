@@ -1,4 +1,4 @@
-\c trajectory;
+\c indoor_location_estimation;
 
 
 INSERT INTO pedestrians (id)
