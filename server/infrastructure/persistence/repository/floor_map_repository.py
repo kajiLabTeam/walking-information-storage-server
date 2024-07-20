@@ -16,17 +16,24 @@ class FloorMapRepository(FloorMapRepositoryImpl):
 
 
 class FloorMapImageRepository(FloorMapImageRepositoryImpl):
-
-    def save(self, conn: connection, floor_map_id: str, floor_map_image: bytes) -> None:
+    def save(self, conn: connection, floor_map_id: str, floor_map_image: bytes) -> str:
         with conn as conn:
             with conn.cursor() as cursor:
                 ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO floor_map_image (id, floor_map_id) VALUES (%s, %s, %s)",
-                    (floor_map_id, floor_map_image),
+                    "INSERT INTO floor_map_image (id, floor_map_id) VALUES (%s, %s, %s) RETURNING id",
+                    (ulid, floor_map_id, floor_map_image),
                 )
 
-    def find_for_floor_map_id(self, conn: connection, floor_map_id: str) -> bytes:
+                result = cursor.fetchone()
+                if result is not None:
+                    floor_map_image_id = result[0]
+                else:
+                    raise ValueError("Failed to save floor map image")
+
+                return floor_map_image_id
+
+    def find_for_floor_map_id(self, conn: connection, floor_map_id: str) -> str:
         with conn as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
@@ -41,4 +48,4 @@ class FloorMapImageRepository(FloorMapImageRepositoryImpl):
                 else:
                     floor_map_image_id = None
 
-                return bytes
+                return floor_map_id

@@ -1,3 +1,5 @@
+from config.const.bucket import (FLOOR_MAP_IMAGE_BUCKET_NAME,
+                                 RAW_DATA_FILE_BUCKET_NAME)
 from domain.models.estimated_particle.estimated_particle import \
     EstimatedParticle
 from domain.models.estimated_position.estimated_position import \
@@ -16,7 +18,8 @@ from domain.repository_impl.trajectory_repository_impl import \
     RealtimeTrajectoryRepositoryImpl
 from domain.repository_impl.walking_sample_repository_impl import \
     RealtimeWalkingSampleRepositoryImpl
-from infrastructure.connection import DBConnection
+from infrastructure.connection import DBConnection, MinioConnection
+from infrastructure.external.services.file_service import FileService
 
 
 class CreateWalkingSampleService:
@@ -43,6 +46,8 @@ class CreateWalkingSampleService:
         walking_parameter: WalkingParameter,
     ) -> EstimatedPosition:
         conn = DBConnection.connect()
+        s3 = MinioConnection.connect()
+        file_service = FileService(s3)
 
         # 引数のidを元に、必要な情報を取得
         realtime_id, floor_map_id = (
@@ -64,8 +69,11 @@ class CreateWalkingSampleService:
         )
 
         # 最新のパーティクルフィルタの状態を復元
-        floor_map_image_bytes = self.__floor_map_image_repo.find_for_floor_map_id(
+        floor_map_image_id = self.__floor_map_image_repo.find_for_floor_map_id(
             conn=conn, floor_map_id=floor_map_id
+        )
+        floor_map_image_bytes = file_service.download(
+            file_type_name=FLOOR_MAP_IMAGE_BUCKET_NAME, file_id=floor_map_image_id
         )
         floor_map = FloorMap(
             floor_map_image_bytes=floor_map_image_bytes,
@@ -108,10 +116,15 @@ class CreateWalkingSampleService:
         )
 
         # 生データを保存
-        _ = self.__raw_data_repo.save(
+        raw_data_id = self.__raw_data_repo.save(
             conn=conn,
             realtime_walking_sample_id=realtime_walking_sample_insert_result.get_id(),
             raw_data_file=raw_data_file,
+        )
+        file_service.upload(
+            file_type_name=RAW_DATA_FILE_BUCKET_NAME,
+            file_id=raw_data_id,
+            file=raw_data_file,
         )
 
         return estimated_position

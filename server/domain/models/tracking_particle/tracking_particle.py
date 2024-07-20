@@ -14,25 +14,11 @@ from utils.angle import reverse_angle
 
 
 class TrackingParticle:
-    _instance = None
-
-    def __new__(
-        cls,
-        floor_map: FloorMap,
-        model_path: str = RSSI_MODEL_PATH,
-    ) -> "TrackingParticle":
-        if cls._instance is None:
-            cls._instance = super(TrackingParticle, cls).__new__(cls)
-            cls._instance.__init__(floor_map)
-        return cls._instance
-
     def __init__(
         self,
         floor_map: FloorMap,
         model_path: str = RSSI_MODEL_PATH,
     ) -> None:
-        if hasattr(self, "_initialized") and self._initialized:
-            return
         self.__floor_map = floor_map
         self.__tracking_count = 0
         self.__coverage_count = 0
@@ -40,13 +26,6 @@ class TrackingParticle:
         self.__estimation_particles: List[EstimatedParticle] = []
         self.__walking_parameter_collection = WalkingParameterCollection()
         self._initialized = True
-
-    def reset(self) -> None:
-        self.__tracking_count = 0
-        self.__coverage_count = 0
-        self.__coverage_position = None
-        self.__estimation_particles = []
-        self.__walking_parameter_collection = WalkingParameterCollection()
 
     @classmethod
     def reset_instance(cls, floor_map: FloorMap) -> None:
