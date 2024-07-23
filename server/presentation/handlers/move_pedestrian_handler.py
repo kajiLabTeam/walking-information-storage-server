@@ -49,7 +49,7 @@ move_pedestrian_service = CreateWalkingSampleService(
 
 
 @router.post("/api/walk", response_model=CreateWalkingSampleResponse, status_code=201)
-async def move_particles(
+async def move_pedestrian(
     trajectoryId: str,
     rawDataFile: Annotated[UploadFile, File()],
 ):

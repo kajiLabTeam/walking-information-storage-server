@@ -20,11 +20,9 @@ router = APIRouter()
 finish_walking_service = FinishWalkingService(trajectory_repo=TrajectoryRepository())
 
 
-@router.post("/api/walk", response_model=FinishWalkingRequest, status_code=201)
-async def move_particles(finish_walking_request: FinishWalkingRequest):
+@router.post("/api/walk/finish", response_model=FinishWalkingRequest, status_code=201)
+async def finish_walking(trajectory_id: str):
     try:
-        trajectory_id = finish_walking_request.trajectory_id
-
         finish_walking_service.run(trajectory_id=trajectory_id)
 
         return FinishWalkingResponse(trajectory_id=trajectory_id)
