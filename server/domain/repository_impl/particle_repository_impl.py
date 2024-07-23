@@ -2,8 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 from psycopg2.extensions import connection
 
-from domain.models.particle_collection.particle_collection import \
-    ParticleCollection
+from domain.models.particle_collection.particle_collection import ParticleCollection
 
 
 class ParticleRepositoryImpl(metaclass=ABCMeta):

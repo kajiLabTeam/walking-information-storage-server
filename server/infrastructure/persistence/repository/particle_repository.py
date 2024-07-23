@@ -2,10 +2,8 @@ from psycopg2.extensions import connection
 from ulid import ULID
 
 from domain.models.particle.particle import Particle
-from domain.models.particle_collection.particle_collection import \
-    ParticleCollection
-from domain.repository_impl.particle_repository_impl import \
-    ParticleRepositoryImpl
+from domain.models.particle_collection.particle_collection import ParticleCollection
+from domain.repository_impl.particle_repository_impl import ParticleRepositoryImpl
 
 
 class ParticleRepository(ParticleRepositoryImpl):

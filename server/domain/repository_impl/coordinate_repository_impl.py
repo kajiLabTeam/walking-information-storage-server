@@ -2,8 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 from psycopg2.extensions import connection
 
-from domain.models.estimated_position.estimated_position import \
-    EstimatedPosition
+from domain.models.estimated_position.estimated_position import EstimatedPosition
 
 
 class RealtimeCoordinateRepositoryImpl(metaclass=ABCMeta):

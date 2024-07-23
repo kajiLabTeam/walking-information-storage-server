@@ -1,10 +1,11 @@
 from psycopg2.extensions import connection
 from ulid import ULID
 
-from domain.models.estimated_position.estimated_position import \
-    EstimatedPosition
+from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.repository_impl.coordinate_repository_impl import (
-    ModifiedCoordinateRepositoryImpl, RealtimeCoordinateRepositoryImpl)
+    ModifiedCoordinateRepositoryImpl,
+    RealtimeCoordinateRepositoryImpl,
+)
 
 
 class RealtimeCoordinateRepository(RealtimeCoordinateRepositoryImpl):

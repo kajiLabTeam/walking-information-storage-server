@@ -1,5 +1,4 @@
-from domain.repository_impl.trajectory_repository_impl import \
-    TrajectoryRepositoryImpl
+from domain.repository_impl.trajectory_repository_impl import TrajectoryRepositoryImpl
 from infrastructure.connection import DBConnection
 
 

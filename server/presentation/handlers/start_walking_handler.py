@@ -3,7 +3,9 @@ from pydantic import BaseModel
 
 from application.services.start_walking_service import StartWalkingService
 from infrastructure.persistence.repository.trajectory_repository import (
-    RealtimeTrajectoryRepository, TrajectoryRepository)
+    RealtimeTrajectoryRepository,
+    TrajectoryRepository,
+)
 
 
 class StartWalkingRequest(BaseModel):
@@ -26,7 +28,6 @@ start_walking_service = StartWalkingService(
 @router.post("/api/walk/start", response_model=StartWalkingResponse, status_code=201)
 async def start_walking(start_walking_request: StartWalkingRequest):
     try:
-
         trajectory_id = start_walking_service.run(
             pedestrian_id=start_walking_request.pedestrian_id,
             floor_map_id=start_walking_request.floor_map_id,

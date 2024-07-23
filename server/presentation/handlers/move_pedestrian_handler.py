@@ -3,23 +3,24 @@ from typing import Annotated
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel
 
-from application.services.move_pedestrian_service import \
-    CreateWalkingSampleService
+from application.services.move_pedestrian_service import CreateWalkingSampleService
 from config.const.amount import STEP
 from domain.models.angle_converter.angle_converter import AngleConverter
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
-from infrastructure.persistence.repository.coordinate_repository import \
-    RealtimeCoordinateRepository
-from infrastructure.persistence.repository.floor_map_repository import \
-    FloorMapImageRepository
-from infrastructure.persistence.repository.particle_repository import \
-    ParticleRepository
-from infrastructure.persistence.repository.raw_data_repository import \
-    RawDataRepository
-from infrastructure.persistence.repository.trajectory_repository import \
-    RealtimeTrajectoryRepository
-from infrastructure.persistence.repository.walking_sample_repository import \
-    RealtimeWalkingSampleRepository
+from infrastructure.persistence.repository.coordinate_repository import (
+    RealtimeCoordinateRepository,
+)
+from infrastructure.persistence.repository.floor_map_repository import (
+    FloorMapImageRepository,
+)
+from infrastructure.persistence.repository.particle_repository import ParticleRepository
+from infrastructure.persistence.repository.raw_data_repository import RawDataRepository
+from infrastructure.persistence.repository.trajectory_repository import (
+    RealtimeTrajectoryRepository,
+)
+from infrastructure.persistence.repository.walking_sample_repository import (
+    RealtimeWalkingSampleRepository,
+)
 
 
 class CreateWalkingSampleRequest(BaseModel):

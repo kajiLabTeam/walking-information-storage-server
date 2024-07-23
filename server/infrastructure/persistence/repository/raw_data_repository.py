@@ -1,8 +1,7 @@
 from psycopg2.extensions import connection
 from ulid import ULID
 
-from domain.repository_impl.raw_data_repository_impl import \
-    RawDataRepositoryImpl
+from domain.repository_impl.raw_data_repository_impl import RawDataRepositoryImpl
 
 
 class RawDataRepository(RawDataRepositoryImpl):

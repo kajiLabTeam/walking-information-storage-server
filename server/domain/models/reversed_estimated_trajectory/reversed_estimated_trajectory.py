@@ -1,11 +1,10 @@
 from typing import List, Literal
 
-from domain.models.estimated_position.estimated_position import \
-    EstimatedPosition
-from domain.models.reversed_estimated_trajectory.cluster_tracking import \
-    ClusterTracking
-from domain.models.reversed_estimated_trajectory.reversed_particle_filter import \
-    ReversedEstimationParticleFilter
+from domain.models.estimated_position.estimated_position import EstimatedPosition
+from domain.models.reversed_estimated_trajectory.cluster_tracking import ClusterTracking
+from domain.models.reversed_estimated_trajectory.reversed_particle_filter import (
+    ReversedEstimationParticleFilter,
+)
 from domain.models.tracking_particle.tracking_particle import TrackingParticle
 
 

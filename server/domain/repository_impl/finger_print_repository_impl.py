@@ -1,10 +1,8 @@
 from abc import ABCMeta, abstractmethod
-from typing import Any
 
 from psycopg2.extensions import connection
 
-from domain.models.estimated_position.estimated_position import \
-    EstimatedPosition
+from domain.models.estimated_position.estimated_position import EstimatedPosition
 
 
 class FingerPrintRepositoryImpl(metaclass=ABCMeta):

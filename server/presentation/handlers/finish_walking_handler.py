@@ -1,14 +1,10 @@
-from typing import Annotated
-
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from application.services.finish_walking_service import FinishWalkingService
-from config.const.amount import STEP
-from domain.models.angle_converter.angle_converter import AngleConverter
-from domain.models.walking_parameter.walking_parameter import WalkingParameter
-from infrastructure.persistence.repository.trajectory_repository import \
-    TrajectoryRepository
+from infrastructure.persistence.repository.trajectory_repository import (
+    TrajectoryRepository,
+)
 
 
 class FinishWalkingRequest(BaseModel):

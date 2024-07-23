@@ -9,7 +9,6 @@ class AngleConverter:
         self.__gyro_df = pd.read_csv(BytesIO(raw_data_file))
 
     def calculate_cumulative_angle(self, time_unit: float = 0.7) -> int:
-
         sample_freq = 100
         window_gayo = 10
         self.__gyro_df["time_unit"] = (self.__gyro_df["t"] / time_unit).astype(int)
@@ -31,7 +30,7 @@ class AngleConverter:
                 lambda df: pd.Series(
                     {
                         "t": df["t"].iloc[0],  # 各グループの開始時間
-                        "angle_x": np.trapz(df[f"angle_x"], df["t"]),  # type: ignore
+                        "angle_x": np.trapz(df["angle_x"], df["t"]),  # type: ignore
                     }
                 )
             )

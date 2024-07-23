@@ -4,8 +4,10 @@ from psycopg2.extensions import connection
 from ulid import ULID
 
 from domain.repository_impl.trajectory_repository_impl import (
-    ModifiedTrajectoryRepositoryImpl, RealtimeTrajectoryRepositoryImpl,
-    TrajectoryRepositoryImpl)
+    ModifiedTrajectoryRepositoryImpl,
+    RealtimeTrajectoryRepositoryImpl,
+    TrajectoryRepositoryImpl,
+)
 
 
 class TrajectoryRepository(TrajectoryRepositoryImpl):

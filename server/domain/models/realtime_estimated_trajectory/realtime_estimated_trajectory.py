@@ -1,7 +1,6 @@
 from typing import List
 
-from domain.models.estimated_position.estimated_position import \
-    EstimatedPosition
+from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.tracking_particle.tracking_particle import TrackingParticle
 
 

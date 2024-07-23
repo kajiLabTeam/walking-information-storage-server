@@ -3,13 +3,15 @@ from typing import List, Optional, Tuple
 from config.const.amount import CONVERGENCE_JUDGEMENT_NUMBER
 from config.const.path import RSSI_MODEL_PATH
 from domain.models.estimated_particle.estimated_particle import (
-    EstimatedParticle, EstimatedParticleFactory)
-from domain.models.estimated_position.estimated_position import \
-    EstimatedPosition
+    EstimatedParticle,
+    EstimatedParticleFactory,
+)
+from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
-from domain.models.walking_parameter_collection.walking_parameter_collection import \
-    WalkingParameterCollection
+from domain.models.walking_parameter_collection.walking_parameter_collection import (
+    WalkingParameterCollection,
+)
 from utils.angle import reverse_angle
 
 

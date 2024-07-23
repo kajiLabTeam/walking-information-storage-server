@@ -3,7 +3,9 @@ from ulid import ULID
 
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from domain.repository_impl.walking_sample_repository_impl import (
-    ModifiedWalkingSampleRepositoryImpl, RealtimeWalkingSampleRepositoryImpl)
+    ModifiedWalkingSampleRepositoryImpl,
+    RealtimeWalkingSampleRepositoryImpl,
+)
 
 
 class RealtimeWalkingSampleRepository(RealtimeWalkingSampleRepositoryImpl):

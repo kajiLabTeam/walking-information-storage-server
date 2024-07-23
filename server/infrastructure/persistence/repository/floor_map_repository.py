@@ -2,11 +2,12 @@ from psycopg2.extensions import connection
 from ulid import ULID
 
 from domain.repository_impl.floor_map_repository_impl import (
-    FloorMapImageRepositoryImpl, FloorMapRepositoryImpl)
+    FloorMapImageRepositoryImpl,
+    FloorMapRepositoryImpl,
+)
 
 
 class FloorMapRepository(FloorMapRepositoryImpl):
-
     def save(self, conn: connection) -> None:
         with conn as conn:
             with conn.cursor() as cursor:
