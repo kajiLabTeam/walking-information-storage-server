@@ -9,4 +9,4 @@ RUN pip install --upgrade pip && pip install --no-cache-dir --upgrade -r /server
 COPY /server /server
 COPY /.env /server/.env
 
-CMD ["python", "main.py"]
+CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
