@@ -4,7 +4,7 @@ from application.services.move_pedestrian_service import CreateWalkingSampleServ
 from config.const.amount import STEP
 from domain.models.angle_converter.angle_converter import AngleConverter
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from infrastructure.persistence.repository.coordinate_repository import (
     RealtimeCoordinateRepository,
 )
@@ -20,11 +20,6 @@ from infrastructure.persistence.repository.walking_sample_repository import (
     RealtimeWalkingSampleRepository,
 )
 from pydantic import BaseModel
-
-
-class CreateWalkingSampleRequest(BaseModel):
-    trajectoryId: str
-    rawDataFile: Annotated[UploadFile, File()]
 
 
 class CreateWalkingSampleResponse(BaseModel):
@@ -49,7 +44,7 @@ move_pedestrian_service = CreateWalkingSampleService(
 
 @router.post("/api/walk", response_model=CreateWalkingSampleResponse, status_code=201)
 async def move_pedestrian(
-    trajectoryId: str,
+    trajectoryId: Annotated[str, Form()],
     rawDataFile: Annotated[UploadFile, File()],
 ):
     """
