@@ -15,7 +15,7 @@ from domain.repository_impl.trajectory_repository_impl import (
 from domain.repository_impl.walking_sample_repository_impl import (
     RealtimeWalkingSampleRepositoryImpl,
 )
-from infrastructure.connection import DBConnection, MinioConnection
+from infrastructure.connection import DBConnection, MinIOConnection
 from infrastructure.external.services.file_service import FileService
 
 
@@ -43,7 +43,7 @@ class CreateWalkingSampleService:
         walking_parameter: WalkingParameter,
     ) -> EstimatedPosition:
         conn = DBConnection.connect()
-        s3 = MinioConnection.connect()
+        s3 = MinIOConnection.connect()
         file_service = FileService(s3)
 
         # 引数のidを元に、必要な情報を取得
@@ -70,7 +70,7 @@ class CreateWalkingSampleService:
             conn=conn, floor_map_id=floor_map_id
         )
         floor_map_image_bytes = file_service.download(
-            file_type_name=FLOOR_MAP_IMAGE_BUCKET_NAME, file_id=floor_map_image_id
+            bucket_type_name=FLOOR_MAP_IMAGE_BUCKET_NAME, bucket_id=floor_map_image_id
         )
         floor_map = FloorMap(
             floor_map_image_bytes=floor_map_image_bytes,
@@ -119,8 +119,8 @@ class CreateWalkingSampleService:
             raw_data_file=raw_data_file,
         )
         file_service.upload(
-            file_type_name=RAW_DATA_FILE_BUCKET_NAME,
-            file_id=raw_data_id,
+            bucket_type_name=RAW_DATA_FILE_BUCKET_NAME,
+            bucket_id=raw_data_id,
             file=raw_data_file,
         )
 
