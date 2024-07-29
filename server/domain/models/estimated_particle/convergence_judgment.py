@@ -1,11 +1,10 @@
 from typing import List
 
 import numpy as np
+from domain.models.estimated_particle.cluster import Cluster
 from numpy.typing import NDArray
 from scipy import stats
 from sklearn.cluster import KMeans
-
-from domain.models.estimated_particle.cluster import Cluster
 
 
 class ConvergenceJudgment:
