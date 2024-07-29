@@ -1,11 +1,10 @@
-from psycopg2.extensions import connection
-
 from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.repository_impl.finger_print_repository_impl import (
     AccessPointRepositoryImpl,
     FingerPrintModelRepositoryImpl,
     FingerPrintRepositoryImpl,
 )
+from psycopg2.extensions import connection
 
 
 class FingerPrintRepository(FingerPrintRepositoryImpl):
