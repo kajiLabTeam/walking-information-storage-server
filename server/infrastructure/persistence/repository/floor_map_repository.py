@@ -21,7 +21,7 @@ class FloorMapImageRepository(FloorMapImageRepositoryImpl):
                 ulid = ULID()
                 cursor.execute(
                     "INSERT INTO floor_map_image (id, floor_map_id) VALUES (%s, %s, %s) RETURNING id",
-                    (ulid, floor_map_id, floor_map_image),
+                    (str(ulid), floor_map_id, floor_map_image),
                 )
 
                 result = cursor.fetchone()

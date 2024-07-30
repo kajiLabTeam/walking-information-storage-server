@@ -15,8 +15,8 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
             with conn.cursor() as cursor:
                 ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO trajectories (id, is_walking, pedestrian_id, floor_map_id) VALUES (%s.%s,%s, %s) RETURNING id",
-                    (ulid, True, pedestrian_id, floor_map_id),
+                    "INSERT INTO trajectories (id, is_walking, pedestrian_id, floor_map_id) VALUES (%s, %s, %s, %s) RETURNING id",
+                    (str(ulid), True, pedestrian_id, floor_map_id),
                 )
 
                 result = cursor.fetchone()
@@ -42,9 +42,9 @@ class RealtimeTrajectoryRepository(RealtimeTrajectoryRepositoryImpl):
             with conn.cursor() as cursor:
                 ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO id, realtime_trajectories (trajectory_id) VALUES (%s, %s)",
+                    "INSERT INTO realtime (id, trajectory_id) VALUES (%s, %s)",
                     (
-                        ulid,
+                        str(ulid),
                         trajectory_id,
                     ),
                 )
@@ -55,7 +55,7 @@ class RealtimeTrajectoryRepository(RealtimeTrajectoryRepositoryImpl):
         with conn as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "SELECT id, trajectory_id FROM realtime_trajectories WHERE trajectory_id = %s",
+                    "SELECT id, trajectory_id FROM realtime WHERE trajectory_id = %s",
                     (trajectory_id,),
                 )
 
@@ -75,9 +75,9 @@ class ModifiedTrajectoryRepository(ModifiedTrajectoryRepositoryImpl):
             with conn.cursor() as cursor:
                 ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO modified_trajectories (id, trajectory_id) VALUES (%s, %s)",
+                    "INSERT INTO modified (id, trajectory_id) VALUES (%s, %s)",
                     (
-                        ulid,
+                        str(ulid),
                         trajectory_id,
                     ),
                 )
