@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from typing import Tuple
 
 from psycopg2.extensions import connection
 
@@ -7,6 +6,10 @@ from psycopg2.extensions import connection
 class TrajectoryRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(self, conn: connection, pedestrian_id: str, floor_map_id: str) -> str:
+        pass
+
+    @abstractmethod
+    def find_for_id(self, conn: connection, trajectory_id: str) -> str:
         pass
 
     @abstractmethod
@@ -20,9 +23,7 @@ class RealtimeTrajectoryRepositoryImpl(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_for_trajectory_id(
-        self, conn: connection, trajectory_id: str
-    ) -> Tuple[str, str]:
+    def find_for_trajectory_id(self, conn: connection, trajectory_id: str) -> str:
         pass
 
 

@@ -5,14 +5,19 @@ from ulid import ULID
 
 class RawDataRepository(RawDataRepositoryImpl):
     def save(
-        self, conn: connection, realtime_walking_sample_id: str, raw_data_file: bytes
+        self,
+        conn: connection,
+        realtime_walking_sample_id: str,
     ) -> str:
+        print("RawDataRepository.save")
+        print("realtime_walking_sample_id: ", realtime_walking_sample_id)
+
         with conn as conn:
             with conn.cursor() as cursor:
                 ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO raw_data (id, realtime_walking_sample_id, data) VALUES (%s, %s, %s) RETURNING id",
-                    (str(ulid), realtime_walking_sample_id, raw_data_file),
+                    "INSERT INTO raw_data (id, realtime_walking_sample_id) VALUES (%s, %s) RETURNING id",
+                    (str(ulid), realtime_walking_sample_id),
                 )
 
                 result = cursor.fetchone()

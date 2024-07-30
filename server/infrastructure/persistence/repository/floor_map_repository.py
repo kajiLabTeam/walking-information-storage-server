@@ -1,3 +1,5 @@
+from typing import Optional
+
 from domain.repository_impl.floor_map_repository_impl import (
     FloorMapImageRepositoryImpl,
     FloorMapRepositoryImpl,
@@ -11,7 +13,7 @@ class FloorMapRepository(FloorMapRepositoryImpl):
         with conn as conn:
             with conn.cursor() as cursor:
                 ulid = ULID()
-                cursor.execute("INSERT INTO floor_map (id) VALUES (%s)", (str(ulid)))
+                cursor.execute("INSERT INTO floor_maps (id) VALUES (%s)", (str(ulid)))
 
 
 class FloorMapImageRepository(FloorMapImageRepositoryImpl):
@@ -20,7 +22,7 @@ class FloorMapImageRepository(FloorMapImageRepositoryImpl):
             with conn.cursor() as cursor:
                 ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO floor_map_image (id, floor_map_id) VALUES (%s, %s, %s) RETURNING id",
+                    "INSERT INTO floor_map_images (id, floor_map_id) VALUES (%s, %s, %s) RETURNING id",
                     (str(ulid), floor_map_id, floor_map_image),
                 )
 
@@ -32,11 +34,13 @@ class FloorMapImageRepository(FloorMapImageRepositoryImpl):
 
                 return floor_map_image_id
 
-    def find_for_floor_map_id(self, conn: connection, floor_map_id: str) -> str:
+    def find_for_floor_map_id(
+        self, conn: connection, floor_map_id: str
+    ) -> Optional[str]:
         with conn as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "SELECT id FROM floor_map_image WHERE floor_map_id = %s",
+                    "SELECT id FROM floor_map_images WHERE floor_map_id = %s",
                     (floor_map_id,),
                 )
 
@@ -45,6 +49,6 @@ class FloorMapImageRepository(FloorMapImageRepositoryImpl):
                 if result is not None:
                     floor_map_image_id = result[0]
                 else:
-                    floor_map_image_id = None
+                    return None
 
-                return floor_map_id
+                return floor_map_image_id

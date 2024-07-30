@@ -9,7 +9,7 @@ class WalkingParameter:
 
     def get_id(self) -> str:
         if self.__id is None:
-            raise ValueError("Not found")
+            raise ValueError("Not")
 
         return self.__id
 

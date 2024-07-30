@@ -1,9 +1,6 @@
 from typing import Annotated
 
 from application.services.move_pedestrian_service import CreateWalkingSampleService
-from config.const.amount import STEP
-from domain.models.angle_converter.angle_converter import AngleConverter
-from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from infrastructure.persistence.repository.coordinate_repository import (
     RealtimeCoordinateRepository,
@@ -15,6 +12,7 @@ from infrastructure.persistence.repository.particle_repository import ParticleRe
 from infrastructure.persistence.repository.raw_data_repository import RawDataRepository
 from infrastructure.persistence.repository.trajectory_repository import (
     RealtimeTrajectoryRepository,
+    TrajectoryRepository,
 )
 from infrastructure.persistence.repository.walking_sample_repository import (
     RealtimeWalkingSampleRepository,
@@ -35,6 +33,7 @@ router = APIRouter()
 move_pedestrian_service = CreateWalkingSampleService(
     raw_data_repo=RawDataRepository(),
     particle_repo=ParticleRepository(),
+    trajectory_repo=TrajectoryRepository(),
     floor_map_image_repo=FloorMapImageRepository(),
     realtime_coordinate_repo=RealtimeCoordinateRepository(),
     realtime_trajectory_repo=RealtimeTrajectoryRepository(),
@@ -53,19 +52,9 @@ async def move_pedestrian(
     try:
         raw_data_file = await rawDataFile.read()
 
-        angle_converter = AngleConverter(raw_data_file=raw_data_file)
-        angle_changed = angle_converter.calculate_cumulative_angle()
-
-        walking_parameter = WalkingParameter(
-            id=None,
-            step=STEP,
-            angle_changed=angle_changed,
-        )
-
-        estimated_position = move_pedestrian_service.run(
+        estimated_position, walking_parameter = move_pedestrian_service.run(
             trajectory_id=trajectoryId,
             raw_data_file=raw_data_file,
-            walking_parameter=walking_parameter,
         )
 
         return CreateWalkingSampleResponse(

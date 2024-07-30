@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from typing import Optional
 
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from psycopg2.extensions import connection
@@ -18,7 +19,9 @@ class RealtimeWalkingSampleRepositoryImpl(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_latest_id_for_realtime_id(self, conn: connection, realtime_id: str) -> str:
+    def find_latest_id_for_realtime_id(
+        self, conn: connection, realtime_id: str
+    ) -> Optional[str]:
         pass
 
 

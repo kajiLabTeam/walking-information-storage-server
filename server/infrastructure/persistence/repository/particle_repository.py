@@ -17,7 +17,7 @@ class ParticleRepository(ParticleRepositoryImpl):
                 for particle in particle_collection.get_particles():
                     ulid = ULID()
                     cursor.execute(
-                        "INSERT INTO particle (id, x, y, weight, direction, realtime_walking_sample_id) VALUES (%s, %s, %s, %s, %s, %s)",
+                        "INSERT INTO particles (id, x, y, weight, direction, realtime_walking_sample_id) VALUES (%s, %s, %s, %s, %s, %s)",
                         (
                             str(ulid),
                             particle.get_x(),
@@ -35,7 +35,7 @@ class ParticleRepository(ParticleRepositoryImpl):
         with conn as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "SELECT x, y, weight, direction FROM particle WHERE realtime_walking_sample_id = %s",
+                    "SELECT x, y, weight, direction FROM particles WHERE realtime_walking_sample_id = %s",
                     (realtime_walking_sample_id,),
                 )
                 for x, y, weight, direction in cursor.fetchall():

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from domain.repository_impl.walking_sample_repository_impl import (
     ModifiedWalkingSampleRepositoryImpl,
@@ -15,7 +17,7 @@ class RealtimeWalkingSampleRepository(RealtimeWalkingSampleRepositoryImpl):
             with conn.cursor() as cursor:
                 ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO id, step, angle_changed, realtime_id VALUES (%s, %s, %s, %s)",
+                    "INSERT INTO realtime_walking_samples (id, step, angle_changed, realtime_id) VALUES (%s, %s, %s, %s) RETURNING id",
                     (
                         str(ulid),
                         walking_sample.get_step(),
@@ -23,6 +25,17 @@ class RealtimeWalkingSampleRepository(RealtimeWalkingSampleRepositoryImpl):
                         realtime_id,
                     ),
                 )
+
+                row = cursor.fetchone()
+                if row is not None:
+                    walking_sample = WalkingParameter(
+                        id=row[0],
+                        step=walking_sample.get_step(),
+                        angle_changed=walking_sample.get_angle_changed(),
+                    )
+                else:
+                    raise ValueError("Failed to save realtime walking sample")
+
                 return walking_sample
 
     def find_latest_for_realtime_id(
@@ -31,7 +44,7 @@ class RealtimeWalkingSampleRepository(RealtimeWalkingSampleRepositoryImpl):
         with conn as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "SELECT id, step, angle_changed FROM realtime_walking_sample WHERE realtime_id = %s ORDER BY created_at DESC LIMIT 1",
+                    "SELECT id, step, angle_changed FROM realtime_walking_samples WHERE realtime_id = %s ORDER BY created_at DESC LIMIT 1",
                     (realtime_id,),
                 )
                 row = cursor.fetchone()
@@ -40,16 +53,18 @@ class RealtimeWalkingSampleRepository(RealtimeWalkingSampleRepositoryImpl):
 
                 return WalkingParameter(id=row[0], step=row[1], angle_changed=row[2])
 
-    def find_latest_id_for_realtime_id(self, conn: connection, realtime_id: str) -> str:
+    def find_latest_id_for_realtime_id(
+        self, conn: connection, realtime_id: str
+    ) -> Optional[str]:
         with conn as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "SELECT id FROM realtime_walking_sample WHERE realtime_id = %s ORDER BY created_at DESC LIMIT 1",
+                    "SELECT id FROM realtime_walking_samples WHERE realtime_id = %s ORDER BY created_at DESC LIMIT 1",
                     (realtime_id,),
                 )
                 row = cursor.fetchone()
                 if row is None:
-                    raise ValueError("Not found")
+                    return None
 
                 return row[0]
 

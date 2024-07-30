@@ -18,7 +18,7 @@ class RealtimeCoordinateRepository(RealtimeCoordinateRepositoryImpl):
             with conn.cursor() as cursor:
                 ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO realtime_coordinate (id, x, y, realtime_walking_sample_id) VALUES (%s, %s, %s, %s)",
+                    "INSERT INTO realtime_coordinates (id, x, y, realtime_walking_sample_id) VALUES (%s, %s, %s, %s)",
                     (
                         str(ulid),
                         estimated_position.get_x(),
@@ -39,7 +39,7 @@ class ModifiedCoordinateRepository(ModifiedCoordinateRepositoryImpl):
             with conn.cursor() as cursor:
                 ulid = ULID()
                 cursor.execute(
-                    "INSERT INTO modified_coordinate (id, x, y, modified_walking_sample_id) VALUES (%s, %s, %s, %s)",
+                    "INSERT INTO modified_coordinates (id, x, y, modified_walking_sample_id) VALUES (%s, %s, %s, %s)",
                     (
                         str(ulid),
                         estimated_position.get_x(),

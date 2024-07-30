@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from typing import Optional
 
 from psycopg2.extensions import connection
 
@@ -15,5 +16,7 @@ class FloorMapImageRepositoryImpl(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_for_floor_map_id(self, conn: connection, floor_map_id: str) -> str:
+    def find_for_floor_map_id(
+        self, conn: connection, floor_map_id: str
+    ) -> Optional[str]:
         pass
