@@ -8,12 +8,12 @@ from pydantic import BaseModel
 
 
 class StartWalkingRequest(BaseModel):
-    pedestrian_id: str
-    floor_map_id: str
+    pedestrianId: str
+    floorMapId: str
 
 
 class StartWalkingResponse(BaseModel):
-    trajectory_id: str
+    trajectoryId: str
 
 
 router = APIRouter()
@@ -31,11 +31,11 @@ async def start_walking(request: StartWalkingRequest):
     """
     try:
         trajectory_id = start_walking_service.run(
-            pedestrian_id=request.pedestrian_id,
-            floor_map_id=request.floor_map_id,
+            pedestrian_id=request.pedestrianId,
+            floor_map_id=request.floorMapId,
         )
 
-        return StartWalkingResponse(trajectory_id=trajectory_id)
+        return StartWalkingResponse(trajectoryId=trajectory_id)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e

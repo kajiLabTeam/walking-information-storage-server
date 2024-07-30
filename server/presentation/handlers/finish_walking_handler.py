@@ -7,11 +7,11 @@ from pydantic import BaseModel
 
 
 class FinishWalkingRequest(BaseModel):
-    trajectory_id: str
+    trajectoryId: str
 
 
 class FinishWalkingResponse(BaseModel):
-    trajectory_id: str
+    trajectoryId: str
 
 
 router = APIRouter()
@@ -25,9 +25,9 @@ async def finish_walking(request: FinishWalkingRequest):
     歩行者が歩行を終了することをサーバに通知するためのエンドポイント
     """
     try:
-        finish_walking_service.run(trajectory_id=request.trajectory_id)
+        finish_walking_service.run(trajectory_id=request.trajectoryId)
 
-        return FinishWalkingResponse(trajectory_id=request.trajectory_id)
+        return FinishWalkingResponse(trajectoryId=request.trajectoryId)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e

@@ -4,21 +4,13 @@ from typing import Annotated
 from application.services.health_check_service import HealthCheckService
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
-
-
-class CheckMinIOHealthResponse(BaseModel):
-    download_file: bytes
-
 
 health_check_service = HealthCheckService()
 
 router = APIRouter()
 
 
-@router.post(
-    "/api/health/minio/csv", response_model=CheckMinIOHealthResponse, status_code=201
-)
+@router.post("/api/health/minio/csv", status_code=201)
 async def check_minio_csv_health(
     bucketName: Annotated[str, Form()],
     uploadFile: Annotated[UploadFile, File()],
@@ -43,9 +35,7 @@ async def check_minio_csv_health(
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-@router.post(
-    "/api/health/minio/img", response_model=CheckMinIOHealthResponse, status_code=201
-)
+@router.post("/api/health/minio/img", status_code=201)
 async def check_minio_image_health(
     bucketName: Annotated[str, Form()],
     uploadFile: Annotated[UploadFile, File()],
