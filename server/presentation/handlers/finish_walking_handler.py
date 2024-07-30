@@ -19,7 +19,9 @@ router = APIRouter()
 finish_walking_service = FinishWalkingService(trajectory_repo=TrajectoryRepository())
 
 
-@router.post("/api/walk/finish", response_model=FinishWalkingRequest, status_code=201)
+@router.post(
+    "/api/walking/finish", response_model=FinishWalkingRequest, status_code=201
+)
 async def finish_walking(request: FinishWalkingRequest):
     """
     歩行者が歩行を終了することをサーバに通知するためのエンドポイント

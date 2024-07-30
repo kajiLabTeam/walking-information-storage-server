@@ -24,7 +24,7 @@ start_walking_service = StartWalkingService(
 )
 
 
-@router.post("/api/walk/start", response_model=StartWalkingResponse, status_code=201)
+@router.post("/api/walking/start", response_model=StartWalkingResponse, status_code=201)
 async def start_walking(request: StartWalkingRequest):
     """
     クライアントが歩行を開始することをサーバに通知するためのエンドポイント
