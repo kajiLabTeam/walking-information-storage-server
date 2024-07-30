@@ -106,6 +106,7 @@ CREATE TABLE particles (
     id VARCHAR(26) PRIMARY KEY,
     x DECIMAL(10, 2) NOT NULL,
     y DECIMAL(10, 2) NOT NULL,
+    direction DECIMAL(5, 2) NOT NULL,
     weight DECIMAL(5, 2) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id)
