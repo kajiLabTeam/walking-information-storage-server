@@ -160,6 +160,5 @@ cython_debug/
 #.idea/
 
 # 
-docker/external-service/minio/data/
-docker/external-service/postgres/data/
+docker/postgres/data/
 

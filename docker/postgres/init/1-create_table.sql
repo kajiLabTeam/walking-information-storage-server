@@ -96,8 +96,21 @@ CREATE TABLE finger_prints (
     realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id)
 );
 
-CREATE TABLE raw_data (
+CREATE TABLE gyroscopes (
     id VARCHAR(26) PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id)
+);
+
+CREATE TABLE accelerations (
+    id VARCHAR(26) PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id)
+);
+
+CREATE TABLE atmospheric_pressure (
+    id VARCHAR(26) PRIMARY KEY,
+    value DECIMAL(5, 2) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     realtime_walking_sample_id VARCHAR(26) REFERENCES realtime_walking_samples(id)
 );
