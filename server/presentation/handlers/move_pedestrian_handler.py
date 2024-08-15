@@ -8,8 +8,10 @@ from infrastructure.persistence.repository.coordinate_repository import (
 from infrastructure.persistence.repository.floor_map_repository import (
     FloorMapImageRepository,
 )
+from infrastructure.persistence.repository.gyroscope_repository import (
+    GyroscopeRepository,
+)
 from infrastructure.persistence.repository.particle_repository import ParticleRepository
-from infrastructure.persistence.repository.raw_data_repository import RawDataRepository
 from infrastructure.persistence.repository.trajectory_repository import (
     RealtimeTrajectoryRepository,
     TrajectoryRepository,
@@ -31,8 +33,8 @@ class CreateWalkingSampleResponse(BaseModel):
 router = APIRouter()
 
 move_pedestrian_service = CreateWalkingSampleService(
-    raw_data_repo=RawDataRepository(),
     particle_repo=ParticleRepository(),
+    gyroscope_repo=GyroscopeRepository(),
     trajectory_repo=TrajectoryRepository(),
     floor_map_image_repo=FloorMapImageRepository(),
     realtime_coordinate_repo=RealtimeCoordinateRepository(),
@@ -44,13 +46,13 @@ move_pedestrian_service = CreateWalkingSampleService(
 @router.post("/api/walk", response_model=CreateWalkingSampleResponse, status_code=201)
 async def move_pedestrian(
     trajectoryId: Annotated[str, Form()],
-    rawDataFile: Annotated[UploadFile, File()],
+    gyroscopeFile: Annotated[UploadFile, File()],
 ):
     """
     クライアントが歩行開始からの歩行データをサーバに送信するためのエンドポイント
     """
     try:
-        raw_data_file = await rawDataFile.read()
+        raw_data_file = await gyroscopeFile.read()
 
         estimated_position, walking_parameter = move_pedestrian_service.run(
             trajectory_id=trajectoryId,

@@ -24,17 +24,4 @@ class AngleConverter:
             window=window_gayo, center=True
         ).mean() * (180 / np.pi)
 
-        angle_df = (
-            self.__gyro_df.groupby("time_unit")
-            .apply(
-                lambda df: pd.Series(
-                    {
-                        "t": df["t"].iloc[0],  # 各グループの開始時間
-                        "angle_x": np.trapz(df["angle_x"], df["t"]),  # type: ignore
-                    }
-                )
-            )
-            .reset_index(drop=True)
-        )
-
         return int(self.__gyro_df["angle_x"].max())

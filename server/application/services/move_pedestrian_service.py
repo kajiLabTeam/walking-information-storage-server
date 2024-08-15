@@ -1,8 +1,8 @@
 from typing import Tuple
 
 from config.const.amount import STEP
-from config.const.bucket import FLOOR_MAP_IMAGE_BUCKET_NAME, RAW_DATA_FILE_BUCKET_NAME
-from config.const.extension import FLOOR_MAP_EXTENSION, RAW_DATA_EXTENSION
+from config.const.bucket import FLOOR_MAP_IMAGE_BUCKET_NAME, GYROSCOPE_FILE_BUCKET_NAME
+from config.const.extension import FLOOR_MAP_EXTENSION, GYROSCOPE_EXTENSION
 from domain.models.angle_converter.angle_converter import AngleConverter
 from domain.models.estimated_particle.estimated_particle import (
     EstimatedParticle,
@@ -15,8 +15,8 @@ from domain.repository_impl.coordinate_repository_impl import (
     RealtimeCoordinateRepositoryImpl,
 )
 from domain.repository_impl.floor_map_repository_impl import FloorMapImageRepositoryImpl
+from domain.repository_impl.gyroscope_repository_impl import GyroscopeRepositoryImpl
 from domain.repository_impl.particle_repository_impl import ParticleRepositoryImpl
-from domain.repository_impl.raw_data_repository_impl import RawDataRepositoryImpl
 from domain.repository_impl.trajectory_repository_impl import (
     RealtimeTrajectoryRepositoryImpl,
     TrajectoryRepositoryImpl,
@@ -31,16 +31,16 @@ from infrastructure.external.services.file_service import FileService
 class CreateWalkingSampleService:
     def __init__(
         self,
-        raw_data_repo: RawDataRepositoryImpl,
         particle_repo: ParticleRepositoryImpl,
+        gyroscope_repo: GyroscopeRepositoryImpl,
         trajectory_repo: TrajectoryRepositoryImpl,
         floor_map_image_repo: FloorMapImageRepositoryImpl,
         realtime_coordinate_repo: RealtimeCoordinateRepositoryImpl,
         realtime_trajectory_repo: RealtimeTrajectoryRepositoryImpl,
         realtime_walking_sample_repo: RealtimeWalkingSampleRepositoryImpl,
     ):
-        self.__raw_data_repo = raw_data_repo
         self.__particle_repo = particle_repo
+        self.__gyroscope_repo = gyroscope_repo
         self.__trajectory_repo = trajectory_repo
         self.__floor_map_image_repo = floor_map_image_repo
         self.__realtime_coordinate_repo = realtime_coordinate_repo
@@ -145,13 +145,13 @@ class CreateWalkingSampleService:
         )
 
         # 生データを保存
-        raw_data_id = self.__raw_data_repo.save(
+        gyroscope_id = self.__gyroscope_repo.save(
             conn=conn,
             realtime_walking_sample_id=realtime_walking_sample_insert_result.get_id(),
         )
         file_service.upload(
-            bucket_type_name=RAW_DATA_FILE_BUCKET_NAME,
-            bucket_id=f"{trajectory_id}/{raw_data_id}.{RAW_DATA_EXTENSION}",
+            bucket_type_name=GYROSCOPE_FILE_BUCKET_NAME,
+            bucket_id=f"{trajectory_id}/{gyroscope_id}.{GYROSCOPE_EXTENSION}",
             file=raw_data_file,
         )
 
