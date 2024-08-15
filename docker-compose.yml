@@ -1,14 +1,13 @@
-version: "3.9"
-
 services:
   postgres:
     container_name: postgres
-    image: postgres:15
+    build: 
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    volumes:
-      - ./docker/external-service/postgres/init:/docker-entrypoint-initdb.d
-      - ./docker/external-service/postgres/data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
