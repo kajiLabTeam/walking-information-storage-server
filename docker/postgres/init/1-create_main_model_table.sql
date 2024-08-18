@@ -1,5 +1,3 @@
-CREATE DATABASE indoor_location_estimation;
-
 \c indoor_location_estimation;
 
 CREATE TABLE floors (
