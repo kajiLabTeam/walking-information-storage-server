@@ -56,6 +56,11 @@ class CreateWalkingSampleService:
         s3 = MinIOConnection.connect()
         file_service = FileService(s3)
 
+        # 軌跡IDがない場合つまり歩行開始していない場合は、新規に軌跡IDを生成
+        trajectory_id = self.__trajectory_repo.save(
+            conn=conn, is_walking=True, floor_id=floor_id
+        )
+
         # 歩行データから、歩行パラメータを取得
         angle_converter = AngleConverter(raw_data_file=raw_data_file)
         angle_changed = angle_converter.calculate_cumulative_angle()
