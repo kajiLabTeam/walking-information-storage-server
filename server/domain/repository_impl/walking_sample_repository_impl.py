@@ -1,33 +1,64 @@
 from abc import ABCMeta, abstractmethod
 from typing import Optional
 
+from domain.models.estimated_position.estimated_position import EstimatedPosition
+from domain.models.particle_collection.particle_collection import ParticleCollection
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from psycopg2.extensions import connection
 
 
-class RealtimeWalkingSampleRepositoryImpl(metaclass=ABCMeta):
+class WalkingSampleRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, realtime_id: str, walking_sample: WalkingParameter
+        self,
+        conn: connection,
+        is_converged: bool,
+        trajectory_id: str,
     ) -> WalkingParameter:
         pass
 
     @abstractmethod
-    def find_latest_for_realtime_id(
-        self, conn: connection, realtime_id: str
+    def find_latest_for_trajectory_id(
+        self, conn: connection, trajectory_id: str
     ) -> WalkingParameter:
         pass
 
     @abstractmethod
-    def find_latest_id_for_realtime_id(
-        self, conn: connection, realtime_id: str
+    def find_latest_id_for_trajectory_id(
+        self, conn: connection, trajectory_id: str
     ) -> Optional[str]:
         pass
 
 
-class ModifiedWalkingSampleRepositoryImpl(metaclass=ABCMeta):
+class ParticleRepositoryImpl(metaclass=ABCMeta):
+    @abstractmethod
+    def save_all(
+        self,
+        conn: connection,
+        walking_sample_id: str,
+        particle_collection: ParticleCollection,
+    ) -> None:
+        pass
+
+    @abstractmethod
+    def find_for_walking_sample_id(
+        self, conn: connection, walking_sample_id: str
+    ) -> ParticleCollection:
+        pass
+
+
+class EstimatedPositionRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, modified_id: str, walking_sample: WalkingParameter
-    ) -> WalkingParameter:
+        self,
+        conn: connection,
+        estimated_position: EstimatedPosition,
+        walking_sample_id: str,
+    ) -> None:
+        pass
+
+    @abstractmethod
+    def find_for_walking_sample_id(
+        self, conn: connection, walking_sample_id: str
+    ) -> ParticleCollection:
         pass
