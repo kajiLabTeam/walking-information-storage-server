@@ -7,5 +7,7 @@ class PedestrianRepository(PedestrianRepositoryImpl):
     def save(self, conn: connection) -> None:
         with conn as conn:
             with conn.cursor() as cursor:
-                ulid = ULID()
-                cursor.execute("INSERT INTO pedestrians (id) VALUES (%s)", (str(ulid)))
+                pedestrian_id = str(ULID())
+                cursor.execute(
+                    "INSERT INTO pedestrians (id) VALUES (%s)", (pedestrian_id,)
+                )
