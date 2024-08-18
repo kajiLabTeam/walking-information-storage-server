@@ -1,16 +1,27 @@
 -include .env
 
-up:
+app-up:
 	docker compose build && docker compose up -d
 
-db:
-	docker exec -it $(POSTGRES_HOST) psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
+app-db:
+	docker exec -it $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME)
 
-down:
+app-down:
 	docker compose down
 
-logs:
+app-logs:
 	docker compose logs -f
 
-restart:
+app-restart:
 	docker compose down && docker compose build && docker compose up -d && docker compose logs -f
+
+spy-up:
+	docker compose -f docker-compose-spy.yml up --build --force-recreate spy
+	docker rm spy
+	docker compose -f docker-compose-spy.yml up -d --build nginx_schemaspy
+
+spy-down:
+	docker compose -f docker-compose-spy.yml down --remove-orphans
+
+spy-destroy:
+	docker compose -f docker-compose-spy.yml down --rmi all --volumes
