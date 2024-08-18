@@ -11,7 +11,7 @@ RUN apk --update add graphviz ttf-dejavu gettext && \
     apk del .builddep && \
     rm -rf /var/cache/apk/*
 
-COPY ./schemaspy.properties.template /schemaspy.properties.template
+COPY ./docker/schemaspy/schemaspy.properties.template /schemaspy.properties.template
 COPY ./docker/schemaspy/run_schemaspy.sh /usr/local/bin/run_schemaspy.sh
 RUN chmod +x /usr/local/bin/run_schemaspy.sh
 
