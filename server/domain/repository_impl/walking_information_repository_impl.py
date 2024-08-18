@@ -23,13 +23,18 @@ class AccelerometerRepositoryImpl(metaclass=ABCMeta):
 
 class RatioWaveRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save(self, conn: connection, walking_information_id: str, rssi: float) -> str:
+    def save(
+        self,
+        conn: connection,
+        rssi: float,
+        walking_information_id: str,
+    ) -> str:
         pass
 
 
 class AtmosphericPressureRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, walking_information_id: str, pressure: float
+        self, conn: connection, pressure: float, walking_information_id: str
     ) -> str:
         pass

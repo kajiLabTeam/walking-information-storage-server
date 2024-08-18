@@ -3,7 +3,6 @@ from typing import Optional
 
 from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.particle_collection.particle_collection import ParticleCollection
-from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from psycopg2.extensions import connection
 
 
@@ -14,13 +13,8 @@ class WalkingSampleRepositoryImpl(metaclass=ABCMeta):
         conn: connection,
         is_converged: bool,
         trajectory_id: str,
-    ) -> WalkingParameter:
-        pass
-
-    @abstractmethod
-    def find_latest_for_trajectory_id(
-        self, conn: connection, trajectory_id: str
-    ) -> WalkingParameter:
+        walking_information_id: str,
+    ) -> str:
         pass
 
     @abstractmethod
@@ -54,11 +48,5 @@ class EstimatedPositionRepositoryImpl(metaclass=ABCMeta):
         conn: connection,
         estimated_position: EstimatedPosition,
         walking_sample_id: str,
-    ) -> None:
-        pass
-
-    @abstractmethod
-    def find_for_walking_sample_id(
-        self, conn: connection, walking_sample_id: str
-    ) -> ParticleCollection:
+    ) -> str:
         pass

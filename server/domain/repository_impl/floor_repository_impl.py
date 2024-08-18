@@ -20,19 +20,11 @@ class FloorRepositoryImpl(metaclass=ABCMeta):
 
 class FloorMapRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save(self, conn: connection) -> None:
-        pass
-
-
-class FloorMapImageRepositoryImpl(metaclass=ABCMeta):
-    @abstractmethod
     def save(self, conn: connection, floor_id: str, floor_map: bytes) -> str:
         pass
 
     @abstractmethod
-    def find_for_floor_map_id(
-        self, conn: connection, floor_map_id: str
-    ) -> Optional[str]:
+    def find_for_floor_id(self, conn: connection, floor_id: str) -> Optional[str]:
         pass
 
 
