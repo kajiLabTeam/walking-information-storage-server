@@ -11,21 +11,22 @@ from domain.models.estimated_particle.estimated_particle import (
 from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
-from domain.repository_impl.coordinate_repository_impl import (
-    RealtimeCoordinateRepositoryImpl,
-)
-from domain.repository_impl.floor_map_repository_impl import FloorMapImageRepositoryImpl
-from domain.repository_impl.gyroscope_repository_impl import GyroscopeRepositoryImpl
-from domain.repository_impl.particle_repository_impl import ParticleRepositoryImpl
-from domain.repository_impl.trajectory_repository_impl import (
-    RealtimeTrajectoryRepositoryImpl,
-    TrajectoryRepositoryImpl,
+from domain.repository_impl.trajectory_repository_impl import TrajectoryRepositoryImpl
+from domain.repository_impl.walking_information_repository_impl import (
+    GyroscopeRepositoryImpl,
+    WalkingInformationRepositoryImpl,
 )
 from domain.repository_impl.walking_sample_repository_impl import (
-    RealtimeWalkingSampleRepositoryImpl,
+    EstimatedPositionRepositoryImpl,
+    ParticleRepositoryImpl,
+    WalkingSampleRepositoryImpl,
 )
 from infrastructure.connection import DBConnection, MinIOConnection
 from infrastructure.external.services.file_service import FileService
+
+from server.domain.repository_impl.floor_repository_impl import (
+    FloorMapImageRepositoryImpl,
+)
 
 
 class CreateWalkingSampleService:
@@ -34,21 +35,22 @@ class CreateWalkingSampleService:
         particle_repo: ParticleRepositoryImpl,
         gyroscope_repo: GyroscopeRepositoryImpl,
         trajectory_repo: TrajectoryRepositoryImpl,
+        walking_sample_repo: WalkingSampleRepositoryImpl,
         floor_map_image_repo: FloorMapImageRepositoryImpl,
-        realtime_coordinate_repo: RealtimeCoordinateRepositoryImpl,
-        realtime_trajectory_repo: RealtimeTrajectoryRepositoryImpl,
-        realtime_walking_sample_repo: RealtimeWalkingSampleRepositoryImpl,
+        estimated_position_repo: EstimatedPositionRepositoryImpl,
+        walking_information_repo: WalkingInformationRepositoryImpl,
     ):
         self.__particle_repo = particle_repo
         self.__gyroscope_repo = gyroscope_repo
         self.__trajectory_repo = trajectory_repo
+        self.__walking_sample_repo = walking_sample_repo
         self.__floor_map_image_repo = floor_map_image_repo
-        self.__realtime_coordinate_repo = realtime_coordinate_repo
-        self.__realtime_trajectory_repo = realtime_trajectory_repo
-        self.__realtime_walking_sample_repo = realtime_walking_sample_repo
+        self.__estimated_position_repo = estimated_position_repo
+        self.__walking_information_repo = walking_information_repo
 
     def run(
         self,
+        pedestrian_id: str,
         trajectory_id: str,
         raw_data_file: bytes,
     ) -> Tuple[EstimatedPosition, WalkingParameter]:
@@ -66,13 +68,8 @@ class CreateWalkingSampleService:
         )
 
         # 引数のidを元に、必要な情報を取得
-        realtime_id = self.__realtime_trajectory_repo.find_for_trajectory_id(
+        walking_sample_id = self.__walking_sample_repo.find_latest_id_for_trajectory_id(
             conn=conn, trajectory_id=trajectory_id
-        )
-        realtime_walking_sample_id = (
-            self.__realtime_walking_sample_repo.find_latest_id_for_realtime_id(
-                conn=conn, realtime_id=realtime_id
-            )
         )
 
         floor_map_id = self.__trajectory_repo.find_for_id(
@@ -91,7 +88,7 @@ class CreateWalkingSampleService:
         )
 
         # 歩行サンプルがない場合は、初期のパーティクルを生成
-        if realtime_walking_sample_id is None:
+        if walking_sample_id is None:
             estimated_particle = EstimatedParticleFactory.create(
                 floor_map=floor_map,
                 initial_walking_parameter=walking_parameter,
@@ -99,8 +96,8 @@ class CreateWalkingSampleService:
         else:
             # 最新のパーティクルの状態を取得
             latest_particle_collection = (
-                self.__particle_repo.find_for_realtime_walking_sample_id(
-                    conn=conn, realtime_walking_sample_id=realtime_walking_sample_id
+                self.__particle_repo.find_for_walking_sample_id(
+                    conn=conn, walking_sample_id=walking_sample_id
                 )
             )
             estimated_particle = EstimatedParticle(
@@ -126,28 +123,33 @@ class CreateWalkingSampleService:
         estimated_position = move_estimation_particles.estimate_position()
 
         # パーティクルフィルタの結果を保存
-        realtime_walking_sample_insert_result = (
-            self.__realtime_walking_sample_repo.save(
-                conn=conn, realtime_id=realtime_id, walking_sample=walking_parameter
-            )
+        walking_sample = self.__walking_sample_repo.save(
+            conn=conn,
+            is_converged=move_estimation_particles.is_converged(),
+            trajectory_id=trajectory_id,
         )
         _ = self.__particle_repo.save_all(
             conn=conn,
-            realtime_walking_sample_id=realtime_walking_sample_insert_result.get_id(),
+            walking_sample_id=walking_sample.get_id(),
             particle_collection=move_estimation_particles.get_particle_collection(),
         )
 
         # 推定位置を保存
-        _ = self.__realtime_coordinate_repo.save(
+        self.__estimated_position_repo.save(
             conn=conn,
-            realtime_walking_sample_id=realtime_walking_sample_insert_result.get_id(),
             estimated_position=estimated_position,
+            walking_sample_id=walking_sample.get_id(),
         )
 
-        # 生データを保存
+        # 歩行情報を保存
+        walking_information_id = self.__walking_information_repo.save(
+            conn=conn,
+            pedestrian_id=pedestrian_id,
+        )
+
         gyroscope_id = self.__gyroscope_repo.save(
             conn=conn,
-            realtime_walking_sample_id=realtime_walking_sample_insert_result.get_id(),
+            walking_information_id=walking_information_id,
         )
         file_service.upload(
             bucket_type_name=GYROSCOPE_FILE_BUCKET_NAME,

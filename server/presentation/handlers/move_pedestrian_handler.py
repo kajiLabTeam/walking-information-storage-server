@@ -45,6 +45,7 @@ move_pedestrian_service = CreateWalkingSampleService(
 
 @router.post("/api/walk", response_model=CreateWalkingSampleResponse, status_code=201)
 async def move_pedestrian(
+    pedestrianId: Annotated[str, Form()],
     trajectoryId: Annotated[str, Form()],
     gyroscopeFile: Annotated[UploadFile, File()],
 ):
@@ -55,6 +56,7 @@ async def move_pedestrian(
         raw_data_file = await gyroscopeFile.read()
 
         estimated_position, walking_parameter = move_pedestrian_service.run(
+            pedestrian_id=pedestrianId,
             trajectory_id=trajectoryId,
             raw_data_file=raw_data_file,
         )

@@ -1,11 +1,12 @@
 from typing import Optional
 
-from domain.repository_impl.floor_map_repository_impl import (
+from psycopg2.extensions import connection
+from ulid import ULID
+
+from server.domain.repository_impl.floor_repository_impl import (
     FloorMapImageRepositoryImpl,
     FloorMapRepositoryImpl,
 )
-from psycopg2.extensions import connection
-from ulid import ULID
 
 
 class FloorMapRepository(FloorMapRepositoryImpl):

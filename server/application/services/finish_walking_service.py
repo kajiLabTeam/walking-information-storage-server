@@ -12,6 +12,8 @@ class FinishWalkingService:
     def run(self, trajectory_id: str) -> str:
         conn = DBConnection.connect()
 
-        self.__trajectory_repo.update(conn=conn, trajectory_id=trajectory_id)
+        self.__trajectory_repo.update(
+            conn=conn, is_walking=False, trajectory_id=trajectory_id
+        )
 
         return trajectory_id
