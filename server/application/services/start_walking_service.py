@@ -9,7 +9,7 @@ class StartWalkingService:
     ):
         self.__trajectory_repo = trajectory_repo
 
-    def run(self, floor_id: str) -> str:
+    def run(self, pedestrian_id: str, floor_id: str) -> str:
         conn = DBConnection.connect()
 
         trajectory_id = self.__trajectory_repo.save(
