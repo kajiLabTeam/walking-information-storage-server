@@ -1,7 +1,9 @@
+from typing import Optional
+
 from domain.repository_impl.trajectory_repository_impl import TrajectoryRepositoryImpl
 from psycopg2.extensions import connection
 from ulid import ULID
-from typing import Optional
+
 
 class TrajectoryRepository(TrajectoryRepositoryImpl):
     def save(self, conn: connection, is_walking: bool, floor_id: str) -> str:

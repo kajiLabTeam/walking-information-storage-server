@@ -1,5 +1,6 @@
 from typing import Tuple
 
+from application.errors.application_error import ApplicationError, ApplicationErrorType
 from config.const.amount import STEP
 from config.const.bucket import FLOOR_MAP_IMAGE_BUCKET_NAME, GYROSCOPE_FILE_BUCKET_NAME
 from config.const.extension import FLOOR_MAP_EXTENSION, GYROSCOPE_EXTENSION
@@ -56,10 +57,14 @@ class CreateWalkingSampleService:
         s3 = MinIOConnection.connect()
         file_service = FileService(s3)
 
-        # 軌跡IDがない場合つまり歩行開始していない場合は、新規に軌跡IDを生成
-        trajectory_id = self.__trajectory_repo.save(
-            conn=conn, is_walking=True, floor_id=floor_id
-        )
+        # 軌跡IDがない場合は、エラーを返す
+        if not self.__trajectory_repo.find_for_id(
+            conn=conn, trajectory_id=trajectory_id
+        ):
+            raise ApplicationError(
+                error_type=ApplicationErrorType.NOT_WALKING_START,
+                message="The trajectory is not walking start.",
+            )
 
         # 歩行データから、歩行パラメータを取得
         angle_converter = AngleConverter(raw_data_file=raw_data_file)

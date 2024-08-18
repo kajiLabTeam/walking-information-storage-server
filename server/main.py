@@ -1,3 +1,4 @@
+from application.errors.application_error import ApplicationError
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -29,6 +30,14 @@ app.include_router(start_walking_router)
 app.include_router(finish_walking_router)
 app.include_router(move_pedestrian_router)
 app.include_router(health_check_router)
+
+
+@app.exception_handler(ApplicationError)
+async def application_error_handler(request: Request, exc: ApplicationError):
+    return JSONResponse(
+        status_code=412,
+        content={"error": exc.args[0]},
+    )
 
 
 @app.exception_handler(HTTPException)

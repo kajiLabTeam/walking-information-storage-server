@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
+from typing import Optional
 
 from psycopg2.extensions import connection
-from typing import Optional
+
 
 class TrajectoryRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
