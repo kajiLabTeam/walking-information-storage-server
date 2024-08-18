@@ -2,22 +2,18 @@ from typing import Annotated
 
 from application.services.move_pedestrian_service import CreateWalkingSampleService
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
-from infrastructure.persistence.repository.coordinate_repository import (
-    RealtimeCoordinateRepository,
-)
-from infrastructure.persistence.repository.floor_map_repository import (
-    FloorMapImageRepository,
-)
-from infrastructure.persistence.repository.gyroscope_repository import (
-    GyroscopeRepository,
-)
-from infrastructure.persistence.repository.particle_repository import ParticleRepository
+from infrastructure.persistence.repository.floor_repository import FloorMapRepository
 from infrastructure.persistence.repository.trajectory_repository import (
-    RealtimeTrajectoryRepository,
     TrajectoryRepository,
 )
+from infrastructure.persistence.repository.walking_information_repository import (
+    GyroscopeRepository,
+    WalkingInformationRepository,
+)
 from infrastructure.persistence.repository.walking_sample_repository import (
-    RealtimeWalkingSampleRepository,
+    EstimatedPositionRepository,
+    ParticleRepository,
+    WalkingSampleRepository,
 )
 from pydantic import BaseModel
 
@@ -34,17 +30,18 @@ router = APIRouter()
 
 move_pedestrian_service = CreateWalkingSampleService(
     particle_repo=ParticleRepository(),
+    floor_map_repo=FloorMapRepository(),
     gyroscope_repo=GyroscopeRepository(),
     trajectory_repo=TrajectoryRepository(),
-    floor_map_image_repo=FloorMapImageRepository(),
-    realtime_coordinate_repo=RealtimeCoordinateRepository(),
-    realtime_trajectory_repo=RealtimeTrajectoryRepository(),
-    realtime_walking_sample_repo=RealtimeWalkingSampleRepository(),
+    walking_sample_repo=WalkingSampleRepository(),
+    estimated_position_repo=EstimatedPositionRepository(),
+    walking_information_repo=WalkingInformationRepository(),
 )
 
 
 @router.post("/api/walk", response_model=CreateWalkingSampleResponse, status_code=201)
 async def move_pedestrian(
+    floorId: Annotated[str, Form()],
     pedestrianId: Annotated[str, Form()],
     trajectoryId: Annotated[str, Form()],
     gyroscopeFile: Annotated[UploadFile, File()],
@@ -56,6 +53,7 @@ async def move_pedestrian(
         raw_data_file = await gyroscopeFile.read()
 
         estimated_position, walking_parameter = move_pedestrian_service.run(
+            floor_id=floorId,
             pedestrian_id=pedestrianId,
             trajectory_id=trajectoryId,
             raw_data_file=raw_data_file,
