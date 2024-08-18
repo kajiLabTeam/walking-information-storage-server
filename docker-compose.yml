@@ -9,8 +9,11 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - trajectory-storage-network
 
   server:
     container_name: server
@@ -20,5 +23,9 @@ services:
     stdin_open: true
     ports:
       - 8000:8000
+    networks:
+      - trajectory-storage-network
 
-
+networks:
+  trajectory-storage-network:
+    driver: bridge

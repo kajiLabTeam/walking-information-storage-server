@@ -7,11 +7,11 @@ load_dotenv()
 
 class PostgresEnv:
     def __init__(self):
-        self.__host = os.getenv("POSTGRES_HOST")
-        self.__port = os.getenv("POSTGRES_PORT")
-        self.__database = os.getenv("POSTGRES_DB")
-        self.__user = os.getenv("POSTGRES_USER")
-        self.__password = os.getenv("POSTGRES_PASSWORD")
+        self.__host = os.getenv("DB_HOST")
+        self.__port = os.getenv("DB_PORT")
+        self.__database = os.getenv("DB_NAME")
+        self.__user = os.getenv("DB_USER")
+        self.__password = os.getenv("DB_PASSWORD")
 
     def get_host_of_private_value(self):
         return self.__host
