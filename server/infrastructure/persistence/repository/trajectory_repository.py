@@ -1,7 +1,7 @@
 from domain.repository_impl.trajectory_repository_impl import TrajectoryRepositoryImpl
 from psycopg2.extensions import connection
 from ulid import ULID
-
+from typing import Optional
 
 class TrajectoryRepository(TrajectoryRepositoryImpl):
     def save(self, conn: connection, is_walking: bool, floor_id: str) -> str:
@@ -19,7 +19,7 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
 
                 return trajectory_id
 
-    def find_for_id(self, conn: connection, trajectory_id: str) -> str:
+    def find_for_id(self, conn: connection, trajectory_id: str) -> Optional[str]:
         with conn as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
@@ -32,7 +32,7 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
                     trajectory_id = result[0]
                     floor_map_id = result[1]
                 else:
-                    raise ValueError("Not found")
+                    return None
 
                 return floor_map_id
 

@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
 from psycopg2.extensions import connection
-
+from typing import Optional
 
 class TrajectoryRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
@@ -9,7 +9,7 @@ class TrajectoryRepositoryImpl(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_for_id(self, conn: connection, trajectory_id: str) -> str:
+    def find_for_id(self, conn: connection, trajectory_id: str) -> Optional[str]:
         pass
 
     @abstractmethod
