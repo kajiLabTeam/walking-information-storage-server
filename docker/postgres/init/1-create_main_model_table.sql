@@ -23,18 +23,18 @@ CREATE TABLE walking_information (
     pedestrian_id VARCHAR(26) REFERENCES pedestrians(id)
 );
 
-CREATE TABLE walking_samples (
-    id VARCHAR(26) PRIMARY KEY,
-    x DECIMAL NOT NULL,
-    y DECIMAL NOT NULL,
-    is_converged BOOLEAN NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    walking_information_id VARCHAR(26) REFERENCES walking_information(id)
-);
-
 CREATE TABLE trajectories (
     id VARCHAR(26) PRIMARY KEY,
     is_walking BOOLEAN NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     floor_id VARCHAR(26) REFERENCES floors(id)
 );
+
+CREATE TABLE walking_samples (
+    id VARCHAR(26) PRIMARY KEY,
+    is_converged BOOLEAN NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    trajectory_id VARCHAR(26) REFERENCES trajectories(id),
+    walking_information_id VARCHAR(26) REFERENCES walking_information(id)
+);
+

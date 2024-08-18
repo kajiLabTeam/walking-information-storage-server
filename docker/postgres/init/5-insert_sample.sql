@@ -5,9 +5,9 @@ INSERT INTO pedestrians (id)
 VALUES
     ('01F8VYXK67BGC1F9RP1E4S9YAK');
 
-INSERT INTO floors (id)
+INSERT INTO floors (id, name)
 VALUES
-    ('01F8VYXK67BGC1F9RP1E4S9YTV');
+    ('01F8VYXK67BGC1F9RP1E4S9YTV', '14号館5階');
 
 INSERT INTO floor_maps (id, floor_id)
 VALUES
