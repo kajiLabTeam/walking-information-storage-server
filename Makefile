@@ -26,5 +26,5 @@ spy-down:
 spy-destroy:
 	docker compose -f docker-compose-spy.yml down --rmi all --volumes
 
-delete-all:
+delete:
 	rm -rf docker/postgres/data/ && rm -rf output/
