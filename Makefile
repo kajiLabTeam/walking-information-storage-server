@@ -7,7 +7,7 @@ app-db:
 	docker exec -it $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME)
 
 app-down:
-	docker compose down
+	docker compose down --remove-orphans
 
 app-destroy:
 	docker compose down --rmi all --volumes
@@ -33,4 +33,4 @@ delete:
 	rm -rf docker/postgres/data/ && rm -rf output/
 
 all-restart:
-	make delete && make app-destroy && make spy-destroy && make app-up && make spy-up
+	make delete && make app-down && make spy-down && make app-destroy && make spy-destroy && make app-up && make spy-up
