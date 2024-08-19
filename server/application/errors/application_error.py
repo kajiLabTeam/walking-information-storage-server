@@ -3,6 +3,9 @@ from enum import Enum
 
 class ApplicationErrorType(Enum):
     NOT_WALKING_START = "NotWalkingStart"
+    NOT_FLOOR_INFORMATION = "NotFloorInformation"
+    NOT_FLOOR_MAP = "NotFloorMap"
+    NOT_FLOOR = "NotFloor"
 
 
 class ApplicationError(Exception):
