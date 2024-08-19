@@ -5,6 +5,10 @@ INSERT INTO pedestrians (id)
 VALUES
     ('01F8VYXK67BGC1F9RP1E4S9YAK');
 
+INSERT INTO buildings (id, name, latitude, longitude)
+VALUES
+    ('01F8VYXK67BGC1F9RP1E4S9YAK', '14号館', 35.1847559, 137.1110031);
+
 INSERT INTO floors (id, name)
 VALUES
     ('01F8VYXK67BGC1F9RP1E4S9YTV', '14号館5階');
