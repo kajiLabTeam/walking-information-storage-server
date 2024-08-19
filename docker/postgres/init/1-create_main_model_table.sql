@@ -25,7 +25,8 @@ CREATE TABLE trajectories (
     id VARCHAR(26) PRIMARY KEY,
     is_walking BOOLEAN NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    floor_id VARCHAR(26) REFERENCES floors(id)
+    floor_id VARCHAR(26) REFERENCES floors(id),
+    pedestrian_id VARCHAR(26) REFERENCES pedestrians(id)
 );
 
 CREATE TABLE walking_samples (
@@ -33,6 +34,6 @@ CREATE TABLE walking_samples (
     is_converged BOOLEAN NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     trajectory_id VARCHAR(26) REFERENCES trajectories(id),
-    walking_information_id VARCHAR(26) REFERENCES walking_information(id)
+    walking_information_id VARCHAR(26) UNIQUE REFERENCES walking_information(id)
 );
 
