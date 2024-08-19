@@ -6,17 +6,15 @@ from ulid import ULID
 
 
 class TrajectoryRepository(TrajectoryRepositoryImpl):
-    def save(self, conn: connection, is_walking: bool, floor_id: str) -> str:
+    def save(
+        self, conn: connection, is_walking: bool, floor_id: str, pedestrian_id: str
+    ) -> str:
         with conn as conn:
             with conn.cursor() as cursor:
                 trajectory_id = str(ULID())
                 cursor.execute(
-                    "INSERT INTO trajectories (id, is_walking, floor_id) VALUES (%s, %s, %s)",
-                    (
-                        trajectory_id,
-                        is_walking,
-                        floor_id,
-                    ),
+                    "INSERT INTO trajectories (id, is_walking, floor_id, pedestrian_id) VALUES (%s, %s, %s, %s)",
+                    (trajectory_id, is_walking, floor_id, pedestrian_id),
                 )
 
                 return trajectory_id

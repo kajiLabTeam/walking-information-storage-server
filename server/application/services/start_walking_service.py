@@ -13,7 +13,7 @@ class StartWalkingService:
         conn = DBConnection.connect()
 
         trajectory_id = self.__trajectory_repo.save(
-            conn=conn, is_walking=True, floor_id=floor_id
+            conn=conn, is_walking=True, floor_id=floor_id, pedestrian_id=pedestrian_id
         )
 
         return trajectory_id

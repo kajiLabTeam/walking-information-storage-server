@@ -6,7 +6,9 @@ from psycopg2.extensions import connection
 
 class TrajectoryRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save(self, conn: connection, is_walking: bool, floor_id: str) -> str:
+    def save(
+        self, conn: connection, is_walking: bool, floor_id: str, pedestrian_id: str
+    ) -> str:
         pass
 
     @abstractmethod
