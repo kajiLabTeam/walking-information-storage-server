@@ -4,7 +4,7 @@ CREATE TABLE floor_maps (
     id VARCHAR(26) PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    floor_id VARCHAR(26) REFERENCES floors(id)
+    floor_information_id VARCHAR(26) REFERENCES floor_information(id)
 );
 
 CREATE TABLE access_points (
@@ -13,12 +13,13 @@ CREATE TABLE access_points (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP WITH TIME ZONE,
-    floor_id VARCHAR(26) REFERENCES floors(id)
+    floor_information_id VARCHAR(26) UNIQUE REFERENCES floor_information(id)
 );
 
 CREATE TABLE fp_models (
     id VARCHAR(26) PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    access_point_id VARCHAR(26) REFERENCES access_points(id)
+    access_point_id VARCHAR(26) UNIQUE REFERENCES access_points(id)
 );
+

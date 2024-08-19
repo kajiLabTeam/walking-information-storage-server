@@ -20,6 +20,12 @@ CREATE TABLE floors (
     building_id VARCHAR(26) REFERENCES buildings(id)
 );
 
+CREATE TABLE floor_information (
+    id VARCHAR(26) PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    floor_id VARCHAR(26) REFERENCES floors(id)
+);
+
 CREATE TABLE pedestrians (
     id VARCHAR(26) PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -37,8 +43,8 @@ CREATE TABLE trajectories (
     id VARCHAR(26) PRIMARY KEY,
     is_walking BOOLEAN NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    floor_id VARCHAR(26) REFERENCES floors(id),
-    pedestrian_id VARCHAR(26) REFERENCES pedestrians(id)
+    pedestrian_id VARCHAR(26) REFERENCES pedestrians(id),
+    floor_information_id VARCHAR(26) REFERENCES floor_information(id)
 );
 
 CREATE TABLE walking_samples (
