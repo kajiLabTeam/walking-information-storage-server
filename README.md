@@ -17,7 +17,7 @@ make app-up
 make db
 ```
 
-### ER ず生成
+### ER 図生成
 
 ```
 make spy-up
