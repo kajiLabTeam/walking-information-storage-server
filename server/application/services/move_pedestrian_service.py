@@ -1,18 +1,17 @@
-from typing import Tuple
-
+from application.dto.application_dto import MovePedestrianServiceDto
 from application.errors.application_error import ApplicationError, ApplicationErrorType
 from config.const.amount import STEP
-from config.const.bucket import FLOOR_MAP_IMAGE_BUCKET_NAME, GYROSCOPE_FILE_BUCKET_NAME
-from config.const.extension import FLOOR_MAP_EXTENSION, GYROSCOPE_EXTENSION
 from domain.models.angle_converter.angle_converter import AngleConverter
 from domain.models.estimated_particle.estimated_particle import (
     EstimatedParticle,
     EstimatedParticleFactory,
 )
-from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
-from domain.repository_impl.floor_repository_impl import FloorMapRepositoryImpl
+from domain.repository_impl.floor_repository_impl import (
+    FloorMapRepositoryImpl,
+    FloorRepositoryImpl,
+)
 from domain.repository_impl.trajectory_repository_impl import TrajectoryRepositoryImpl
 from domain.repository_impl.walking_information_repository_impl import (
     GyroscopeRepositoryImpl,
@@ -25,11 +24,13 @@ from domain.repository_impl.walking_sample_repository_impl import (
 )
 from infrastructure.connection import DBConnection, MinIOConnection
 from infrastructure.external.services.file_service import FileService
+from utils.bucket import get_floor_map_bucket_name, get_gyroscope_bucket_name
 
 
-class CreateWalkingSampleService:
+class MovePedestrianService:
     def __init__(
         self,
+        floor_repo: FloorRepositoryImpl,
         particle_repo: ParticleRepositoryImpl,
         floor_map_repo: FloorMapRepositoryImpl,
         gyroscope_repo: GyroscopeRepositoryImpl,
@@ -38,6 +39,7 @@ class CreateWalkingSampleService:
         estimated_position_repo: EstimatedPositionRepositoryImpl,
         walking_information_repo: WalkingInformationRepositoryImpl,
     ):
+        self.__floor_repo = floor_repo
         self.__particle_repo = particle_repo
         self.__floor_map_repo = floor_map_repo
         self.__gyroscope_repo = gyroscope_repo
@@ -48,11 +50,10 @@ class CreateWalkingSampleService:
 
     def run(
         self,
-        floor_id: str,
         pedestrian_id: str,
         trajectory_id: str,
         raw_data_file: bytes,
-    ) -> Tuple[EstimatedPosition, WalkingParameter]:
+    ) -> MovePedestrianServiceDto:
         conn = DBConnection.connect()
         s3 = MinIOConnection.connect()
         file_service = FileService(s3)
@@ -86,13 +87,40 @@ class CreateWalkingSampleService:
             conn=conn, trajectory_id=trajectory_id
         )
 
-        floor_map_id = self.__floor_map_repo.find_for_floor_id(
-            conn=conn, floor_id=floor_id
+        floor_information = self.__trajectory_repo.find_for_id(
+            conn=conn, trajectory_id=trajectory_id
         )
+        if not floor_information:
+            raise ApplicationError(
+                error_type=ApplicationErrorType.NOT_FLOOR_INFORMATION,
+                message="The floor information is not found.",
+            )
+        floor_information_id = floor_information.floor_information_id
+
+        floor_map_id = self.__floor_map_repo.find_for_floor_information_id(
+            conn=conn, floor_information_id=floor_information_id
+        )
+        if not floor_map_id:
+            raise ApplicationError(
+                error_type=ApplicationErrorType.NOT_FLOOR_MAP,
+                message="The floor map is not found.",
+            )
+
+        floor_id = self.__floor_repo.find_for_floor_information_id(
+            conn=conn, floor_information_id=floor_information_id
+        )
+        if not floor_id:
+            raise ApplicationError(
+                error_type=ApplicationErrorType.NOT_FLOOR,
+                message="The floor is not found.",
+            )
 
         floor_map_image_bytes = file_service.download(
-            bucket_type_name=FLOOR_MAP_IMAGE_BUCKET_NAME,
-            bucket_id=f"{floor_id}/{floor_map_id}.{FLOOR_MAP_EXTENSION}",
+            key=get_floor_map_bucket_name(
+                floor_id=floor_id,
+                floor_information_id=floor_information_id,
+                floor_map_id=floor_map_id,
+            )
         )
         floor_map = FloorMap(
             floor_map_image_bytes=floor_map_image_bytes,
@@ -165,9 +193,15 @@ class CreateWalkingSampleService:
             walking_information_id=walking_information_id,
         )
         file_service.upload(
-            bucket_type_name=GYROSCOPE_FILE_BUCKET_NAME,
-            bucket_id=f"{trajectory_id}/{gyroscope_id}.{GYROSCOPE_EXTENSION}",
+            key=get_gyroscope_bucket_name(
+                pedestrian_id=pedestrian_id,
+                walking_information_id=walking_information_id,
+                gyroscope_id=gyroscope_id,
+            ),
             file=raw_data_file,
         )
 
-        return estimated_position, walking_parameter
+        return MovePedestrianServiceDto(
+            estimated_position=estimated_position,
+            walking_parameter=walking_parameter,
+        )

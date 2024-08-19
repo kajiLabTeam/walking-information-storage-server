@@ -1,8 +1,11 @@
 from typing import Annotated
 
-from application.services.move_pedestrian_service import CreateWalkingSampleService
+from application.services.move_pedestrian_service import MovePedestrianService
 from fastapi import APIRouter, File, Form, UploadFile
-from infrastructure.persistence.repository.floor_repository import FloorMapRepository
+from infrastructure.persistence.repository.floor_repository import (
+    FloorMapRepository,
+    FloorRepository,
+)
 from infrastructure.persistence.repository.trajectory_repository import (
     TrajectoryRepository,
 )
@@ -21,14 +24,15 @@ from pydantic import BaseModel
 class CreateWalkingSampleResponse(BaseModel):
     x: int
     y: int
-    direction: int
+    direction: float
     step: int
     angleChanged: int
 
 
 router = APIRouter()
 
-move_pedestrian_service = CreateWalkingSampleService(
+move_pedestrian_service = MovePedestrianService(
+    floor_repo=FloorRepository(),
     particle_repo=ParticleRepository(),
     floor_map_repo=FloorMapRepository(),
     gyroscope_repo=GyroscopeRepository(),
@@ -41,7 +45,6 @@ move_pedestrian_service = CreateWalkingSampleService(
 
 @router.post("/api/walk", response_model=CreateWalkingSampleResponse, status_code=201)
 async def move_pedestrian(
-    floorId: Annotated[str, Form()],
     pedestrianId: Annotated[str, Form()],
     trajectoryId: Annotated[str, Form()],
     gyroscopeFile: Annotated[UploadFile, File()],
@@ -51,17 +54,16 @@ async def move_pedestrian(
     """
     raw_data_file = await gyroscopeFile.read()
 
-    estimated_position, walking_parameter = move_pedestrian_service.run(
-        floor_id=floorId,
+    move_pedestrian_service_dto = move_pedestrian_service.run(
         pedestrian_id=pedestrianId,
         trajectory_id=trajectoryId,
         raw_data_file=raw_data_file,
     )
 
     return CreateWalkingSampleResponse(
-        x=estimated_position.get_x(),
-        y=estimated_position.get_y(),
-        direction=int(estimated_position.get_direction()),
-        step=walking_parameter.get_step(),
-        angleChanged=walking_parameter.get_angle_changed(),
+        x=move_pedestrian_service_dto.estimated_position.get_x(),
+        y=move_pedestrian_service_dto.estimated_position.get_y(),
+        direction=move_pedestrian_service_dto.estimated_position.get_direction(),
+        step=move_pedestrian_service_dto.walking_parameter.get_step(),
+        angleChanged=move_pedestrian_service_dto.walking_parameter.get_angle_changed(),
     )

@@ -10,12 +10,11 @@ class HealthCheckService:
         file_service = FileService(s3)
 
         file_service.upload(
-            bucket_type_name=HEALTH_CHECK_BUCKET_NAME,
-            bucket_id=bucket_name,
-            file=upload_file,
+            key=f"{HEALTH_CHECK_BUCKET_NAME}/{bucket_name}", file=upload_file
         )
+
         download_file = file_service.download(
-            bucket_type_name=HEALTH_CHECK_BUCKET_NAME, bucket_id=bucket_name
+            key=f"{HEALTH_CHECK_BUCKET_NAME}/{bucket_name}"
         )
 
         return download_file
