@@ -9,6 +9,9 @@ app-db:
 app-down:
 	docker compose down
 
+app-destroy:
+	docker compose down --rmi all --volumes
+
 app-logs:
 	docker compose logs -f
 
@@ -28,3 +31,6 @@ spy-destroy:
 
 delete:
 	rm -rf docker/postgres/data/ && rm -rf output/
+
+all-restart:
+	make delete && make app-destroy && make spy-destroy && make app-up && make spy-up
