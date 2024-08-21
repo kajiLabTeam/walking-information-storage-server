@@ -1,3 +1,10 @@
+from domain.repository_impl.dto.infrastructure_dto import (
+    AccelerometerRepositoryDto,
+    AtmosphericPressureRepositoryDto,
+    GyroscopeRepositoryDto,
+    RatioWaveRepositoryDto,
+    WalkingInformationRepositoryDto,
+)
 from domain.repository_impl.walking_information_repository_impl import (
     AccelerometerRepositoryImpl,
     AtmosphericPressureRepositoryImpl,
@@ -10,20 +17,27 @@ from ulid import ULID
 
 
 class WalkingInformationRepository(WalkingInformationRepositoryImpl):
-    def save(self, conn: connection, pedestrian_id: str) -> str:
+    def save(
+        self, conn: connection, pedestrian_id: str
+    ) -> WalkingInformationRepositoryDto:
         with conn.cursor() as cursor:
             walking_information_id = str(ULID())
 
             cursor.execute(
-                "INSERT INTO walking_information (id, pedestrian_id) VALUES (%s, %s)",
+                "INSERT INTO walking_informations (id, pedestrian_id) VALUES (%s, %s)",
                 ((walking_information_id), pedestrian_id),
             )
 
-            return walking_information_id
+            return WalkingInformationRepositoryDto(
+                walking_information_id=walking_information_id,
+                pedestrian_id=pedestrian_id,
+            )
 
 
 class GyroscopeRepository(GyroscopeRepositoryImpl):
-    def save(self, conn: connection, walking_information_id: str) -> str:
+    def save(
+        self, conn: connection, walking_information_id: str
+    ) -> GyroscopeRepositoryDto:
         with conn.cursor() as cursor:
             gyroscope_id = str(ULID())
 
@@ -32,11 +46,16 @@ class GyroscopeRepository(GyroscopeRepositoryImpl):
                 ((gyroscope_id), walking_information_id),
             )
 
-            return gyroscope_id
+            return GyroscopeRepositoryDto(
+                gyroscope_id=gyroscope_id,
+                walking_information_id=walking_information_id,
+            )
 
 
 class AccelerometerRepository(AccelerometerRepositoryImpl):
-    def save(self, conn: connection, walking_information_id: str) -> str:
+    def save(
+        self, conn: connection, walking_information_id: str
+    ) -> AccelerometerRepositoryDto:
         with conn.cursor() as cursor:
             accelerometer_id = str(ULID())
 
@@ -45,7 +64,10 @@ class AccelerometerRepository(AccelerometerRepositoryImpl):
                 ((accelerometer_id), walking_information_id),
             )
 
-            return accelerometer_id
+            return AccelerometerRepositoryDto(
+                accelerometer_id=accelerometer_id,
+                walking_information_id=walking_information_id,
+            )
 
 
 class RatioWaveRepository(RatioWaveRepositoryImpl):
@@ -54,7 +76,7 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
         conn: connection,
         rssi: float,
         walking_information_id: str,
-    ) -> str:
+    ) -> RatioWaveRepositoryDto:
         with conn.cursor() as cursor:
             ratio_wave_id = str(ULID())
 
@@ -63,13 +85,17 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
                 ((ratio_wave_id), rssi, walking_information_id),
             )
 
-            return ratio_wave_id
+            return RatioWaveRepositoryDto(
+                ratio_wave_id=ratio_wave_id,
+                rssi=rssi,
+                walking_information_id=walking_information_id,
+            )
 
 
 class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
     def save(
         self, conn: connection, pressure: float, walking_information_id: str
-    ) -> str:
+    ) -> AtmosphericPressureRepositoryDto:
         with conn.cursor() as cursor:
             atmospheric_pressure_id = str(ULID())
 
@@ -78,4 +104,8 @@ class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
                 ((atmospheric_pressure_id), pressure, walking_information_id),
             )
 
-            return atmospheric_pressure_id
+            return AtmosphericPressureRepositoryDto(
+                atmospheric_pressure_id=atmospheric_pressure_id,
+                pressure=pressure,
+                walking_information_id=walking_information_id,
+            )
