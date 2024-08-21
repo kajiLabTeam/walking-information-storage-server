@@ -3,6 +3,7 @@ from typing import Annotated
 from application.services.move_pedestrian_service import MovePedestrianService
 from fastapi import APIRouter, File, Form, UploadFile
 from infrastructure.persistence.repository.floor_repository import (
+    FloorInformationRepository,
     FloorMapRepository,
     FloorRepository,
 )
@@ -38,6 +39,7 @@ move_pedestrian_service = MovePedestrianService(
     gyroscope_repo=GyroscopeRepository(),
     trajectory_repo=TrajectoryRepository(),
     walking_sample_repo=WalkingSampleRepository(),
+    floor_information_repo=FloorInformationRepository(),
     estimated_position_repo=EstimatedPositionRepository(),
     walking_information_repo=WalkingInformationRepository(),
 )

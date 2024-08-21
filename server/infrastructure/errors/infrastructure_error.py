@@ -6,6 +6,7 @@ class InfrastructureErrorType(Enum):
     NOT_FOUND_FLOOR_MAP = "NOT_FOUND_FLOOR_MAP"
     NOT_FOUND_FLOOR = "NOT_FOUND_FLOOR"
     NOT_FOUND_TRAJECTORY = "NOT_FOUND_TRAJECTORY"
+    NOT_FOUND_WALKING_SAMPLE = "NOT_FOUND_WALKING_SAMPLE"
 
 
 class InfrastructureError(Exception):

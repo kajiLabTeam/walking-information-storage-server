@@ -1,5 +1,3 @@
-from typing import Optional
-
 from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.particle.particle import Particle
 from domain.models.particle_collection.particle_collection import ParticleCollection
@@ -8,8 +6,16 @@ from domain.repository_impl.walking_sample_repository_impl import (
     ParticleRepositoryImpl,
     WalkingSampleRepositoryImpl,
 )
+from infrastructure.errors.infrastructure_error import (
+    InfrastructureError,
+    InfrastructureErrorType,
+)
 from psycopg2.extensions import connection
 from ulid import ULID
+
+from domain.repository_impl.dto.infrastructure_dto import (
+    WalkingSampleRepositoryDto,
+)
 
 
 class WalkingSampleRepository(WalkingSampleRepositoryImpl):
@@ -19,7 +25,7 @@ class WalkingSampleRepository(WalkingSampleRepositoryImpl):
         is_converged: bool,
         trajectory_id: str,
         walking_information_id: str,
-    ) -> str:
+    ) -> WalkingSampleRepositoryDto:
         with conn as conn:
             with conn.cursor() as cursor:
                 walking_sample_id = str(ULID())
@@ -33,25 +39,41 @@ class WalkingSampleRepository(WalkingSampleRepositoryImpl):
                     ),
                 )
 
-                return walking_sample_id
+                return WalkingSampleRepositoryDto(
+                    walking_sample_id=walking_sample_id,
+                    is_converged=is_converged,
+                    trajectory_id=trajectory_id,
+                    walking_information_id=walking_information_id,
+                )
 
-    def find_latest_id_for_trajectory_id(
+    def find_latest_for_trajectory_id(
         self, conn: connection, trajectory_id: str
-    ) -> Optional[str]:
+    ) -> WalkingSampleRepositoryDto:
         with conn as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "SELECT id FROM walking_samples WHERE trajectory_id = %s ORDER BY created_at DESC LIMIT 1",
+                    "SELECT id, is_converged, trajectory_id, walking_information_id FROM walking_samples WHERE trajectory_id = %s ORDER BY created_at DESC LIMIT 1",
                     (trajectory_id,),
                 )
 
                 result = cursor.fetchone()
                 if result is not None:
                     walking_sample_id = result[0]
+                    is_converged = result[1]
+                    trajectory_id = result[2]
+                    walking_information_id = result[3]
                 else:
-                    return None
+                    raise InfrastructureError(
+                        InfrastructureErrorType.NOT_FOUND_WALKING_SAMPLE,
+                        message="Walking sample not found",
+                    )
 
-                return walking_sample_id
+                return WalkingSampleRepositoryDto(
+                    walking_sample_id=walking_sample_id,
+                    is_converged=is_converged,
+                    trajectory_id=trajectory_id,
+                    walking_information_id=walking_information_id,
+                )
 
 
 class ParticleRepository(ParticleRepositoryImpl):

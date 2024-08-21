@@ -49,7 +49,9 @@ class FloorMapRepositoryImpl(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def find_for_id(self, conn: connection, floor_map_id: str) -> FloorMapRepositoryDto:
+    def find_for_floor_information_id(
+        self, conn: connection, floor_information_id: str
+    ) -> FloorMapRepositoryDto:
         pass
 
 

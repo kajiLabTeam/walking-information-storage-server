@@ -24,7 +24,7 @@ class WalkingInformationRepository(WalkingInformationRepositoryImpl):
             walking_information_id = str(ULID())
 
             cursor.execute(
-                "INSERT INTO walking_informations (id, pedestrian_id) VALUES (%s, %s)",
+                "INSERT INTO walking_information (id, pedestrian_id) VALUES (%s, %s)",
                 ((walking_information_id), pedestrian_id),
             )
 

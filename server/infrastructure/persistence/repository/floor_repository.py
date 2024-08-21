@@ -165,17 +165,19 @@ class FloorMapRepository(FloorMapRepositoryImpl):
                     floor_map_id=floor_map_id, floor_information_id=floor_information_id
                 )
 
-    def find_for_id(self, conn: connection, floor_map_id: str) -> FloorMapRepositoryDto:
+    def find_for_floor_information_id(
+        self, conn: connection, floor_information_id: str
+    ) -> FloorMapRepositoryDto:
         with conn as conn:
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "SELECT floor_information_id FROM floor_maps WHERE id = %s",
-                    (floor_map_id,),
+                    "SELECT id FROM floor_maps WHERE floor_information_id = %s",
+                    (floor_information_id,),
                 )
 
                 result = cursor.fetchone()
                 if result is not None:
-                    floor_information_id = result[0]
+                    floor_id = result[0]
                 else:
                     raise InfrastructureError(
                         InfrastructureErrorType.NOT_FOUND_FLOOR_MAP,
@@ -183,5 +185,5 @@ class FloorMapRepository(FloorMapRepositoryImpl):
                     )
 
                 return FloorMapRepositoryDto(
-                    floor_map_id=floor_map_id, floor_information_id=floor_information_id
+                    floor_map_id=floor_id, floor_information_id=floor_information_id
                 )

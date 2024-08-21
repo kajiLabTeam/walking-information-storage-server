@@ -9,6 +9,7 @@ from domain.models.estimated_particle.estimated_particle import (
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from domain.repository_impl.floor_repository_impl import (
+    FloorInformationRepositoryImpl,
     FloorMapRepositoryImpl,
     FloorRepositoryImpl,
 )
@@ -23,6 +24,10 @@ from domain.repository_impl.walking_sample_repository_impl import (
     WalkingSampleRepositoryImpl,
 )
 from infrastructure.connection import DBConnection, MinIOConnection
+from infrastructure.errors.infrastructure_error import (
+    InfrastructureError,
+    InfrastructureErrorType,
+)
 from infrastructure.external.services.file_service import FileService
 from utils.bucket import get_floor_map_bucket_name, get_gyroscope_bucket_name
 
@@ -36,6 +41,7 @@ class MovePedestrianService:
         gyroscope_repo: GyroscopeRepositoryImpl,
         trajectory_repo: TrajectoryRepositoryImpl,
         walking_sample_repo: WalkingSampleRepositoryImpl,
+        floor_information_repo: FloorInformationRepositoryImpl,
         estimated_position_repo: EstimatedPositionRepositoryImpl,
         walking_information_repo: WalkingInformationRepositoryImpl,
     ):
@@ -45,6 +51,7 @@ class MovePedestrianService:
         self.__gyroscope_repo = gyroscope_repo
         self.__trajectory_repo = trajectory_repo
         self.__walking_sample_repo = walking_sample_repo
+        self.__floor_information_repo = floor_information_repo
         self.__estimated_position_repo = estimated_position_repo
         self.__walking_information_repo = walking_information_repo
 
@@ -77,43 +84,33 @@ class MovePedestrianService:
         )
 
         # 歩行情報
-        walking_information_id = self.__walking_information_repo.save(
+        walking_information_infrastructure_dto = self.__walking_information_repo.save(
             conn=conn,
             pedestrian_id=pedestrian_id,
         )
+        walking_information_id = (
+            walking_information_infrastructure_dto.walking_information_id
+        )
 
         # 引数のidを元に、必要な情報を取得
-        walking_sample_id = self.__walking_sample_repo.find_latest_id_for_trajectory_id(
+        trajectory_infrastructure_dto = self.__trajectory_repo.find_for_id(
             conn=conn, trajectory_id=trajectory_id
         )
+        floor_information_id = trajectory_infrastructure_dto.floor_information_id
 
-        floor_information = self.__trajectory_repo.find_for_id(
-            conn=conn, trajectory_id=trajectory_id
-        )
-        if not floor_information:
-            raise ApplicationError(
-                error_type=ApplicationErrorType.NOT_FLOOR_INFORMATION,
-                message="The floor information is not found.",
+        floor_map_infrastructure_dto = (
+            self.__floor_map_repo.find_for_floor_information_id(
+                conn=conn, floor_information_id=floor_information_id
             )
-        floor_information_id = floor_information.floor_information_id
+        )
+        floor_map_id = floor_map_infrastructure_dto.floor_map_id
 
-        floor_map_id = self.__floor_map_repo.find_for_floor_information_id(
-            conn=conn, floor_information_id=floor_information_id
-        )
-        if not floor_map_id:
-            raise ApplicationError(
-                error_type=ApplicationErrorType.NOT_FLOOR_MAP,
-                message="The floor map is not found.",
+        floor_information_infrastructure_dto = (
+            self.__floor_information_repo.find_for_id(
+                conn=conn, floor_information_id=floor_information_id
             )
-
-        floor_id = self.__floor_repo.find_for_floor_information_id(
-            conn=conn, floor_information_id=floor_information_id
         )
-        if not floor_id:
-            raise ApplicationError(
-                error_type=ApplicationErrorType.NOT_FLOOR,
-                message="The floor is not found.",
-            )
+        floor_id = floor_information_infrastructure_dto.floor_id
 
         floor_map_image_bytes = file_service.download(
             key=get_floor_map_bucket_name(
@@ -126,13 +123,20 @@ class MovePedestrianService:
             floor_map_image_bytes=floor_map_image_bytes,
         )
 
-        # 歩行サンプルがない場合は、初期のパーティクルを生成
-        if walking_sample_id is None:
-            estimated_particle = EstimatedParticleFactory.create(
-                floor_map=floor_map,
-                initial_walking_parameter=walking_parameter,
+        try:
+            walking_sample_infrastructure_dto = (
+                self.__walking_sample_repo.find_latest_for_trajectory_id(
+                    conn=conn, trajectory_id=trajectory_id
+                )
             )
+        except InfrastructureError as e:
+            if e.type == InfrastructureErrorType.NOT_FOUND_WALKING_SAMPLE:
+                estimated_particle = EstimatedParticleFactory.create(
+                    floor_map=floor_map,
+                    initial_walking_parameter=walking_parameter,
+                )
         else:
+            walking_sample_id = walking_sample_infrastructure_dto.walking_sample_id
             # 最新のパーティクルの状態を取得
             latest_particle_collection = (
                 self.__particle_repo.find_for_walking_sample_id(
@@ -162,12 +166,13 @@ class MovePedestrianService:
         estimated_position = move_estimation_particles.estimate_position()
 
         # パーティクルフィルタの結果を保存
-        walking_sample_id = self.__walking_sample_repo.save(
+        walking_sample = self.__walking_sample_repo.save(
             conn=conn,
             is_converged=move_estimation_particles.is_converged(),
             trajectory_id=trajectory_id,
             walking_information_id=walking_information_id,
         )
+        walking_sample_id = walking_sample.walking_sample_id
 
         _ = self.__particle_repo.save_all(
             conn=conn,
@@ -183,15 +188,19 @@ class MovePedestrianService:
         )
 
         # 歩行情報を保存
-        walking_information_id = self.__walking_information_repo.save(
+        walking_information_infrastructure_dto = self.__walking_information_repo.save(
             conn=conn,
             pedestrian_id=pedestrian_id,
         )
+        walking_information_id = (
+            walking_information_infrastructure_dto.walking_information_id
+        )
 
-        gyroscope_id = self.__gyroscope_repo.save(
+        gyroscope = self.__gyroscope_repo.save(
             conn=conn,
             walking_information_id=walking_information_id,
         )
+        gyroscope_id = gyroscope.gyroscope_id
         file_service.upload(
             key=get_gyroscope_bucket_name(
                 pedestrian_id=pedestrian_id,

@@ -1,8 +1,8 @@
 from abc import ABCMeta, abstractmethod
-from typing import Optional
 
 from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.particle_collection.particle_collection import ParticleCollection
+from domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
 from psycopg2.extensions import connection
 
 
@@ -14,13 +14,13 @@ class WalkingSampleRepositoryImpl(metaclass=ABCMeta):
         is_converged: bool,
         trajectory_id: str,
         walking_information_id: str,
-    ) -> str:
+    ) -> WalkingSampleRepositoryDto:
         pass
 
     @abstractmethod
-    def find_latest_id_for_trajectory_id(
+    def find_latest_for_trajectory_id(
         self, conn: connection, trajectory_id: str
-    ) -> Optional[str]:
+    ) -> WalkingSampleRepositoryDto:
         pass
 
 
