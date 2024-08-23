@@ -12,6 +12,10 @@ from domain.repository_impl.walking_information_repository_impl import (
     RatioWaveRepositoryImpl,
     WalkingInformationRepositoryImpl,
 )
+from infrastructure.errors.infrastructure_error import (
+    InfrastructureError,
+    InfrastructureErrorType,
+)
 from psycopg2.extensions import connection
 from ulid import ULID
 
@@ -20,54 +24,81 @@ class WalkingInformationRepository(WalkingInformationRepositoryImpl):
     def save(
         self, conn: connection, pedestrian_id: str
     ) -> WalkingInformationRepositoryDto:
-        with conn.cursor() as cursor:
-            walking_information_id = str(ULID())
+        with conn:
+            with conn.cursor() as cursor:
+                try:
+                    walking_information_id = str(ULID())
 
-            cursor.execute(
-                "INSERT INTO walking_information (id, pedestrian_id) VALUES (%s, %s)",
-                ((walking_information_id), pedestrian_id),
-            )
+                    cursor.execute(
+                        "INSERT INTO walking_information (id, pedestrian_id) VALUES (%s, %s)",
+                        ((walking_information_id), pedestrian_id),
+                    )
 
-            return WalkingInformationRepositoryDto(
-                walking_information_id=walking_information_id,
-                pedestrian_id=pedestrian_id,
-            )
+                    return WalkingInformationRepositoryDto(
+                        walking_information_id=walking_information_id,
+                        pedestrian_id=pedestrian_id,
+                    )
+
+                except Exception as e:
+                    raise InfrastructureError(
+                        InfrastructureErrorType.WALKING_INFORMATION_DB_ERROR,
+                        "Failed to save walking information",
+                        500,
+                    ) from e
 
 
 class GyroscopeRepository(GyroscopeRepositoryImpl):
     def save(
         self, conn: connection, walking_information_id: str
     ) -> GyroscopeRepositoryDto:
-        with conn.cursor() as cursor:
-            gyroscope_id = str(ULID())
+        with conn:
+            with conn.cursor() as cursor:
+                try:
+                    gyroscope_id = str(ULID())
 
-            cursor.execute(
-                "INSERT INTO gyroscopes (id, walking_information_id) VALUES (%s, %s)",
-                ((gyroscope_id), walking_information_id),
-            )
+                    cursor.execute(
+                        "INSERT INTO gyroscopes (id, walking_information_id) VALUES (%s, %s)",
+                        ((gyroscope_id), walking_information_id),
+                    )
 
-            return GyroscopeRepositoryDto(
-                gyroscope_id=gyroscope_id,
-                walking_information_id=walking_information_id,
-            )
+                    return GyroscopeRepositoryDto(
+                        gyroscope_id=gyroscope_id,
+                        walking_information_id=walking_information_id,
+                    )
+
+                except Exception as e:
+                    raise InfrastructureError(
+                        InfrastructureErrorType.GYROSCOPE_DB_ERROR,
+                        "Failed to save gyroscope",
+                        500,
+                    ) from e
 
 
 class AccelerometerRepository(AccelerometerRepositoryImpl):
     def save(
         self, conn: connection, walking_information_id: str
     ) -> AccelerometerRepositoryDto:
-        with conn.cursor() as cursor:
-            accelerometer_id = str(ULID())
+        with conn:
+            with conn.cursor() as cursor:
+                try:
+                    accelerometer_id = str(ULID())
 
-            cursor.execute(
-                "INSERT INTO accelerometers (id, walking_information_id) VALUES (%s, %s)",
-                ((accelerometer_id), walking_information_id),
-            )
+                    cursor.execute(
+                        "INSERT INTO accelerometers (id, walking_information_id) VALUES (%s, %s)",
+                        ((accelerometer_id), walking_information_id),
+                    )
 
-            return AccelerometerRepositoryDto(
-                accelerometer_id=accelerometer_id,
-                walking_information_id=walking_information_id,
-            )
+                    return AccelerometerRepositoryDto(
+                        accelerometer_id=accelerometer_id,
+                        walking_information_id=walking_information_id,
+                    )
+
+                except Exception as e:
+                    raise InfrastructureError(
+                        InfrastructureErrorType.ACCELEROMETER_DB_ERROR,
+                        "Failed to save accelerometer",
+                        500,
+                    ) from e
 
 
 class RatioWaveRepository(RatioWaveRepositoryImpl):
@@ -77,35 +108,53 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
         rssi: float,
         walking_information_id: str,
     ) -> RatioWaveRepositoryDto:
-        with conn.cursor() as cursor:
-            ratio_wave_id = str(ULID())
+        with conn:
+            with conn.cursor() as cursor:
+                try:
+                    ratio_wave_id = str(ULID())
 
-            cursor.execute(
-                "INSERT INTO ratio_waves (id, rssi, walking_information_id) VALUES (%s, %s, %s)",
-                ((ratio_wave_id), rssi, walking_information_id),
-            )
+                    cursor.execute(
+                        "INSERT INTO ratio_waves (id, rssi, walking_information_id) VALUES (%s, %s, %s)",
+                        ((ratio_wave_id), rssi, walking_information_id),
+                    )
 
-            return RatioWaveRepositoryDto(
-                ratio_wave_id=ratio_wave_id,
-                rssi=rssi,
-                walking_information_id=walking_information_id,
-            )
+                    return RatioWaveRepositoryDto(
+                        ratio_wave_id=ratio_wave_id,
+                        rssi=rssi,
+                        walking_information_id=walking_information_id,
+                    )
+
+                except Exception as e:
+                    raise InfrastructureError(
+                        InfrastructureErrorType.RATIO_WAVE_DB_ERROR,
+                        "Failed to save ratio wave",
+                        500,
+                    ) from e
 
 
 class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
     def save(
         self, conn: connection, pressure: float, walking_information_id: str
     ) -> AtmosphericPressureRepositoryDto:
-        with conn.cursor() as cursor:
-            atmospheric_pressure_id = str(ULID())
+        with conn:
+            with conn.cursor() as cursor:
+                try:
+                    atmospheric_pressure_id = str(ULID())
 
-            cursor.execute(
-                "INSERT INTO atmospheric_pressures (id, pressure, walking_information_id) VALUES (%s, %s, %s)",
-                ((atmospheric_pressure_id), pressure, walking_information_id),
-            )
+                    cursor.execute(
+                        "INSERT INTO atmospheric_pressures (id, pressure, walking_information_id) VALUES (%s, %s, %s)",
+                        ((atmospheric_pressure_id), pressure, walking_information_id),
+                    )
 
-            return AtmosphericPressureRepositoryDto(
-                atmospheric_pressure_id=atmospheric_pressure_id,
-                pressure=pressure,
-                walking_information_id=walking_information_id,
-            )
+                    return AtmosphericPressureRepositoryDto(
+                        atmospheric_pressure_id=atmospheric_pressure_id,
+                        pressure=pressure,
+                        walking_information_id=walking_information_id,
+                    )
+
+                except Exception as e:
+                    raise InfrastructureError(
+                        InfrastructureErrorType.ATMOSPHERIC_PRESSURE_DB_ERROR,
+                        "Failed to save atmospheric pressure",
+                        500,
+                    ) from e

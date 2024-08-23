@@ -1,6 +1,7 @@
 from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.particle.particle import Particle
 from domain.models.particle_collection.particle_collection import ParticleCollection
+from domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
 from domain.repository_impl.walking_sample_repository_impl import (
     EstimatedPositionRepositoryImpl,
     ParticleRepositoryImpl,
@@ -13,10 +14,6 @@ from infrastructure.errors.infrastructure_error import (
 from psycopg2.extensions import connection
 from ulid import ULID
 
-from domain.repository_impl.dto.infrastructure_dto import (
-    WalkingSampleRepositoryDto,
-)
-
 
 class WalkingSampleRepository(WalkingSampleRepositoryImpl):
     def save(
@@ -26,7 +23,7 @@ class WalkingSampleRepository(WalkingSampleRepositoryImpl):
         trajectory_id: str,
         walking_information_id: str,
     ) -> WalkingSampleRepositoryDto:
-        with conn as conn:
+        with conn:
             with conn.cursor() as cursor:
                 walking_sample_id = str(ULID())
                 cursor.execute(
@@ -49,7 +46,7 @@ class WalkingSampleRepository(WalkingSampleRepositoryImpl):
     def find_latest_for_trajectory_id(
         self, conn: connection, trajectory_id: str
     ) -> WalkingSampleRepositoryDto:
-        with conn as conn:
+        with conn:
             with conn.cursor() as cursor:
                 cursor.execute(
                     "SELECT id, is_converged, trajectory_id, walking_information_id FROM walking_samples WHERE trajectory_id = %s ORDER BY created_at DESC LIMIT 1",
@@ -83,7 +80,7 @@ class ParticleRepository(ParticleRepositoryImpl):
         walking_sample_id: str,
         particle_collection: ParticleCollection,
     ) -> None:
-        with conn as conn:
+        with conn:
             with conn.cursor() as cursor:
                 for particle in particle_collection.get_particles():
                     particle_id = str(ULID())
@@ -103,7 +100,7 @@ class ParticleRepository(ParticleRepositoryImpl):
         self, conn: connection, walking_sample_id: str
     ) -> ParticleCollection:
         particle_collection = ParticleCollection()
-        with conn as conn:
+        with conn:
             with conn.cursor() as cursor:
                 cursor.execute(
                     "SELECT x, y, weight, direction FROM particles WHERE walking_sample_id = %s",
@@ -119,7 +116,7 @@ class ParticleRepository(ParticleRepositoryImpl):
         self, conn: connection, walking_sample_id: str
     ) -> ParticleCollection:
         particle_collection = ParticleCollection()
-        with conn as conn:
+        with conn:
             with conn.cursor() as cursor:
                 cursor.execute(
                     "SELECT x, y, weight, direction FROM particles WHERE walking_sample_id = %s ORDER BY created_at DESC LIMIT 1",
@@ -139,7 +136,7 @@ class EstimatedPositionRepository(EstimatedPositionRepositoryImpl):
         estimated_position: EstimatedPosition,
         walking_sample_id: str,
     ) -> str:
-        with conn as conn:
+        with conn:
             with conn.cursor() as cursor:
                 estimated_position_id = str(ULID())
                 cursor.execute(

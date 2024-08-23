@@ -1,13 +1,25 @@
 from domain.repository_impl.pedestrian_repository_impl import PedestrianRepositoryImpl
+from infrastructure.errors.infrastructure_error import (
+    InfrastructureError,
+    InfrastructureErrorType,
+)
 from psycopg2.extensions import connection
 from ulid import ULID
 
 
 class PedestrianRepository(PedestrianRepositoryImpl):
     def save(self, conn: connection) -> None:
-        with conn as conn:
+        with conn:
             with conn.cursor() as cursor:
-                pedestrian_id = str(ULID())
-                cursor.execute(
-                    "INSERT INTO pedestrians (id) VALUES (%s)", (pedestrian_id,)
-                )
+                try:
+                    pedestrian_id = str(ULID())
+                    cursor.execute(
+                        "INSERT INTO pedestrians (id) VALUES (%s)", (pedestrian_id,)
+                    )
+
+                except Exception as e:
+                    raise InfrastructureError(
+                        InfrastructureErrorType.PEDESTRIAN_DB_ERROR,
+                        "Failed to save pedestrian",
+                        500,
+                    ) from e
