@@ -18,12 +18,3 @@ CREATE TABLE estimated_positions (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     walking_sample_id VARCHAR(26) UNIQUE REFERENCES walking_samples(id)
 );
-
-CREATE TABLE correct_positions (
-    id VARCHAR(26) PRIMARY KEY,
-    x DECIMAL NOT NULL,
-    y DECIMAL NOT NULL,
-    direction DECIMAL NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    walking_sample_id VARCHAR(26) UNIQUE REFERENCES walking_samples(id)
-);

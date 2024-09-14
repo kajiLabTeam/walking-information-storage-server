@@ -47,6 +47,15 @@ CREATE TABLE trajectories (
     floor_information_id VARCHAR(26) REFERENCES floor_information(id)
 );
 
+CREATE TABLE correct_positions (
+    id VARCHAR(26) PRIMARY KEY,
+    x DECIMAL NOT NULL,
+    y DECIMAL NOT NULL,
+    direction DECIMAL NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    trajectory_id VARCHAR(26) REFERENCES trajectories(id)
+);
+
 CREATE TABLE walking_samples (
     id VARCHAR(26) PRIMARY KEY,
     is_converged BOOLEAN NOT NULL,
@@ -54,4 +63,3 @@ CREATE TABLE walking_samples (
     trajectory_id VARCHAR(26) REFERENCES trajectories(id),
     walking_information_id VARCHAR(26) UNIQUE REFERENCES walking_information(id)
 );
-
