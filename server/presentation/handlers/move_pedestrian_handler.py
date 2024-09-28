@@ -49,7 +49,12 @@ move_pedestrian_service = MovePedestrianService(
 async def move_pedestrian(
     pedestrianId: Annotated[str, Form()],
     trajectoryId: Annotated[str, Form()],
+    latitude: Annotated[float, Form()],
+    longitude: Annotated[float, Form()],
+    wifiFile: Annotated[UploadFile, File()],
     gyroscopeFile: Annotated[UploadFile, File()],
+    accelerationFile: Annotated[UploadFile, File()],
+    atmosphericPressureFile: Annotated[UploadFile, File()],
 ):
     """
     クライアントが歩行開始からの歩行データをサーバに送信するためのエンドポイント
