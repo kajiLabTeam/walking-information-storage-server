@@ -5,8 +5,8 @@ import pandas as pd
 
 
 class AngleConverter:
-    def __init__(self, raw_data_file: bytes):
-        self.__gyro_df = pd.read_csv(BytesIO(raw_data_file))
+    def __init__(self, gyroscope_file: bytes):
+        self.__gyro_df = pd.read_csv(BytesIO(gyroscope_file))
 
     def calculate_cumulative_angle(self, time_unit: float = 0.7) -> int:
         sample_freq = 100

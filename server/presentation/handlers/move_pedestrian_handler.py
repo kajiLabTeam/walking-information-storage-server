@@ -11,7 +11,11 @@ from infrastructure.persistence.repository.trajectory_repository import (
     TrajectoryRepository,
 )
 from infrastructure.persistence.repository.walking_information_repository import (
+    AccelerometerRepository,
+    AtmosphericPressureRepository,
+    GpsRepository,
     GyroscopeRepository,
+    RatioWaveRepository,
     WalkingInformationRepository,
 )
 from infrastructure.persistence.repository.walking_sample_repository import (
@@ -36,7 +40,11 @@ move_pedestrian_service = MovePedestrianService(
     floor_repo=FloorRepository(),
     particle_repo=ParticleRepository(),
     floor_map_repo=FloorMapRepository(),
+    gps_repo=GpsRepository(),
+    ratio_wave_repo=RatioWaveRepository(),
     gyroscope_repo=GyroscopeRepository(),
+    accelerometer_repo=AccelerometerRepository(),
+    atmospheric_pressure_repo=AtmosphericPressureRepository(),
     trajectory_repo=TrajectoryRepository(),
     walking_sample_repo=WalkingSampleRepository(),
     floor_information_repo=FloorInformationRepository(),
@@ -49,22 +57,29 @@ move_pedestrian_service = MovePedestrianService(
 async def move_pedestrian(
     pedestrianId: Annotated[str, Form()],
     trajectoryId: Annotated[str, Form()],
-    latitude: Annotated[float, Form()],
-    longitude: Annotated[float, Form()],
+    gpsFile: Annotated[UploadFile, File()],
     wifiFile: Annotated[UploadFile, File()],
     gyroscopeFile: Annotated[UploadFile, File()],
-    accelerationFile: Annotated[UploadFile, File()],
+    accelerometerFile: Annotated[UploadFile, File()],
     atmosphericPressureFile: Annotated[UploadFile, File()],
 ):
     """
     クライアントが歩行開始からの歩行データをサーバに送信するためのエンドポイント
     """
-    raw_data_file = await gyroscopeFile.read()
+    gps_file = await gpsFile.read()
+    wifi_file = await wifiFile.read()
+    gyroscope_file = await gyroscopeFile.read()
+    accelerometer_file = await accelerometerFile.read()
+    atmospheric_pressure_file = await atmosphericPressureFile.read()
 
     move_pedestrian_service_dto = move_pedestrian_service.run(
         pedestrian_id=pedestrianId,
         trajectory_id=trajectoryId,
-        raw_data_file=raw_data_file,
+        gps_file=gps_file,
+        wifi_file=wifi_file,
+        gyroscope_file=gyroscope_file,
+        accelerometer_file=accelerometer_file,
+        atmospheric_pressure_file=atmospheric_pressure_file,
     )
 
     return CreateWalkingSampleResponse(

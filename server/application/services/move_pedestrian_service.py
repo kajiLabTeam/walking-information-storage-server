@@ -15,7 +15,11 @@ from domain.repository_impl.floor_repository_impl import (
 )
 from domain.repository_impl.trajectory_repository_impl import TrajectoryRepositoryImpl
 from domain.repository_impl.walking_information_repository_impl import (
+    AccelerometerRepositoryImpl,
+    AtmosphericPressureRepositoryImpl,
+    GpsRepositoryImpl,
     GyroscopeRepositoryImpl,
+    RatioWaveRepositoryImpl,
     WalkingInformationRepositoryImpl,
 )
 from domain.repository_impl.walking_sample_repository_impl import (
@@ -29,7 +33,14 @@ from infrastructure.errors.infrastructure_error import (
     InfrastructureErrorType,
 )
 from infrastructure.external.services.file_service import FileService
-from utils.bucket import get_floor_map_bucket_name, get_gyroscope_bucket_name
+from utils.bucket import (
+    get_accelerometer_bucket_name,
+    get_atmospheric_pressure_bucket_name,
+    get_floor_map_bucket_name,
+    get_gps_bucket_name,
+    get_gyroscope_bucket_name,
+    get_ratio_wave_bucket_name,
+)
 
 
 class MovePedestrianService:
@@ -38,7 +49,11 @@ class MovePedestrianService:
         floor_repo: FloorRepositoryImpl,
         particle_repo: ParticleRepositoryImpl,
         floor_map_repo: FloorMapRepositoryImpl,
+        gps_repo: GpsRepositoryImpl,
         gyroscope_repo: GyroscopeRepositoryImpl,
+        ratio_wave_repo: RatioWaveRepositoryImpl,
+        accelerometer_repo: AccelerometerRepositoryImpl,
+        atmospheric_pressure_repo: AtmosphericPressureRepositoryImpl,
         trajectory_repo: TrajectoryRepositoryImpl,
         walking_sample_repo: WalkingSampleRepositoryImpl,
         floor_information_repo: FloorInformationRepositoryImpl,
@@ -48,7 +63,11 @@ class MovePedestrianService:
         self.__floor_repo = floor_repo
         self.__particle_repo = particle_repo
         self.__floor_map_repo = floor_map_repo
+        self.__gps_repo = gps_repo
         self.__gyroscope_repo = gyroscope_repo
+        self.__ratio_wave_repo = ratio_wave_repo
+        self.__accelerometer_repo = accelerometer_repo
+        self.__atmospheric_pressure_repo = atmospheric_pressure_repo
         self.__trajectory_repo = trajectory_repo
         self.__walking_sample_repo = walking_sample_repo
         self.__floor_information_repo = floor_information_repo
@@ -59,7 +78,11 @@ class MovePedestrianService:
         self,
         pedestrian_id: str,
         trajectory_id: str,
-        raw_data_file: bytes,
+        gps_file: bytes,
+        wifi_file: bytes,
+        gyroscope_file: bytes,
+        accelerometer_file: bytes,
+        atmospheric_pressure_file: bytes,
     ) -> MovePedestrianServiceDto:
         conn = DBConnection.connect()
         s3 = MinIOConnection.connect()
@@ -75,7 +98,7 @@ class MovePedestrianService:
             )
 
         # 歩行データから、歩行パラメータを取得
-        angle_converter = AngleConverter(raw_data_file=raw_data_file)
+        angle_converter = AngleConverter(gyroscope_file=gyroscope_file)
         angle_changed = angle_converter.calculate_cumulative_angle()
         walking_parameter = WalkingParameter(
             id=None,
@@ -196,18 +219,69 @@ class MovePedestrianService:
             walking_information_infrastructure_dto.walking_information_id
         )
 
+        gps = self.__gps_repo.save(
+            conn=conn,
+            walking_information_id=walking_information_id,
+        )
+        file_service.upload(
+            key=get_gps_bucket_name(
+                pedestrian_id=pedestrian_id,
+                walking_information_id=walking_information_id,
+                gps_id=gps.gps_id,
+            ),
+            file=gps_file,
+        )
+
+        ratio_wave = self.__ratio_wave_repo.save(
+            conn=conn,
+            walking_information_id=walking_information_id,
+        )
+        file_service.upload(
+            key=get_ratio_wave_bucket_name(
+                pedestrian_id=pedestrian_id,
+                walking_information_id=walking_information_id,
+                ratio_wave_id=ratio_wave.ratio_wave_id,
+            ),
+            file=wifi_file,
+        )
+
         gyroscope = self.__gyroscope_repo.save(
             conn=conn,
             walking_information_id=walking_information_id,
         )
-        gyroscope_id = gyroscope.gyroscope_id
         file_service.upload(
             key=get_gyroscope_bucket_name(
                 pedestrian_id=pedestrian_id,
                 walking_information_id=walking_information_id,
-                gyroscope_id=gyroscope_id,
+                gyroscope_id=gyroscope.gyroscope_id,
             ),
-            file=raw_data_file,
+            file=gyroscope_file,
+        )
+
+        accelerometer = self.__accelerometer_repo.save(
+            conn=conn,
+            walking_information_id=walking_information_id,
+        )
+        file_service.upload(
+            key=get_accelerometer_bucket_name(
+                pedestrian_id=pedestrian_id,
+                walking_information_id=walking_information_id,
+                accelerometer_id=accelerometer.accelerometer_id,
+            ),
+            file=accelerometer_file,
+        )
+
+        atmospheric_pressure = self.__atmospheric_pressure_repo.save(
+            conn=conn,
+            walking_information_id=walking_information_id,
+        )
+        file_service.upload(
+            key=get_atmospheric_pressure_bucket_name(
+                pedestrian_id=pedestrian_id,
+                walking_information_id=walking_information_id,
+                atmospheric_pressure_id=atmospheric_pressure.atmospheric_pressure_id,
+            ),
+            file=atmospheric_pressure_file,
         )
 
         return MovePedestrianServiceDto(
