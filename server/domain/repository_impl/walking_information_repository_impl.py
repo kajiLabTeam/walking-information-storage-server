@@ -3,6 +3,7 @@ from abc import ABCMeta, abstractmethod
 from domain.repository_impl.dto.infrastructure_dto import (
     AccelerometerRepositoryDto,
     AtmosphericPressureRepositoryDto,
+    GpsRepositoryDto,
     GyroscopeRepositoryDto,
     RatioWaveRepositoryDto,
     WalkingInformationRepositoryDto,
@@ -39,7 +40,6 @@ class RatioWaveRepositoryImpl(metaclass=ABCMeta):
     def save(
         self,
         conn: connection,
-        rssi: float,
         walking_information_id: str,
     ) -> RatioWaveRepositoryDto:
         pass
@@ -48,6 +48,12 @@ class RatioWaveRepositoryImpl(metaclass=ABCMeta):
 class AtmosphericPressureRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, pressure: float, walking_information_id: str
+        self, conn: connection, walking_information_id: str
     ) -> AtmosphericPressureRepositoryDto:
+        pass
+
+
+class GpsRepositoryImpl(metaclass=ABCMeta):
+    @abstractmethod
+    def save(self, conn: connection, walking_information_id: str) -> GpsRepositoryDto:
         pass

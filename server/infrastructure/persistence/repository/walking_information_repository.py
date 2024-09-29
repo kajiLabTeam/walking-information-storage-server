@@ -1,6 +1,7 @@
 from domain.repository_impl.dto.infrastructure_dto import (
     AccelerometerRepositoryDto,
     AtmosphericPressureRepositoryDto,
+    GpsRepositoryDto,
     GyroscopeRepositoryDto,
     RatioWaveRepositoryDto,
     WalkingInformationRepositoryDto,
@@ -8,6 +9,7 @@ from domain.repository_impl.dto.infrastructure_dto import (
 from domain.repository_impl.walking_information_repository_impl import (
     AccelerometerRepositoryImpl,
     AtmosphericPressureRepositoryImpl,
+    GpsRepositoryImpl,
     GyroscopeRepositoryImpl,
     RatioWaveRepositoryImpl,
     WalkingInformationRepositoryImpl,
@@ -105,7 +107,6 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
     def save(
         self,
         conn: connection,
-        rssi: float,
         walking_information_id: str,
     ) -> RatioWaveRepositoryDto:
         with conn:
@@ -115,12 +116,11 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
 
                     cursor.execute(
                         "INSERT INTO ratio_waves (id, rssi, walking_information_id) VALUES (%s, %s, %s)",
-                        ((ratio_wave_id), rssi, walking_information_id),
+                        ((ratio_wave_id), walking_information_id),
                     )
 
                     return RatioWaveRepositoryDto(
                         ratio_wave_id=ratio_wave_id,
-                        rssi=rssi,
                         walking_information_id=walking_information_id,
                     )
 
@@ -134,7 +134,7 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
 
 class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
     def save(
-        self, conn: connection, pressure: float, walking_information_id: str
+        self, conn: connection, walking_information_id: str
     ) -> AtmosphericPressureRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
@@ -142,13 +142,12 @@ class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
                     atmospheric_pressure_id = str(ULID())
 
                     cursor.execute(
-                        "INSERT INTO atmospheric_pressures (id, pressure, walking_information_id) VALUES (%s, %s, %s)",
-                        ((atmospheric_pressure_id), pressure, walking_information_id),
+                        "INSERT INTO atmospheric_pressures (id, walking_information_id) VALUES (%s, %s, %s)",
+                        ((atmospheric_pressure_id), walking_information_id),
                     )
 
                     return AtmosphericPressureRepositoryDto(
                         atmospheric_pressure_id=atmospheric_pressure_id,
-                        pressure=pressure,
                         walking_information_id=walking_information_id,
                     )
 
@@ -156,5 +155,30 @@ class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
                     raise InfrastructureError(
                         InfrastructureErrorType.ATMOSPHERIC_PRESSURE_DB_ERROR,
                         "Failed to save atmospheric pressure",
+                        500,
+                    ) from e
+
+
+class GpsRepository(GpsRepositoryImpl):
+    def save(self, conn: connection, walking_information_id: str) -> GpsRepositoryDto:
+        with conn:
+            with conn.cursor() as cursor:
+                try:
+                    gps_id = str(ULID())
+
+                    cursor.execute(
+                        "INSERT INTO gps (id, walking_information_id) VALUES (%s, %s)",
+                        ((gps_id), walking_information_id),
+                    )
+
+                    return GpsRepositoryDto(
+                        gps_id=gps_id,
+                        walking_information_id=walking_information_id,
+                    )
+
+                except Exception as e:
+                    raise InfrastructureError(
+                        InfrastructureErrorType.GPS_DB_ERROR,
+                        "Failed to save gps",
                         500,
                     ) from e

@@ -55,14 +55,18 @@ class AccelerometerRepositoryDto:
 @dataclass
 class RatioWaveRepositoryDto:
     ratio_wave_id: str
-    rssi: float
     walking_information_id: str
 
 
 @dataclass
 class AtmosphericPressureRepositoryDto:
     atmospheric_pressure_id: str
-    pressure: float
+    walking_information_id: str
+
+
+@dataclass
+class GpsRepositoryDto:
+    gps_id: str
     walking_information_id: str
 
 
