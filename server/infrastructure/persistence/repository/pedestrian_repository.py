@@ -20,6 +20,6 @@ class PedestrianRepository(PedestrianRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.PEDESTRIAN_DB_ERROR,
-                        "Failed to save pedestrian",
                         500,
+                        "Failed to save pedestrian",
                     ) from e
