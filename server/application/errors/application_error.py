@@ -1,5 +1,7 @@
 from enum import Enum
 
+from fastapi import HTTPException
+
 
 class ApplicationErrorType(Enum):
     NOT_WALKING_START = "NotWalkingStart"
@@ -8,10 +10,10 @@ class ApplicationErrorType(Enum):
     NOT_FLOOR = "NotFloor"
 
 
-class ApplicationError(Exception):
-    def __init__(self, error_type: ApplicationErrorType, message: str):
+class ApplicationError(HTTPException):
+    def __init__(self, error_type: ApplicationErrorType, status_code: int, detail: str):
         self._type = error_type
-        super().__init__(message)
+        super().__init__(status_code, detail=detail)
 
     @property
     def type(self):

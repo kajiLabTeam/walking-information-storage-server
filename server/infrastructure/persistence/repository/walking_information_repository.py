@@ -44,8 +44,8 @@ class WalkingInformationRepository(WalkingInformationRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.WALKING_INFORMATION_DB_ERROR,
-                        "Failed to save walking information",
                         500,
+                        "Failed to save walking information",
                     ) from e
 
 
@@ -71,8 +71,8 @@ class GyroscopeRepository(GyroscopeRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.GYROSCOPE_DB_ERROR,
-                        "Failed to save gyroscope",
                         500,
+                        "Failed to save gyroscope",
                     ) from e
 
 
@@ -98,8 +98,8 @@ class AccelerometerRepository(AccelerometerRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.ACCELEROMETER_DB_ERROR,
-                        "Failed to save accelerometer",
                         500,
+                        "Failed to save accelerometer",
                     ) from e
 
 
@@ -115,7 +115,7 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
                     ratio_wave_id = str(ULID())
 
                     cursor.execute(
-                        "INSERT INTO ratio_waves (id, rssi, walking_information_id) VALUES (%s, %s, %s)",
+                        "INSERT INTO ratio_waves (id, walking_information_id) VALUES (%s, %s)",
                         ((ratio_wave_id), walking_information_id),
                     )
 
@@ -127,8 +127,8 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.RATIO_WAVE_DB_ERROR,
-                        "Failed to save ratio wave",
                         500,
+                        "Failed to save ratio wave",
                     ) from e
 
 
@@ -142,7 +142,7 @@ class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
                     atmospheric_pressure_id = str(ULID())
 
                     cursor.execute(
-                        "INSERT INTO atmospheric_pressures (id, walking_information_id) VALUES (%s, %s, %s)",
+                        "INSERT INTO atmospheric_pressures (id, walking_information_id) VALUES (%s, %s)",
                         ((atmospheric_pressure_id), walking_information_id),
                     )
 
@@ -154,8 +154,8 @@ class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.ATMOSPHERIC_PRESSURE_DB_ERROR,
-                        "Failed to save atmospheric pressure",
                         500,
+                        "Failed to save atmospheric pressure",
                     ) from e
 
 
@@ -179,6 +179,6 @@ class GpsRepository(GpsRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.GPS_DB_ERROR,
-                        "Failed to save gps",
                         500,
+                        "Failed to save gps",
                     ) from e

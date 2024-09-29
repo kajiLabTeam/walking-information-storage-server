@@ -2,6 +2,10 @@ from io import BytesIO
 from typing import Any
 
 from config.const.bucket import BUCKET_NAME
+from infrastructure.errors.infrastructure_error import (
+    InfrastructureError,
+    InfrastructureErrorType,
+)
 
 
 class FileService:
@@ -9,7 +13,14 @@ class FileService:
         self.__s3 = s3
 
     def download(self, key: str) -> bytes:
-        obj = self.__s3.get_object(Bucket=BUCKET_NAME, Key=key)
+        try:
+            obj = self.__s3.get_object(Bucket=BUCKET_NAME, Key=key)
+        except Exception as e:
+            raise InfrastructureError(
+                InfrastructureErrorType.FILE_DOWNLOAD_ERROR,
+                500,
+                "Failed to download file",
+            ) from e
 
         return obj["Body"].read()
 
@@ -20,5 +31,12 @@ class FileService:
     ) -> None:
         buffer = BytesIO(file)
 
-        self.__s3.upload_fileobj(buffer, BUCKET_NAME, key)
-        buffer.close()
+        try:
+            self.__s3.upload_fileobj(buffer, BUCKET_NAME, key)
+            buffer.close()
+        except Exception as e:
+            raise InfrastructureError(
+                InfrastructureErrorType.FILE_UPLOAD_ERROR,
+                500,
+                "Failed to upload file",
+            ) from e

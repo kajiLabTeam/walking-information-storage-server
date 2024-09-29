@@ -1,5 +1,7 @@
 from enum import Enum
 
+from fastapi import HTTPException
+
 
 class InfrastructureErrorType(Enum):
     NOT_FOUND_FLOOR_INFORMATION = "NOT_FOUND_FLOOR_INFORMATION"
@@ -20,20 +22,17 @@ class InfrastructureErrorType(Enum):
     RATIO_WAVE_DB_ERROR = "RATIO_WAVE_DB_ERROR"
     ATMOSPHERIC_PRESSURE_DB_ERROR = "ATMOSPHERIC_PRESSURE_DB_ERROR"
     GPS_DB_ERROR = "GPS_DB_ERROR"
+    FILE_UPLOAD_ERROR = "FILE_UPLOAD_ERROR"
+    FILE_DOWNLOAD_ERROR = "FILE_DOWNLOAD_ERROR"
 
 
-class InfrastructureError(Exception):
+class InfrastructureError(HTTPException):
     def __init__(
-        self, error_type: InfrastructureErrorType, message: str, status_code: int
+        self, error_type: InfrastructureErrorType, status_code: int, detail: str
     ):
         self._type = error_type
-        self._status_code = status_code
-        super().__init__(message)
+        super().__init__(status_code, detail=detail)
 
     @property
     def type(self):
         return self._type
-
-    @property
-    def status_code(self):
-        return self._status_code

@@ -94,7 +94,8 @@ class MovePedestrianService:
         ):
             raise ApplicationError(
                 error_type=ApplicationErrorType.NOT_WALKING_START,
-                message="The trajectory is not walking start.",
+                status_code=412,
+                detail="The trajectory is not walking start.",
             )
 
         # 歩行データから、歩行パラメータを取得
