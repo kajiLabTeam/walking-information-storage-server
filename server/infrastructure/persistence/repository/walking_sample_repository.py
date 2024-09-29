@@ -63,6 +63,7 @@ class WalkingSampleRepository(WalkingSampleRepositoryImpl):
                     raise InfrastructureError(
                         InfrastructureErrorType.NOT_FOUND_WALKING_SAMPLE,
                         message="Walking sample not found",
+                        status_code=404,
                     )
 
                 return WalkingSampleRepositoryDto(
