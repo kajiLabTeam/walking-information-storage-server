@@ -2,10 +2,7 @@ from application.errors.application_error import ApplicationError
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from infrastructure.errors.infrastructure_error import (
-    InfrastructureError,
-    InfrastructureErrorType,
-)
+from infrastructure.errors.infrastructure_error import InfrastructureError
 from presentation.handlers.finish_walking_handler import router as finish_walking_router
 from presentation.handlers.get_particles_floor_map_handler import (
     router as get_image_router,
@@ -39,38 +36,17 @@ app.include_router(health_check_router)
 @app.exception_handler(ApplicationError)
 async def application_error_handler(request: Request, exc: ApplicationError):
     return JSONResponse(
-        status_code=412,
-        content={"error": exc.args[0]},
+        status_code=exc.status_code,
+        content={"error": exc.detail, "type": exc.type.value},
     )
 
 
 @app.exception_handler(InfrastructureError)
 async def infrastructure_error_handler(request: Request, exc: InfrastructureError):
-    if exc.type == InfrastructureErrorType.NOT_FOUND_FLOOR:
-        return JSONResponse(
-            status_code=404,
-            content={"error": exc.args[0]},
-        )
-    if exc.type == InfrastructureErrorType.NOT_FOUND_TRAJECTORY:
-        return JSONResponse(
-            status_code=404,
-            content={"error": exc.args[0]},
-        )
-    if exc.type == InfrastructureErrorType.NOT_FOUND_WALKING_SAMPLE:
-        return JSONResponse(
-            status_code=404,
-            content={"error": exc.args[0]},
-        )
-    if exc.type == InfrastructureErrorType.NOT_FOUND_FLOOR_MAP:
-        return JSONResponse(
-            status_code=404,
-            content={"error": exc.args[0]},
-        )
-    if exc.type == InfrastructureErrorType.NOT_FOUND_FLOOR_INFORMATION:
-        return JSONResponse(
-            status_code=404,
-            content={"error": exc.args[0]},
-        )
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": exc.detail, "type": exc.type.value},
+    )
 
 
 @app.exception_handler(HTTPException)

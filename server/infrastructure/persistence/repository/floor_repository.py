@@ -35,7 +35,7 @@ class FloorRepository(FloorRepositoryImpl):
                     else:
                         raise InfrastructureError(
                             InfrastructureErrorType.NOT_FOUND_FLOOR,
-                            message="Floor not found",
+                            detail="Floor not found",
                             status_code=404,
                         )
 
@@ -48,7 +48,7 @@ class FloorRepository(FloorRepositoryImpl):
             except Exception as e:
                 raise InfrastructureError(
                     InfrastructureErrorType.FLOOR_DB_ERROR,
-                    message="Error occurred in floor database",
+                    detail="Error occurred in floor database",
                     status_code=500,
                 ) from e
 
@@ -68,7 +68,7 @@ class FloorRepository(FloorRepositoryImpl):
                     else:
                         raise InfrastructureError(
                             InfrastructureErrorType.NOT_FOUND_FLOOR,
-                            message="Floor not found",
+                            detail="Floor not found",
                             status_code=404,
                         )
 
@@ -81,7 +81,7 @@ class FloorRepository(FloorRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.FLOOR_DB_ERROR,
-                        message="Error occurred in floor database",
+                        detail="Error occurred in floor database",
                         status_code=500,
                     ) from e
 
@@ -97,7 +97,7 @@ class FloorRepository(FloorRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.FLOOR_DB_ERROR,
-                        message="Error occurred in floor database",
+                        detail="Error occurred in floor database",
                         status_code=500,
                     ) from e
 
@@ -119,7 +119,7 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                     else:
                         raise InfrastructureError(
                             InfrastructureErrorType.NOT_FOUND_FLOOR_INFORMATION,
-                            message="Floor information not found",
+                            detail="Floor information not found",
                             status_code=404,
                         )
 
@@ -130,7 +130,7 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.FLOOR_DB_ERROR,
-                        message="Error occurred in floor database",
+                        detail="Error occurred in floor database",
                         status_code=500,
                     ) from e
 
@@ -150,7 +150,7 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                 else:
                     raise InfrastructureError(
                         InfrastructureErrorType.NOT_FOUND_FLOOR_INFORMATION,
-                        message="Floor information not found",
+                        detail="Floor information not found",
                         status_code=404,
                     )
 
@@ -173,7 +173,7 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                     else:
                         raise InfrastructureError(
                             InfrastructureErrorType.NOT_FOUND_FLOOR_INFORMATION,
-                            message="Floor information not found",
+                            detail="Floor information not found",
                             status_code=404,
                         )
 
@@ -184,7 +184,7 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.FLOOR_INFORMATION_DB_ERROR,
-                        message="Error occurred in floor database",
+                        detail="Error occurred in floor database",
                         status_code=500,
                     ) from e
 
@@ -208,7 +208,7 @@ class FloorMapRepository(FloorMapRepositoryImpl):
                     else:
                         raise InfrastructureError(
                             InfrastructureErrorType.NOT_FOUND_FLOOR_MAP,
-                            message="Floor map not found",
+                            detail="Floor map not found",
                             status_code=404,
                         )
 
@@ -220,7 +220,7 @@ class FloorMapRepository(FloorMapRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.FLOOR_MAP_DB_ERROR,
-                        message="Error occurred in floor database",
+                        detail="Error occurred in floor database",
                         status_code=500,
                     ) from e
 
@@ -241,7 +241,7 @@ class FloorMapRepository(FloorMapRepositoryImpl):
                     else:
                         raise InfrastructureError(
                             InfrastructureErrorType.NOT_FOUND_FLOOR_MAP,
-                            message="Floor map not found",
+                            detail="Floor map not found",
                             status_code=404,
                         )
 
@@ -252,6 +252,6 @@ class FloorMapRepository(FloorMapRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.FLOOR_MAP_DB_ERROR,
-                        message="Error occurred in floor database",
+                        detail="Error occurred in floor database",
                         status_code=500,
                     ) from e

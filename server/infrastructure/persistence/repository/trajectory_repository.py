@@ -40,8 +40,8 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.TRAJECTORY_DB_ERROR,
-                        "Failed to save trajectory",
                         500,
+                        "Failed to save trajectory",
                     ) from e
 
     def find_for_id(
@@ -63,7 +63,7 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
                     else:
                         raise InfrastructureError(
                             InfrastructureErrorType.NOT_FOUND_TRAJECTORY,
-                            message="Trajectory not found",
+                            detail="Trajectory not found",
                             status_code=404,
                         )
 
@@ -77,8 +77,8 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.TRAJECTORY_DB_ERROR,
-                        "Failed to find trajectory",
                         500,
+                        "Failed to find trajectory",
                     ) from e
 
     def update(self, conn: connection, is_walking: bool, trajectory_id: str) -> None:
@@ -93,6 +93,6 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
                 except Exception as e:
                     raise InfrastructureError(
                         InfrastructureErrorType.TRAJECTORY_DB_ERROR,
-                        "Failed to update trajectory",
                         500,
+                        "Failed to update trajectory",
                     ) from e
