@@ -26,7 +26,7 @@ make spy-up
 `http://localhost:8080/public/relationships.html`にアクセスすると ER 図を閲覧できます
 
 > [!NOTE]
-> 初期化用 SQL の修正を繁栄したい場合は
+> 初期化用 SQL の修正を反映したい場合は
 >
 > ```
 > make all-restart
