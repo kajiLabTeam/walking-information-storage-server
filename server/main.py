@@ -1,17 +1,15 @@
-from application.errors.application_error import ApplicationError
+from application.errors import ApplicationError
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from infrastructure.errors.infrastructure_error import InfrastructureError
-from presentation.handlers.finish_walking_handler import router as finish_walking_router
-from presentation.handlers.get_particles_floor_map_handler import (
-    router as get_image_router,
+from presentation.handlers import (
+    finish_walking_router,
+    get_image_router,
+    health_check_router,
+    move_pedestrian_router,
+    start_walking_router,
 )
-from presentation.handlers.health_check_handler import router as health_check_router
-from presentation.handlers.move_pedestrian_handler import (
-    router as move_pedestrian_router,
-)
-from presentation.handlers.start_walking_handler import router as start_walking_router
 from starlette.requests import Request
 
 app = FastAPI()

@@ -1,5 +1,5 @@
-from application.dto.application_dto import FinishWalkingServiceDto
-from domain.repository_impl.trajectory_repository_impl import TrajectoryRepositoryImpl
+from application.dto import FinishWalkingServiceDto
+from domain.repository_impl import TrajectoryRepositoryImpl
 from infrastructure.connection import DBConnection
 
 
