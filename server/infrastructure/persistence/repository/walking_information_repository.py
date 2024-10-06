@@ -1,3 +1,11 @@
+from domain.repository_impl import (
+    AccelerometerRepositoryImpl,
+    AtmosphericPressureRepositoryImpl,
+    GpsRepositoryImpl,
+    GyroscopeRepositoryImpl,
+    RatioWaveRepositoryImpl,
+    WalkingInformationRepositoryImpl,
+)
 from domain.repository_impl.dto.infrastructure_dto import (
     AccelerometerRepositoryDto,
     AtmosphericPressureRepositoryDto,
@@ -5,14 +13,6 @@ from domain.repository_impl.dto.infrastructure_dto import (
     GyroscopeRepositoryDto,
     RatioWaveRepositoryDto,
     WalkingInformationRepositoryDto,
-)
-from domain.repository_impl.walking_information_repository_impl import (
-    AccelerometerRepositoryImpl,
-    AtmosphericPressureRepositoryImpl,
-    GpsRepositoryImpl,
-    GyroscopeRepositoryImpl,
-    RatioWaveRepositoryImpl,
-    WalkingInformationRepositoryImpl,
 )
 from infrastructure.errors.infrastructure_error import (
     InfrastructureError,

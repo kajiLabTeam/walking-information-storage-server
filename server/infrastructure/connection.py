@@ -1,7 +1,7 @@
 from typing import Any
 
 import boto3
-from config.env import MinioEnv, PostgresEnv
+from config import MinioEnv, PostgresEnv
 from psycopg2 import connect
 from psycopg2.extensions import connection
 

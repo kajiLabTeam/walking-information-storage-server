@@ -1,6 +1,6 @@
-from application.dto.application_dto import MovePedestrianServiceDto
+from application.dto import MovePedestrianServiceDto
 from application.errors.application_error import ApplicationError, ApplicationErrorType
-from config.const.amount import STEP
+from config.const import STEP
 from domain.models.angle_converter.angle_converter import AngleConverter
 from domain.models.estimated_particle.estimated_particle import (
     EstimatedParticle,
@@ -8,23 +8,19 @@ from domain.models.estimated_particle.estimated_particle import (
 )
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
-from domain.repository_impl.floor_repository_impl import (
+from domain.repository_impl import (
+    AccelerometerRepositoryImpl,
+    AtmosphericPressureRepositoryImpl,
+    EstimatedPositionRepositoryImpl,
     FloorInformationRepositoryImpl,
     FloorMapRepositoryImpl,
     FloorRepositoryImpl,
-)
-from domain.repository_impl.trajectory_repository_impl import TrajectoryRepositoryImpl
-from domain.repository_impl.walking_information_repository_impl import (
-    AccelerometerRepositoryImpl,
-    AtmosphericPressureRepositoryImpl,
     GpsRepositoryImpl,
     GyroscopeRepositoryImpl,
-    RatioWaveRepositoryImpl,
-    WalkingInformationRepositoryImpl,
-)
-from domain.repository_impl.walking_sample_repository_impl import (
-    EstimatedPositionRepositoryImpl,
     ParticleRepositoryImpl,
+    RatioWaveRepositoryImpl,
+    TrajectoryRepositoryImpl,
+    WalkingInformationRepositoryImpl,
     WalkingSampleRepositoryImpl,
 )
 from infrastructure.connection import DBConnection, MinIOConnection
@@ -32,8 +28,8 @@ from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from infrastructure.external.services.file_service import FileService
-from utils.bucket import (
+from infrastructure.external.services import FileService
+from utils import (
     get_accelerometer_bucket_name,
     get_atmospheric_pressure_bucket_name,
     get_floor_map_bucket_name,

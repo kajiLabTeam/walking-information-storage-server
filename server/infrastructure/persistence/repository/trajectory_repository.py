@@ -1,5 +1,5 @@
+from domain.repository_impl import TrajectoryRepositoryImpl
 from domain.repository_impl.dto.infrastructure_dto import TrajectoryRepositoryDto
-from domain.repository_impl.trajectory_repository_impl import TrajectoryRepositoryImpl
 from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
