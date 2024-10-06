@@ -1,18 +1,16 @@
 from typing import List, Literal
 
 import numpy as np
-from config.const.amount import (
+from config.const import (
     CLUSTER_AMOUNT_THRESHOLD,
     CONVERGENCE_DECENTRALIZATION_THRESHOLD,
     INITIAL_PARTICLES_AMOUNT,
     MISSING_PARTICLE_THRESHOLD,
-    SEARCH_NEAREST_INSIDE_RANGE,
-)
-from config.const.circle import REVERSE_RADIUS
-from config.const.error import (
     PARTICLES_ANGLE_ERROR,
     PARTICLES_DIRECTION_ERROR,
     PARTICLES_STEP_ERROR,
+    REVERSE_RADIUS,
+    SEARCH_NEAREST_INSIDE_RANGE,
 )
 from domain.models.estimated_particle.convergence_judgment import ConvergenceJudgment
 from domain.models.estimated_position.estimated_position import EstimatedPosition
@@ -20,7 +18,7 @@ from domain.models.floor_map.floor_map import FloorMap
 from domain.models.particle.particle import Particle
 from domain.models.particle_collection.particle_collection import ParticleCollection
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
-from utils.angle import get_random_angle
+from utils import get_random_angle
 
 
 class EstimatedParticle:

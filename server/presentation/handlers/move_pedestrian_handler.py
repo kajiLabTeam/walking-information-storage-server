@@ -1,26 +1,20 @@
 from typing import Annotated
 
-from application.services.move_pedestrian_service import MovePedestrianService
+from application.services import MovePedestrianService
 from fastapi import APIRouter, File, Form, UploadFile
-from infrastructure.persistence.repository.floor_repository import (
+from infrastructure.persistence.repository import (
+    AccelerometerRepository,
+    AtmosphericPressureRepository,
+    EstimatedPositionRepository,
     FloorInformationRepository,
     FloorMapRepository,
     FloorRepository,
-)
-from infrastructure.persistence.repository.trajectory_repository import (
-    TrajectoryRepository,
-)
-from infrastructure.persistence.repository.walking_information_repository import (
-    AccelerometerRepository,
-    AtmosphericPressureRepository,
     GpsRepository,
     GyroscopeRepository,
-    RatioWaveRepository,
-    WalkingInformationRepository,
-)
-from infrastructure.persistence.repository.walking_sample_repository import (
-    EstimatedPositionRepository,
     ParticleRepository,
+    RatioWaveRepository,
+    TrajectoryRepository,
+    WalkingInformationRepository,
     WalkingSampleRepository,
 )
 from pydantic import BaseModel

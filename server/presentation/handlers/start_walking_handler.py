@@ -1,9 +1,7 @@
-from application.services.start_walking_service import StartWalkingService
+from application.services import StartWalkingService
 from fastapi import APIRouter, HTTPException
-from infrastructure.persistence.repository.floor_repository import (
+from infrastructure.persistence.repository import (
     FloorInformationRepository,
-)
-from infrastructure.persistence.repository.trajectory_repository import (
     TrajectoryRepository,
 )
 from pydantic import BaseModel

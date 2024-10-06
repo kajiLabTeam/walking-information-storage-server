@@ -1,6 +1,6 @@
 from typing import List
 
-from config.const.circle import REVERSE_RADIUS
+from config.const import REVERSE_RADIUS
 from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.tracking_particle.tracking_particle import TrackingParticle
 
