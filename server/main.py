@@ -1,8 +1,9 @@
 from application.errors import ApplicationError
+from domain.errors import DomainError
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from infrastructure.errors.infrastructure_error import InfrastructureError
+from infrastructure.errors import InfrastructureError
 from presentation.handlers import (
     finish_walking_router,
     get_image_router,
@@ -41,6 +42,14 @@ async def application_error_handler(request: Request, exc: ApplicationError):
 
 @app.exception_handler(InfrastructureError)
 async def infrastructure_error_handler(request: Request, exc: InfrastructureError):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": exc.detail, "type": exc.type.value},
+    )
+
+
+@app.exception_handler(DomainError)
+async def domain_error_handler(request: Request, exc: DomainError):
     return JSONResponse(
         status_code=exc.status_code,
         content={"error": exc.detail, "type": exc.type.value},

@@ -3,6 +3,7 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
+from domain.errors import DomainError, DomainErrorType
 
 
 class WalkingParameter:
@@ -26,18 +27,25 @@ class WalkingParameter:
     def __calculate_cumulative_angle(
         self, gyroscope_file: bytes, time_unit: float = 0.7
     ) -> int:
-        sample_freq = 100
-        window_gayo = 10
-        gyro_df = pd.read_csv(BytesIO(gyroscope_file))
-        gyro_df["time_unit"] = (gyro_df["t"] / time_unit).astype(int)
+        try:
+            sample_freq = 100
+            window_gayo = 10
+            gyro_df = pd.read_csv(BytesIO(gyroscope_file))
+            gyro_df["time_unit"] = (gyro_df["t"] / time_unit).astype(int)
 
-        gyro_df["norm"] = (
-            gyro_df["x"] ** 2 + gyro_df["y"] ** 2 + gyro_df["z"] ** 2
-        ) ** (1 / 2)
-        gyro_df["angle"] = np.cumsum(gyro_df["x"]) / sample_freq
-        gyro_df["low_x"] = gyro_df["x"].rolling(window=window_gayo).mean()
-        gyro_df["angle_x"] = gyro_df["angle"].rolling(
-            window=window_gayo, center=True
-        ).mean() * (180 / np.pi)
+            gyro_df["norm"] = (
+                gyro_df["x"] ** 2 + gyro_df["y"] ** 2 + gyro_df["z"] ** 2
+            ) ** (1 / 2)
+            gyro_df["angle"] = np.cumsum(gyro_df["x"]) / sample_freq
+            gyro_df["low_x"] = gyro_df["x"].rolling(window=window_gayo).mean()
+            gyro_df["angle_x"] = gyro_df["angle"].rolling(
+                window=window_gayo, center=True
+            ).mean() * (180 / np.pi)
 
-        return int(gyro_df["angle_x"].max())
+            return int(gyro_df["angle_x"].max())
+        except Exception:
+            raise DomainError(
+                error_type=DomainErrorType.INVALID_GYROSCOPE_DATA,
+                status_code=400,
+                detail="gyroscope data is invalid",
+            )
