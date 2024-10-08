@@ -1,5 +1,5 @@
 from application.dto import MovePedestrianServiceDto
-from application.errors.application_error import ApplicationError, ApplicationErrorType
+from application.errors import ApplicationError, ApplicationErrorType
 from config.const import STEP
 from domain.models.estimated_particle.estimated_particle import (
     EstimatedParticle,
