@@ -1,7 +1,6 @@
 from application.dto import MovePedestrianServiceDto
 from application.errors.application_error import ApplicationError, ApplicationErrorType
 from config.const import STEP
-from domain.models.angle_converter.angle_converter import AngleConverter
 from domain.models.estimated_particle.estimated_particle import (
     EstimatedParticle,
     EstimatedParticleFactory,
@@ -95,12 +94,8 @@ class MovePedestrianService:
             )
 
         # 歩行データから、歩行パラメータを取得
-        angle_converter = AngleConverter(gyroscope_file=gyroscope_file)
-        angle_changed = angle_converter.calculate_cumulative_angle()
         walking_parameter = WalkingParameter(
-            id=None,
-            step=STEP,
-            angle_changed=angle_changed,
+            id=None, step=STEP, gyroscope_file=gyroscope_file
         )
 
         # 歩行情報
