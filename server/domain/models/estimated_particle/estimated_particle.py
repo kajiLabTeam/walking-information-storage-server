@@ -176,14 +176,14 @@ class EstimatedParticle:
         ## ベクトルの向きに合わせてパーティクルを移動させる
         """
         step = current_walking_parameter.get_step()
-        changed_angle = current_walking_parameter.get_angle_changed()
+        angle_change = current_walking_parameter.get_angle_change()
 
         move_particle_collection = ParticleCollection()
 
         moved_particles = [
             particle.move(
                 step=step,
-                changed_angle=changed_angle,
+                angle_change=angle_change,
                 step_error=PARTICLES_STEP_ERROR(),
             )
             for particle in self.__particle_collection
@@ -229,27 +229,31 @@ class EstimatedParticle:
         ]
 
         self.__missing_particle_count += len(remove_particle_indexes)
-
         self.__particle_collection.pop_all(indexes=remove_particle_indexes)
 
     def remove_by_direction(self, step: int):
         """
         ## パーティクルの向きが歩行不可能領域を向いている場合、パーティクルを削除する
         """
-        remove_particle_indexes = []
+        remove_particle_indexes = [
+            i for i, particle in enumerate(self.__particle_collection)
+            if particle.is_straight_direction_to_wall(step=step, is_inside_floor=self.__floor_map.is_inside_floor)
+            or particle.is_turn_direction_to_wall(step=step, is_inside_floor=self.__floor_map.is_inside_floor)
+        ]
 
-        for i, particle in enumerate(self.__particle_collection):
-            if particle.is_straight_direction_to_wall(
-                step=step, is_inside_floor=self.__floor_map.is_inside_floor
-            ):
-                remove_particle_indexes.append(i)
-                continue
 
-            if particle.is_turn_direction_to_wall(
-                step=step,
-                is_inside_floor=self.__floor_map.is_inside_floor,
-            ):
-                remove_particle_indexes.append(i)
+        # for i, particle in enumerate(self.__particle_collection):
+        #     if particle.is_straight_direction_to_wall(
+        #         step=step, is_inside_floor=self.__floor_map.is_inside_floor
+        #     ):
+        #         remove_particle_indexes.append(i)
+        #         continue
+
+        #     if particle.is_turn_direction_to_wall(
+        #         step=step,
+        #         is_inside_floor=self.__floor_map.is_inside_floor,
+        #     ):
+        #         remove_particle_indexes.append(i)
 
         self.__missing_particle_count += len(remove_particle_indexes)
         self.__particle_collection.pop_all(indexes=remove_particle_indexes)

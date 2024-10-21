@@ -81,5 +81,5 @@ async def move_pedestrian(
         y=move_pedestrian_service_dto.estimated_position.get_y(),
         direction=move_pedestrian_service_dto.estimated_position.get_direction(),
         step=move_pedestrian_service_dto.walking_parameter.get_step(),
-        angleChanged=move_pedestrian_service_dto.walking_parameter.get_angle_changed(),
+        angleChanged=move_pedestrian_service_dto.walking_parameter.get_angle_change(),
     )

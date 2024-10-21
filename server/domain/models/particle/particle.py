@@ -67,9 +67,9 @@ class Particle:
             weight=weight,
         )
 
-    def move(self, changed_angle: float, step: int, step_error: int) -> "Particle":
+    def move(self, angle_change: float, step: int, step_error: int) -> "Particle":
         # 方向を変更
-        move_direction = self.__direction + changed_angle
+        move_direction = self.__direction + angle_change
         move_direction %= 360  # 0-359度に正規化
 
         # ステップとステップエラーを加算
@@ -109,8 +109,8 @@ class Particle:
         """
         ## 90度回転したパーティクルが壁に埋まっているかを判定する
         """
-        plus_turn_move_particle = self.move(changed_angle=90, step=step, step_error=0)
-        minus_turn_move_particle = self.move(step=step, changed_angle=-90, step_error=0)
+        plus_turn_move_particle = self.move(angle_change=90, step=step, step_error=0)
+        minus_turn_move_particle = self.move(step=step, angle_change=-90, step_error=0)
 
         return not is_inside_floor(
             plus_turn_move_particle.get_x(), plus_turn_move_particle.get_y()

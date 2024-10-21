@@ -26,10 +26,6 @@ class TrackingParticle:
         self.__walking_parameter_collection = WalkingParameterCollection()
         self._initialized = True
 
-    @classmethod
-    def reset_instance(cls, floor_map: FloorMap):
-        cls._instance = None
-        cls._instance = cls(floor_map)
 
     def get_tracking_count(self) -> int:
         return self.__tracking_count
@@ -107,7 +103,7 @@ class TrackingParticle:
             and self.__tracking_count % CONVERGENCE_JUDGEMENT_NUMBER == 0
             and estimation_particles.is_converged()
         ):
-            print("収束地点しました")
+            print("収束しました")
             self.__coverage_count = self.__tracking_count
             self.__coverage_position = move_estimation_particles.estimate_position()
 
