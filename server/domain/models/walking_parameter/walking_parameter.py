@@ -1,5 +1,4 @@
 from io import BytesIO
-from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -7,16 +6,9 @@ from domain.errors import DomainError, DomainErrorType
 
 
 class WalkingParameter:
-    def __init__(self, id: Optional[str], step: int, gyroscope_file: bytes):
-        self.__id = id
+    def __init__(self, step: int, gyroscope_file: bytes):
         self.__step = step
         self.__angle_changed = self.__calculate_cumulative_angle(gyroscope_file)
-
-    def get_id(self) -> str:
-        if self.__id is None:
-            raise ValueError("Not")
-
-        return self.__id
 
     def get_step(self) -> int:
         return self.__step
