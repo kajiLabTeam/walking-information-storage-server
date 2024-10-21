@@ -35,9 +35,7 @@ class Cluster:
         if self.size > 1:
             self.cov = np.cov(self.data.T)
             if np.linalg.matrix_rank(self.cov) < self.cov.shape[0]:
-                self.cov += (
-                    np.eye(self.cov.shape[0]) * 1e-6
-                ) 
+                self.cov += np.eye(self.cov.shape[0]) * 1e-6
         else:
             self.cov = np.eye(self.data.shape[1]) * 1e-6
 
