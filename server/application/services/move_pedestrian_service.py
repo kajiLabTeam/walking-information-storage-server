@@ -1,10 +1,7 @@
 from application.dto import MovePedestrianServiceDto
 from application.errors import ApplicationError, ApplicationErrorType
 from config.const import STEP
-from domain.models.estimated_particle.estimated_particle import (
-    EstimatedParticle,
-    EstimatedParticleFactory,
-)
+from domain.models.estimated_particle.estimated_particle import EstimatedParticle
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from domain.repository_impl import (
@@ -146,7 +143,7 @@ class MovePedestrianService:
             )
         except InfrastructureError as e:
             if e.type == InfrastructureErrorType.NOT_FOUND_WALKING_SAMPLE:
-                estimated_particle = EstimatedParticleFactory.create(
+                estimated_particle = EstimatedParticle.initialize(
                     floor_map=floor_map,
                     initial_walking_parameter=walking_parameter,
                 )
@@ -164,7 +161,7 @@ class MovePedestrianService:
                 particle_collection=latest_particle_collection,
             )
 
-        estimated_particle = EstimatedParticleFactory.create(
+        estimated_particle = EstimatedParticle.initialize(
             floor_map=floor_map, initial_walking_parameter=walking_parameter
         )
 

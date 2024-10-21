@@ -1,10 +1,8 @@
 from typing import List, Optional, Tuple
 
 from config.const import CONVERGENCE_JUDGEMENT_NUMBER, RSSI_MODEL_PATH
-from domain.models.estimated_particle.estimated_particle import (
-    EstimatedParticle,
-    EstimatedParticleFactory,
-)
+from domain.errors.domain_error import DomainError, DomainErrorType
+from domain.models.estimated_particle.estimated_particle import EstimatedParticle
 from domain.models.estimated_position.estimated_position import EstimatedPosition
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
@@ -29,7 +27,7 @@ class TrackingParticle:
         self._initialized = True
 
     @classmethod
-    def reset_instance(cls, floor_map: FloorMap) -> None:
+    def reset_instance(cls, floor_map: FloorMap):
         cls._instance = None
         cls._instance = cls(floor_map)
 
@@ -49,9 +47,13 @@ class TrackingParticle:
         walking_positions.reverse()
         return walking_positions
 
-    def get_coverage_position(self) -> Optional[Tuple[EstimatedPosition, int]]:
+    def get_coverage_position(self) -> Tuple[EstimatedPosition, int]:
         if self.__coverage_position is None:
-            return None
+            raise DomainError(
+                error_type=DomainErrorType.COVERAGE_POSITION_IS_NONE,
+                status_code=500,
+                detail="収束地点が存在しません",
+            )
 
         return (
             EstimatedPosition(
@@ -84,7 +86,7 @@ class TrackingParticle:
 
     def track(self, walking_parameter: WalkingParameter) -> None:
         if self.__estimation_particles == []:
-            estimated_particle = EstimatedParticleFactory().create(
+            estimated_particle = EstimatedParticle.initialize(
                 floor_map=self.__floor_map, initial_walking_parameter=walking_parameter
             )
             self.add(estimated_particle)

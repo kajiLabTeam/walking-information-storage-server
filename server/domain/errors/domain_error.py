@@ -5,6 +5,8 @@ from fastapi import HTTPException
 
 class DomainErrorType(Enum):
     INVALID_GYROSCOPE_DATA = "InvalidGyroscopeData"
+    COVERAGE_POSITION_IS_NONE = "CoveragePositionIsNone"
+    REVERSED_ESTIMATION_PARTICLE_FILTER = "ReversedEstimationParticleFilter"
 
 
 class DomainError(HTTPException):

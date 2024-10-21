@@ -34,11 +34,10 @@ class Cluster:
 
         if self.size > 1:
             self.cov = np.cov(self.data.T)
-            # Check for singular matrix and adjust if necessary
             if np.linalg.matrix_rank(self.cov) < self.cov.shape[0]:
                 self.cov += (
                     np.eye(self.cov.shape[0]) * 1e-6
-                )  # Adding a small value to diagonal
+                ) 
         else:
             self.cov = np.eye(self.data.shape[1]) * 1e-6
 
@@ -51,7 +50,7 @@ class Cluster:
 
         log_likelihoods = [
             stats.multivariate_normal.logpdf(
-                x, self.center, self.cov, allow_singular=True
+                x, self.center, int(self.cov), allow_singular=True
             )
             for x in self.data
         ]

@@ -35,6 +35,80 @@ class EstimatedParticle:
         self.__current_walking_parameter = current_walking_parameter
         self.__particle_collection = particle_collection
 
+    @classmethod
+    def initialize(
+        cls, floor_map: FloorMap, initial_walking_parameter: WalkingParameter
+    ):
+        """
+        ## 初期パーティクルを散布する
+        """
+        particle_collection = ParticleCollection()
+
+        while len(particle_collection) < INITIAL_PARTICLES_AMOUNT:
+            x = np.random.randint(floor_map.get_map_width())
+            y = np.random.randint(floor_map.get_map_height())
+            direction = get_random_angle()
+            weight = 1 / INITIAL_PARTICLES_AMOUNT
+
+            if not floor_map.is_inside_floor(x=x, y=y):
+                continue
+
+            particle_collection.add(
+                particle=Particle(
+                    x=x,
+                    y=y,
+                    direction=direction,
+                    weight=weight,
+                )
+            )
+
+        return EstimatedParticle(
+            floor_map=floor_map,
+            current_walking_parameter=initial_walking_parameter,
+            particle_collection=particle_collection,
+        )
+
+    @classmethod
+    def reverse_initialize(
+        cls,
+        floor_map: FloorMap,
+        final_position: EstimatedPosition,
+        walking_parameter: WalkingParameter,
+    ):
+        """
+        ## 逆算軌跡推定の際に行うパーティクルフィルタのパーティクルを散布する
+        """
+
+        particle_collection = ParticleCollection()
+
+        while len(particle_collection) < INITIAL_PARTICLES_AMOUNT:
+            x = final_position.get_x() + np.random.randint(
+                -REVERSE_RADIUS, REVERSE_RADIUS
+            )
+            y = final_position.get_y() + np.random.randint(
+                -REVERSE_RADIUS, REVERSE_RADIUS
+            )
+            direction = final_position.get_direction() + PARTICLES_DIRECTION_ERROR()
+            weight = 1 / INITIAL_PARTICLES_AMOUNT
+
+            if not floor_map.is_inside_floor(x=x, y=y):
+                continue
+
+            particle_collection.add(
+                particle=Particle(
+                    x=x,
+                    y=y,
+                    direction=direction,
+                    weight=weight,
+                )
+            )
+
+        return EstimatedParticle(
+            floor_map=floor_map,
+            current_walking_parameter=walking_parameter,
+            particle_collection=particle_collection,
+        )
+
     def get_floor_map(self) -> FloorMap:
         return self.__floor_map
 
@@ -248,78 +322,3 @@ class EstimatedParticle:
 
     def __len__(self):
         return len(self.__particle_collection)
-
-
-class EstimatedParticleFactory:
-    @staticmethod
-    def create(
-        floor_map: FloorMap, initial_walking_parameter: WalkingParameter
-    ) -> EstimatedParticle:
-        """
-        ## 初期パーティクルを散布する
-        """
-        particle_collection = ParticleCollection()
-
-        while len(particle_collection) < INITIAL_PARTICLES_AMOUNT:
-            x = np.random.randint(floor_map.get_map_width())
-            y = np.random.randint(floor_map.get_map_height())
-            direction = get_random_angle()
-            weight = 1 / INITIAL_PARTICLES_AMOUNT
-
-            if not floor_map.is_inside_floor(x=x, y=y):
-                continue
-
-            particle_collection.add(
-                particle=Particle(
-                    x=x,
-                    y=y,
-                    direction=direction,
-                    weight=weight,
-                )
-            )
-
-        return EstimatedParticle(
-            floor_map=floor_map,
-            current_walking_parameter=initial_walking_parameter,
-            particle_collection=particle_collection,
-        )
-
-    @staticmethod
-    def reverse_create(
-        floor_map: FloorMap,
-        final_position: EstimatedPosition,
-        walking_parameter: WalkingParameter,
-    ) -> EstimatedParticle:
-        """
-        ## 逆算軌跡推定の際に行うパーティクルフィルタのパーティクルを散布する
-        """
-
-        particle_collection = ParticleCollection()
-
-        while len(particle_collection) < INITIAL_PARTICLES_AMOUNT:
-            x = final_position.get_x() + np.random.randint(
-                -REVERSE_RADIUS, REVERSE_RADIUS
-            )
-            y = final_position.get_y() + np.random.randint(
-                -REVERSE_RADIUS, REVERSE_RADIUS
-            )
-            direction = final_position.get_direction() + PARTICLES_DIRECTION_ERROR()
-            weight = 1 / INITIAL_PARTICLES_AMOUNT
-
-            if not floor_map.is_inside_floor(x=x, y=y):
-                continue
-
-            particle_collection.add(
-                particle=Particle(
-                    x=x,
-                    y=y,
-                    direction=direction,
-                    weight=weight,
-                )
-            )
-
-        return EstimatedParticle(
-            floor_map=floor_map,
-            current_walking_parameter=walking_parameter,
-            particle_collection=particle_collection,
-        )
