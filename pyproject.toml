@@ -1,12 +1,10 @@
-[tool.ruff]
-line-length = 80
-
-
 [tool.ruff.format]
 docstring-code-format = true
 
 [tool.ruff.lint]
-select = ["ALL"]
+line-length = 88
+indent-width = 4
+select = ["I001"]
 ignore = [
     "ANN1",   # missing type self and cls
     "E999",   # syntax error
@@ -18,6 +16,10 @@ ignore = [
     "TD002",  # missing todo author
     "TD003",  # missing todo link
     "PD011",  # pandas use of dot values
+    "INP001",
+    "TRY301", # try except pass
+    "N806",   # variable in except block
+    "FBT001", # assert in finally block
 ]
 unfixable = [
     "F401",   # unused import
