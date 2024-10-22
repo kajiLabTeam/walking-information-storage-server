@@ -18,13 +18,19 @@ from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from psycopg2.extensions import connection
-from ulid import ULID
+from psycopg2.extensions import (
+    connection,
+)
+from ulid import (
+    ULID,
+)
 
 
 class WalkingInformationRepository(WalkingInformationRepositoryImpl):
     def save(
-        self, conn: connection, pedestrian_id: str
+        self,
+        conn: connection,
+        pedestrian_id: str,
     ) -> WalkingInformationRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
@@ -33,7 +39,10 @@ class WalkingInformationRepository(WalkingInformationRepositoryImpl):
 
                     cursor.execute(
                         "INSERT INTO walking_information (id, pedestrian_id) VALUES (%s, %s)",
-                        ((walking_information_id), pedestrian_id),
+                        (
+                            (walking_information_id),
+                            pedestrian_id,
+                        ),
                     )
 
                     return WalkingInformationRepositoryDto(
@@ -51,7 +60,9 @@ class WalkingInformationRepository(WalkingInformationRepositoryImpl):
 
 class GyroscopeRepository(GyroscopeRepositoryImpl):
     def save(
-        self, conn: connection, walking_information_id: str
+        self,
+        conn: connection,
+        walking_information_id: str,
     ) -> GyroscopeRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
@@ -60,7 +71,10 @@ class GyroscopeRepository(GyroscopeRepositoryImpl):
 
                     cursor.execute(
                         "INSERT INTO gyroscopes (id, walking_information_id) VALUES (%s, %s)",
-                        ((gyroscope_id), walking_information_id),
+                        (
+                            (gyroscope_id),
+                            walking_information_id,
+                        ),
                     )
 
                     return GyroscopeRepositoryDto(
@@ -78,7 +92,9 @@ class GyroscopeRepository(GyroscopeRepositoryImpl):
 
 class AccelerometerRepository(AccelerometerRepositoryImpl):
     def save(
-        self, conn: connection, walking_information_id: str
+        self,
+        conn: connection,
+        walking_information_id: str,
     ) -> AccelerometerRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
@@ -87,7 +103,10 @@ class AccelerometerRepository(AccelerometerRepositoryImpl):
 
                     cursor.execute(
                         "INSERT INTO accelerometers (id, walking_information_id) VALUES (%s, %s)",
-                        ((accelerometer_id), walking_information_id),
+                        (
+                            (accelerometer_id),
+                            walking_information_id,
+                        ),
                     )
 
                     return AccelerometerRepositoryDto(
@@ -116,7 +135,10 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
 
                     cursor.execute(
                         "INSERT INTO ratio_waves (id, walking_information_id) VALUES (%s, %s)",
-                        ((ratio_wave_id), walking_information_id),
+                        (
+                            (ratio_wave_id),
+                            walking_information_id,
+                        ),
                     )
 
                     return RatioWaveRepositoryDto(
@@ -134,7 +156,9 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
 
 class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
     def save(
-        self, conn: connection, walking_information_id: str
+        self,
+        conn: connection,
+        walking_information_id: str,
     ) -> AtmosphericPressureRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
@@ -143,7 +167,10 @@ class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
 
                     cursor.execute(
                         "INSERT INTO atmospheric_pressures (id, walking_information_id) VALUES (%s, %s)",
-                        ((atmospheric_pressure_id), walking_information_id),
+                        (
+                            (atmospheric_pressure_id),
+                            walking_information_id,
+                        ),
                     )
 
                     return AtmosphericPressureRepositoryDto(
@@ -160,7 +187,11 @@ class AtmosphericPressureRepository(AtmosphericPressureRepositoryImpl):
 
 
 class GpsRepository(GpsRepositoryImpl):
-    def save(self, conn: connection, walking_information_id: str) -> GpsRepositoryDto:
+    def save(
+        self,
+        conn: connection,
+        walking_information_id: str,
+    ) -> GpsRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
                 try:
@@ -168,7 +199,10 @@ class GpsRepository(GpsRepositoryImpl):
 
                     cursor.execute(
                         "INSERT INTO gps (id, walking_information_id) VALUES (%s, %s)",
-                        ((gps_id), walking_information_id),
+                        (
+                            (gps_id),
+                            walking_information_id,
+                        ),
                     )
 
                     return GpsRepositoryDto(

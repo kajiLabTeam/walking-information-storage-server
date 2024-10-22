@@ -1,7 +1,16 @@
-from typing import Annotated
+from typing import (
+    Annotated,
+)
 
-from application.services import MovePedestrianService
-from fastapi import APIRouter, File, Form, UploadFile
+from application.services import (
+    MovePedestrianService,
+)
+from fastapi import (
+    APIRouter,
+    File,
+    Form,
+    UploadFile,
+)
 from infrastructure.persistence.repository import (
     AccelerometerRepository,
     AtmosphericPressureRepository,
@@ -17,7 +26,9 @@ from infrastructure.persistence.repository import (
     WalkingInformationRepository,
     WalkingSampleRepository,
 )
-from pydantic import BaseModel
+from pydantic import (
+    BaseModel,
+)
 
 
 class CreateWalkingSampleResponse(BaseModel):
@@ -47,15 +58,40 @@ move_pedestrian_service = MovePedestrianService(
 )
 
 
-@router.post("/api/walk", response_model=CreateWalkingSampleResponse, status_code=201)
+@router.post(
+    "/api/walk",
+    response_model=CreateWalkingSampleResponse,
+    status_code=201,
+)
 async def move_pedestrian(
-    pedestrianId: Annotated[str, Form()],
-    trajectoryId: Annotated[str, Form()],
-    gpsFile: Annotated[UploadFile, File()],
-    wifiFile: Annotated[UploadFile, File()],
-    gyroscopeFile: Annotated[UploadFile, File()],
-    accelerometerFile: Annotated[UploadFile, File()],
-    atmosphericPressureFile: Annotated[UploadFile, File()],
+    pedestrianId: Annotated[
+        str,
+        Form(),
+    ],
+    trajectoryId: Annotated[
+        str,
+        Form(),
+    ],
+    gpsFile: Annotated[
+        UploadFile,
+        File(),
+    ],
+    wifiFile: Annotated[
+        UploadFile,
+        File(),
+    ],
+    gyroscopeFile: Annotated[
+        UploadFile,
+        File(),
+    ],
+    accelerometerFile: Annotated[
+        UploadFile,
+        File(),
+    ],
+    atmosphericPressureFile: Annotated[
+        UploadFile,
+        File(),
+    ],
 ):
     """
     クライアントが歩行開始からの歩行データをサーバに送信するためのエンドポイント

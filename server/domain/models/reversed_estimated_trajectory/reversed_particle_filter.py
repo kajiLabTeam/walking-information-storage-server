@@ -1,16 +1,32 @@
-from typing import List
+from typing import (
+    List,
+)
 
-from domain.errors.domain_error import DomainError, DomainErrorType
-from domain.models.estimated_particle.estimated_particle import EstimatedParticle
-from domain.models.estimated_position.estimated_position import EstimatedPosition
-from domain.models.tracking_particle.tracking_particle import TrackingParticle
+from domain.errors.domain_error import (
+    DomainError,
+    DomainErrorType,
+)
+from domain.models.estimated_particle.estimated_particle import (
+    EstimatedParticle,
+)
+from domain.models.estimated_position.estimated_position import (
+    EstimatedPosition,
+)
+from domain.models.tracking_particle.tracking_particle import (
+    TrackingParticle,
+)
 
 
 class ReversedEstimationParticleFilter:
     @staticmethod
-    def run(tracking_particle: TrackingParticle) -> List[EstimatedPosition]:
+    def run(
+        tracking_particle: TrackingParticle,
+    ) -> List[EstimatedPosition]:
         try:
-            starting_point, coverage_count = tracking_particle.get_coverage_position()
+            (
+                starting_point,
+                coverage_count,
+            ) = tracking_particle.get_coverage_position()
 
             print(
                 "逆推定開始点",
@@ -40,10 +56,15 @@ class ReversedEstimationParticleFilter:
             ]
 
             reversed_walking_parameter = (
-                tracking_particle.get_walking_parameter_reverse(index=coverage_count)
+                tracking_particle.get_walking_parameter_reverse(
+                    index=coverage_count
+                )
             )
 
-            for _, reversed_walking_parameter in enumerate(reversed_walking_parameter):
+            for (
+                _,
+                reversed_walking_parameter,
+            ) in enumerate(reversed_walking_parameter):
                 estimation_particles = reversed_estimation_particles[-1]
                 estimation_particles.remove_by_floor_map()
                 move_estimation_particles = estimation_particles.move(
@@ -56,15 +77,18 @@ class ReversedEstimationParticleFilter:
                 )
                 # estimation_particles.update_weight()
                 move_estimation_particles.resampling(
-                    step=reversed_walking_parameter.get_step(), mode="reversed"
+                    step=reversed_walking_parameter.get_step(),
+                    mode="reversed",
                 )
 
                 reversed_estimation_particles.append(move_estimation_particles)
                 reversed_estimated_positions.append(
-                    move_estimation_particles.estimate_position()
+                    move_estimation_particles.get_estimated_pose()
                 )
 
-            tracking_particle.set_estimation_particles(reversed_estimation_particles)
+            tracking_particle.set_estimation_particles(
+                reversed_estimation_particles
+            )
 
             return reversed_estimated_positions
 

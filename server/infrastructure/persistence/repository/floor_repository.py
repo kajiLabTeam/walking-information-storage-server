@@ -12,13 +12,20 @@ from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from psycopg2.extensions import connection
-from ulid import ULID
+from psycopg2.extensions import (
+    connection,
+)
+from ulid import (
+    ULID,
+)
 
 
 class FloorRepository(FloorRepositoryImpl):
     def save(
-        self, conn: connection, floor_name: str, building_id
+        self,
+        conn: connection,
+        floor_name: str,
+        building_id,
     ) -> FloorRepositoryDto:
         with conn:
             try:
@@ -26,7 +33,11 @@ class FloorRepository(FloorRepositoryImpl):
                     ulid = ULID()
                     cursor.execute(
                         "INSERT INTO floors (id, floor_name, building_id) VALUES (%s, %s, %s) RETURNING id",
-                        (str(ulid), floor_name, building_id),
+                        (
+                            str(ulid),
+                            floor_name,
+                            building_id,
+                        ),
                     )
 
                     result = cursor.fetchone()
@@ -52,7 +63,11 @@ class FloorRepository(FloorRepositoryImpl):
                     status_code=500,
                 ) from e
 
-    def find_for_id(self, conn: connection, floor_id: str) -> FloorRepositoryDto:
+    def find_for_id(
+        self,
+        conn: connection,
+        floor_id: str,
+    ) -> FloorRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
                 try:
@@ -85,7 +100,11 @@ class FloorRepository(FloorRepositoryImpl):
                         status_code=500,
                     ) from e
 
-    def update(self, conn: connection, floor_id: str) -> None:
+    def update(
+        self,
+        conn: connection,
+        floor_id: str,
+    ) -> None:
         with conn:
             with conn.cursor() as cursor:
                 try:
@@ -103,14 +122,21 @@ class FloorRepository(FloorRepositoryImpl):
 
 
 class FloorInformationRepository(FloorInformationRepositoryImpl):
-    def save(self, conn: connection, floor_id: str) -> FloorInformationDto:
+    def save(
+        self,
+        conn: connection,
+        floor_id: str,
+    ) -> FloorInformationDto:
         with conn:
             with conn.cursor() as cursor:
                 try:
                     floor_information_id = str(ULID())
                     cursor.execute(
                         "INSERT INTO floor_information (id, floor_id) VALUES (%s, %s) RETURNING id",
-                        (floor_information_id, floor_id),
+                        (
+                            floor_information_id,
+                            floor_id,
+                        ),
                     )
 
                     result = cursor.fetchone()
@@ -124,7 +150,8 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                         )
 
                     return FloorInformationDto(
-                        floor_information_id=floor_information_id, floor_id=floor_id
+                        floor_information_id=floor_information_id,
+                        floor_id=floor_id,
                     )
 
                 except Exception as e:
@@ -135,7 +162,9 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                     ) from e
 
     def find_for_id(
-        self, conn: connection, floor_information_id: str
+        self,
+        conn: connection,
+        floor_information_id: str,
     ) -> FloorInformationDto:
         with conn:
             with conn.cursor() as cursor:
@@ -155,10 +184,14 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                     )
 
                 return FloorInformationDto(
-                    floor_information_id=floor_information_id, floor_id=floor_id
+                    floor_information_id=floor_information_id,
+                    floor_id=floor_id,
                 )
 
-    def find_latest(self, conn: connection) -> FloorInformationDto:
+    def find_latest(
+        self,
+        conn: connection,
+    ) -> FloorInformationDto:
         with conn:
             with conn.cursor() as cursor:
                 try:
@@ -178,7 +211,8 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                         )
 
                     return FloorInformationDto(
-                        floor_information_id=floor_information_id, floor_id=floor_id
+                        floor_information_id=floor_information_id,
+                        floor_id=floor_id,
                     )
 
                 except Exception as e:
@@ -191,7 +225,10 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
 
 class FloorMapRepository(FloorMapRepositoryImpl):
     def save(
-        self, conn: connection, floor_information_id: str, floor_map: bytes
+        self,
+        conn: connection,
+        floor_information_id: str,
+        floor_map: bytes,
     ) -> FloorMapRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
@@ -199,7 +236,11 @@ class FloorMapRepository(FloorMapRepositoryImpl):
                     floor_map_id = ULID()
                     cursor.execute(
                         "INSERT INTO floor_maps (id, floor_information_id, floor_map) VALUES (%s, %s, %s) RETURNING id",
-                        (floor_map_id, floor_information_id, floor_map),
+                        (
+                            floor_map_id,
+                            floor_information_id,
+                            floor_map,
+                        ),
                     )
 
                     result = cursor.fetchone()
@@ -225,7 +266,9 @@ class FloorMapRepository(FloorMapRepositoryImpl):
                     ) from e
 
     def find_for_floor_information_id(
-        self, conn: connection, floor_information_id: str
+        self,
+        conn: connection,
+        floor_information_id: str,
     ) -> FloorMapRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
@@ -246,7 +289,8 @@ class FloorMapRepository(FloorMapRepositoryImpl):
                         )
 
                     return FloorMapRepositoryDto(
-                        floor_map_id=floor_id, floor_information_id=floor_information_id
+                        floor_map_id=floor_id,
+                        floor_information_id=floor_information_id,
                     )
 
                 except Exception as e:

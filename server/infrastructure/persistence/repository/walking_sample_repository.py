@@ -1,18 +1,30 @@
-from domain.models.estimated_position.estimated_position import EstimatedPosition
-from domain.models.particle.particle import Particle
-from domain.models.particle_collection.particle_collection import ParticleCollection
+from domain.models.estimated_position.estimated_position import (
+    EstimatedPosition,
+)
+from domain.models.particle.particle import (
+    Particle,
+)
+from domain.models.particle_collection.particle_collection import (
+    ParticleCollection,
+)
 from domain.repository_impl import (
     EstimatedPositionRepositoryImpl,
     ParticleRepositoryImpl,
     WalkingSampleRepositoryImpl,
 )
-from domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
+from domain.repository_impl.dto.infrastructure_dto import (
+    WalkingSampleRepositoryDto,
+)
 from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from psycopg2.extensions import connection
-from ulid import ULID
+from psycopg2.extensions import (
+    connection,
+)
+from ulid import (
+    ULID,
+)
 
 
 class WalkingSampleRepository(WalkingSampleRepositoryImpl):
@@ -44,7 +56,9 @@ class WalkingSampleRepository(WalkingSampleRepositoryImpl):
                 )
 
     def find_latest_for_trajectory_id(
-        self, conn: connection, trajectory_id: str
+        self,
+        conn: connection,
+        trajectory_id: str,
     ) -> WalkingSampleRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
@@ -98,7 +112,9 @@ class ParticleRepository(ParticleRepositoryImpl):
                     )
 
     def find_for_walking_sample_id(
-        self, conn: connection, walking_sample_id: str
+        self,
+        conn: connection,
+        walking_sample_id: str,
     ) -> ParticleCollection:
         particle_collection = ParticleCollection()
         with conn:
@@ -107,14 +123,26 @@ class ParticleRepository(ParticleRepositoryImpl):
                     "SELECT x, y, weight, direction FROM particles WHERE walking_sample_id = %s",
                     (walking_sample_id,),
                 )
-                for x, y, weight, direction in cursor.fetchall():
-                    particle = Particle(x, y, weight, direction)
+                for (
+                    x,
+                    y,
+                    weight,
+                    direction,
+                ) in cursor.fetchall():
+                    particle = Particle(
+                        x,
+                        y,
+                        weight,
+                        direction,
+                    )
                     particle_collection.add(particle=particle)
 
         return particle_collection
 
     def find_latest_for_walking_sample_id(
-        self, conn: connection, walking_sample_id: str
+        self,
+        conn: connection,
+        walking_sample_id: str,
     ) -> ParticleCollection:
         particle_collection = ParticleCollection()
         with conn:
@@ -123,8 +151,18 @@ class ParticleRepository(ParticleRepositoryImpl):
                     "SELECT x, y, weight, direction FROM particles WHERE walking_sample_id = %s ORDER BY created_at DESC LIMIT 1",
                     (walking_sample_id,),
                 )
-                for x, y, weight, direction in cursor.fetchall():
-                    particle = Particle(x, y, weight, direction)
+                for (
+                    x,
+                    y,
+                    weight,
+                    direction,
+                ) in cursor.fetchall():
+                    particle = Particle(
+                        x,
+                        y,
+                        weight,
+                        direction,
+                    )
                     particle_collection.add(particle=particle)
 
         return particle_collection

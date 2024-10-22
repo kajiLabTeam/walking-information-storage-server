@@ -1,6 +1,12 @@
-from application.dto import FinishWalkingServiceDto
-from domain.repository_impl import TrajectoryRepositoryImpl
-from infrastructure.connection import DBConnection
+from application.dto import (
+    FinishWalkingServiceDto,
+)
+from domain.repository_impl import (
+    TrajectoryRepositoryImpl,
+)
+from infrastructure.connection import (
+    DBConnection,
+)
 
 
 class FinishWalkingService:
@@ -10,11 +16,16 @@ class FinishWalkingService:
     ):
         self.__trajectory_repo = trajectory_repo
 
-    def run(self, trajectory_id: str) -> FinishWalkingServiceDto:
+    def run(
+        self,
+        trajectory_id: str,
+    ) -> FinishWalkingServiceDto:
         conn = DBConnection.connect()
 
         self.__trajectory_repo.update(
-            conn=conn, is_walking=False, trajectory_id=trajectory_id
+            conn=conn,
+            is_walking=False,
+            trajectory_id=trajectory_id,
         )
 
         return FinishWalkingServiceDto(trajectory_id=trajectory_id)

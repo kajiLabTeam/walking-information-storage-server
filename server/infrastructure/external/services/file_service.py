@@ -1,7 +1,13 @@
-from io import BytesIO
-from typing import Any
+from io import (
+    BytesIO,
+)
+from typing import (
+    Any,
+)
 
-from config.const import BUCKET_NAME
+from config.const import (
+    BUCKET_NAME,
+)
 from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
@@ -9,12 +15,21 @@ from infrastructure.errors.infrastructure_error import (
 
 
 class FileService:
-    def __init__(self, s3: Any):
+    def __init__(
+        self,
+        s3: Any,
+    ):
         self.__s3 = s3
 
-    def download(self, key: str) -> bytes:
+    def download(
+        self,
+        key: str,
+    ) -> bytes:
         try:
-            obj = self.__s3.get_object(Bucket=BUCKET_NAME, Key=key)
+            obj = self.__s3.get_object(
+                Bucket=BUCKET_NAME,
+                Key=key,
+            )
         except Exception as e:
             raise InfrastructureError(
                 InfrastructureErrorType.FILE_DOWNLOAD_ERROR,
@@ -32,7 +47,11 @@ class FileService:
         buffer = BytesIO(file)
 
         try:
-            self.__s3.upload_fileobj(buffer, BUCKET_NAME, key)
+            self.__s3.upload_fileobj(
+                buffer,
+                BUCKET_NAME,
+                key,
+            )
             buffer.close()
         except Exception as e:
             raise InfrastructureError(

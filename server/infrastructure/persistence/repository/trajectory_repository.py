@@ -1,11 +1,19 @@
-from domain.repository_impl import TrajectoryRepositoryImpl
-from domain.repository_impl.dto.infrastructure_dto import TrajectoryRepositoryDto
+from domain.repository_impl import (
+    TrajectoryRepositoryImpl,
+)
+from domain.repository_impl.dto.infrastructure_dto import (
+    TrajectoryRepositoryDto,
+)
 from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from psycopg2.extensions import connection
-from ulid import ULID
+from psycopg2.extensions import (
+    connection,
+)
+from ulid import (
+    ULID,
+)
 
 
 class TrajectoryRepository(TrajectoryRepositoryImpl):
@@ -45,7 +53,9 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
                     ) from e
 
     def find_for_id(
-        self, conn: connection, trajectory_id: str
+        self,
+        conn: connection,
+        trajectory_id: str,
     ) -> TrajectoryRepositoryDto:
         with conn:
             with conn.cursor() as cursor:
@@ -81,13 +91,21 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
                         "Failed to find trajectory",
                     ) from e
 
-    def update(self, conn: connection, is_walking: bool, trajectory_id: str) -> None:
+    def update(
+        self,
+        conn: connection,
+        is_walking: bool,
+        trajectory_id: str,
+    ) -> None:
         with conn:
             with conn.cursor() as cursor:
                 try:
                     cursor.execute(
                         "UPDATE trajectories SET is_walking = %s WHERE id = %s",
-                        (is_walking, trajectory_id),
+                        (
+                            is_walking,
+                            trajectory_id,
+                        ),
                     )
 
                 except Exception as e:

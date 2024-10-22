@@ -3,7 +3,9 @@ from .floor_repository_impl import (
     FloorMapRepositoryImpl,
     FloorRepositoryImpl,
 )
-from .trajectory_repository_impl import TrajectoryRepositoryImpl
+from .trajectory_repository_impl import (
+    TrajectoryRepositoryImpl,
+)
 from .walking_information_repository_impl import (
     AccelerometerRepositoryImpl,
     AtmosphericPressureRepositoryImpl,

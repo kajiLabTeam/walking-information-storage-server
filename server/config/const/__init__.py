@@ -24,7 +24,10 @@ from .bucket import (
     RATIO_WAVE_BUCKET_NAME,
     WALKING_INFORMATION_BUCKET_NAME,
 )
-from .circle import RELOCATION_RADIUS, REVERSE_RADIUS
+from .circle import (
+    RELOCATION_RADIUS,
+    REVERSE_RADIUS,
+)
 from .color import (
     CANDIDATE_PARTICLES_COLOR,
     CORRECT_CURRENT_POSITION_COLOR,
@@ -51,7 +54,12 @@ from .extension import (
     GYROSCOPE_EXTENSION,
     RATIO_WAVE_EXTENSION,
 )
-from .path import IMAGE_PATH, OUTPUT_NORMAL_PATH, OUTPUT_REVERSED_PATH, RSSI_MODEL_PATH
+from .path import (
+    IMAGE_PATH,
+    OUTPUT_NORMAL_PATH,
+    OUTPUT_REVERSED_PATH,
+    RSSI_MODEL_PATH,
+)
 
 __all__ = [
     "ACCELEROMETER_BUCKET_NAME",

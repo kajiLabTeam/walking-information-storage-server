@@ -1,23 +1,38 @@
-from io import BytesIO
+from io import (
+    BytesIO,
+)
 
 import numpy as np
 import pandas as pd
-from domain.errors import DomainError, DomainErrorType
+from domain.errors import (
+    DomainError,
+    DomainErrorType,
+)
 
 
 class WalkingParameter:
-    def __init__(self, step: int, gyroscope_file: bytes):
+    def __init__(
+        self,
+        step: int,
+        gyroscope_file: bytes,
+    ):
         self.__step = step
         self.__angle_change = self.__calculate_cumulative_angle(gyroscope_file)
 
-    def get_step(self) -> int:
+    def get_step(
+        self,
+    ) -> int:
         return self.__step
 
-    def get_angle_change(self) -> int:
+    def get_angle_change(
+        self,
+    ) -> int:
         return self.__angle_change
 
     def __calculate_cumulative_angle(
-        self, gyroscope_file: bytes, time_unit: float = 0.7
+        self,
+        gyroscope_file: bytes,
+        time_unit: float = 0.7,
     ) -> int:
         try:
             sample_freq = 100
@@ -31,7 +46,8 @@ class WalkingParameter:
             gyro_df["angle"] = np.cumsum(gyro_df["x"]) / sample_freq
             gyro_df["low_x"] = gyro_df["x"].rolling(window=window_gayo).mean()
             gyro_df["angle_x"] = gyro_df["angle"].rolling(
-                window=window_gayo, center=True
+                window=window_gayo,
+                center=True,
             ).mean() * (180 / np.pi)
 
             return int(gyro_df["angle_x"].max())

@@ -1,7 +1,13 @@
-from dataclasses import dataclass
+from dataclasses import (
+    dataclass,
+)
 
-from domain.models.estimated_position.estimated_position import EstimatedPosition
-from domain.models.walking_parameter.walking_parameter import WalkingParameter
+from domain.models.estimated_position.estimated_position import (
+    EstimatedPosition,
+)
+from domain.models.walking_parameter.walking_parameter import (
+    WalkingParameter,
+)
 
 
 @dataclass

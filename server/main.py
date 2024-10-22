@@ -1,9 +1,22 @@
-from application.errors import ApplicationError
-from domain.errors import DomainError
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from infrastructure.errors import InfrastructureError
+from application.errors import (
+    ApplicationError,
+)
+from domain.errors import (
+    DomainError,
+)
+from fastapi import (
+    FastAPI,
+    HTTPException,
+)
+from fastapi.middleware.cors import (
+    CORSMiddleware,
+)
+from fastapi.responses import (
+    JSONResponse,
+)
+from infrastructure.errors import (
+    InfrastructureError,
+)
 from presentation.handlers import (
     finish_walking_router,
     get_image_router,
@@ -11,7 +24,9 @@ from presentation.handlers import (
     move_pedestrian_router,
     start_walking_router,
 )
-from starlette.requests import Request
+from starlette.requests import (
+    Request,
+)
 
 app = FastAPI()
 
@@ -33,31 +48,52 @@ app.include_router(health_check_router)
 
 
 @app.exception_handler(ApplicationError)
-async def application_error_handler(request: Request, exc: ApplicationError):
+async def application_error_handler(
+    request: Request,
+    exc: ApplicationError,
+):
     return JSONResponse(
         status_code=exc.status_code,
-        content={"error": exc.detail, "type": exc.type.value},
+        content={
+            "error": exc.detail,
+            "type": exc.type.value,
+        },
     )
 
 
 @app.exception_handler(InfrastructureError)
-async def infrastructure_error_handler(request: Request, exc: InfrastructureError):
+async def infrastructure_error_handler(
+    request: Request,
+    exc: InfrastructureError,
+):
     return JSONResponse(
         status_code=exc.status_code,
-        content={"error": exc.detail, "type": exc.type.value},
+        content={
+            "error": exc.detail,
+            "type": exc.type.value,
+        },
     )
 
 
 @app.exception_handler(DomainError)
-async def domain_error_handler(request: Request, exc: DomainError):
+async def domain_error_handler(
+    request: Request,
+    exc: DomainError,
+):
     return JSONResponse(
         status_code=exc.status_code,
-        content={"error": exc.detail, "type": exc.type.value},
+        content={
+            "error": exc.detail,
+            "type": exc.type.value,
+        },
     )
 
 
 @app.exception_handler(HTTPException)
-async def http_exception_handler(request: Request, exc: HTTPException):
+async def http_exception_handler(
+    request: Request,
+    exc: HTTPException,
+):
     return JSONResponse(
         status_code=exc.status_code,
         content={"error": exc.detail},
