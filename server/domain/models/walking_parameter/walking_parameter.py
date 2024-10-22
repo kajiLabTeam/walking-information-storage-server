@@ -1,13 +1,8 @@
-from io import (
-    BytesIO,
-)
+from io import BytesIO
 
 import numpy as np
 import pandas as pd
-from domain.errors import (
-    DomainError,
-    DomainErrorType,
-)
+from domain.errors import DomainError, DomainErrorType
 
 
 class WalkingParameter:
@@ -51,9 +46,9 @@ class WalkingParameter:
             ).mean() * (180 / np.pi)
 
             return int(gyro_df["angle_x"].max())
-        except Exception:
+        except Exception as err:
             raise DomainError(
                 error_type=DomainErrorType.INVALID_GYROSCOPE_DATA,
                 status_code=400,
                 detail="gyroscope data is invalid",
-            )
+            ) from err

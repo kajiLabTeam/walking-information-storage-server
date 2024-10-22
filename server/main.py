@@ -1,22 +1,9 @@
-from application.errors import (
-    ApplicationError,
-)
-from domain.errors import (
-    DomainError,
-)
-from fastapi import (
-    FastAPI,
-    HTTPException,
-)
-from fastapi.middleware.cors import (
-    CORSMiddleware,
-)
-from fastapi.responses import (
-    JSONResponse,
-)
-from infrastructure.errors import (
-    InfrastructureError,
-)
+from application.errors import ApplicationError
+from domain.errors import DomainError
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from infrastructure.errors import InfrastructureError
 from presentation.handlers import (
     finish_walking_router,
     get_image_router,
@@ -24,9 +11,7 @@ from presentation.handlers import (
     move_pedestrian_router,
     start_walking_router,
 )
-from starlette.requests import (
-    Request,
-)
+from starlette.requests import Request
 
 app = FastAPI()
 

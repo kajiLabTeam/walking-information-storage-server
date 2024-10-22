@@ -1,7 +1,4 @@
-from .domain_error import (
-    DomainError,
-    DomainErrorType,
-)
+from .domain_error import DomainError, DomainErrorType
 
 __all__ = [
     "DomainError",

@@ -1,10 +1,6 @@
-from enum import (
-    Enum,
-)
+from enum import Enum
 
-from fastapi import (
-    HTTPException,
-)
+from fastapi import HTTPException
 
 
 class ApplicationErrorType(Enum):

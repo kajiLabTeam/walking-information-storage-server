@@ -1,25 +1,17 @@
-import math
-from io import (
-    BytesIO,
-)
-from typing import (
-    Tuple,
-)
+from __future__ import annotations
 
-from config.const import (
-    INSIDE_PARTICLE_COLOR,
-    PEDESTRIAN_SIZE,
-)
-from domain.dataclasses.coordinate import (
-    Coordinate,
-)
-from PIL import (
-    Image,
-    ImageDraw,
-)
-from PIL.Image import (
-    Image as ImageType,
-)
+import math
+from io import BytesIO
+from typing import TYPE_CHECKING
+
+from config.const import INSIDE_PARTICLE_COLOR, PEDESTRIAN_SIZE
+from domain.dataclasses.coordinate import Coordinate
+from domain.errors.domain_error import DomainError, DomainErrorType
+from PIL import Image, ImageDraw
+
+if TYPE_CHECKING:
+    from domain.dataclasses.color import Color
+    from PIL.Image import Image as ImageType
 
 
 class FloorMap:
@@ -54,13 +46,13 @@ class FloorMap:
 
     def depict(
         self,
-        position: Tuple[
+        position: tuple[
             int,
             int,
         ],
         color: Color,
     ) -> None:
-        """## 指定した座標位置を描画する"""
+        """## 指定した座標位置を描画する."""
         try:
             (
                 x,
@@ -71,21 +63,25 @@ class FloorMap:
                     x,
                     y,
                 ),
-                color,
+                [color.a, color.b, color.g, color.r],
             )
-        except Exception:
-            pass
+        except Exception as e:
+            raise DomainError(
+                error_type=DomainErrorType.DEPICT_RECTANGLE_FAILED,
+                status_code=500,
+                detail="Failed to depict the position.",
+            ) from e
 
     def depict_circle(
         self,
-        position: Tuple[
+        position: tuple[
             int,
             int,
         ],
         color: Color,
         outline_color: Color,
     ) -> None:
-        """## 指定した座標位置を中心とする円を描画する"""
+        """## 指定した座標位置を中心とする円を描画する."""
         try:
             (
                 x,
@@ -98,21 +94,30 @@ class FloorMap:
                     x + PEDESTRIAN_SIZE,
                     y + PEDESTRIAN_SIZE,
                 ),
-                fill=color,
-                outline=outline_color,
+                fill=(color.a, color.b, color.g, color.r),
+                outline=(
+                    outline_color.a,
+                    outline_color.b,
+                    outline_color.g,
+                    outline_color.r,
+                ),
             )
-        except Exception:
-            pass
+        except Exception as e:
+            raise DomainError(
+                error_type=DomainErrorType.DEPICT_RECTANGLE_FAILED,
+                status_code=500,
+                detail=str(e),
+            ) from e
 
     def depict_rectangle(
         self,
-        position: Tuple[
+        position: tuple[
             int,
             int,
         ],
         color: Color,
     ) -> None:
-        """## 指定した座標位置を中心とする四角形を描画する"""
+        """## 指定した座標位置を中心とする四角形を描画する."""
         try:
             (
                 x,
@@ -125,17 +130,21 @@ class FloorMap:
                     x + PEDESTRIAN_SIZE,
                     y + PEDESTRIAN_SIZE,
                 ),
-                fill=color,
+                fill=(color.a, color.b, color.g, color.r),
             )
-        except Exception:
-            pass
+        except Exception as e:
+            raise DomainError(
+                error_type=DomainErrorType.DEPICT_RECTANGLE_FAILED,
+                status_code=500,
+                detail=str(e),
+            ) from e
 
     def depict_cross(
         self,
         coordinate: Coordinate,
         color: Color,
     ) -> None:
-        """## 指定した座標位置を十字形に描画する"""
+        """## 指定した座標位置を十字形に描画する."""
         (
             x,
             y,
@@ -149,42 +158,42 @@ class FloorMap:
                 x,
                 y,
             ),
-            color,
+            (color.a, color.b, color.g, color.r),
         )
         self.__floor_map.putpixel(
             (
                 x + 1,
                 y,
             ),
-            color,
+            (color.a, color.b, color.g, color.r),
         )
         self.__floor_map.putpixel(
             (
                 x - 1,
                 y,
             ),
-            color,
+            (color.a, color.b, color.g, color.r),
         )
         self.__floor_map.putpixel(
             (
                 x,
                 y + 1,
             ),
-            color,
+            (color.a, color.b, color.g, color.r),
         )
         self.__floor_map.putpixel(
             (
                 x,
                 y - 1,
             ),
-            color,
+            (color.a, color.b, color.g, color.r),
         )
 
     def depict_correct_trajectory(
         self,
         coordinate: Coordinate,
     ) -> None:
-        """## 正解軌跡を描画する"""
+        """## 正解軌跡を描画する."""
         (
             x,
             y,
@@ -213,7 +222,7 @@ class FloorMap:
         self,
         coordinate: Coordinate,
     ) -> bool:
-        """## 指定した座標が歩行可能領域内に存在するかどうかを判定する"""
+        """## 指定した座標が歩行可能領域内に存在するかどうかを判定する."""
         (
             x,
             y,
@@ -222,17 +231,12 @@ class FloorMap:
             coordinate.y,
         )
 
-        if 0 <= x < self.__map_width and 0 <= y < self.__map_height:
-            if (
-                self.__floor_map.getpixel(
-                    (
-                        x,
-                        y,
-                    )
-                )
-                == INSIDE_PARTICLE_COLOR
-            ):
-                return True
+        if (
+            0 <= x < self.__map_width
+            and 0 <= y < self.__map_height
+            and self.__floor_map.getpixel((x, y)) == INSIDE_PARTICLE_COLOR
+        ):
+            return True
 
         return False
 
@@ -241,7 +245,7 @@ class FloorMap:
         outside_position: Coordinate,
         search_range: int,
     ) -> Coordinate:
-        """## 指定した座標から最も近い歩行可能領域内の座標を取得する"""
+        """## 指定した座標から最も近い歩行可能領域内の座標を取得する."""
         # すでに歩行可能領域内に存在する場合は引数をそのまま返す
         (
             x,
@@ -269,7 +273,7 @@ class FloorMap:
                     Coordinate(
                         x=estimated_x,
                         y=estimated_y,
-                    )
+                    ),
                 ):
                     return Coordinate(
                         x=estimated_x,

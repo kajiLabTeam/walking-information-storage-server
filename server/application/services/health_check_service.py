@@ -1,12 +1,6 @@
-from config.const import (
-    HEALTH_CHECK_BUCKET_NAME,
-)
-from infrastructure.connection import (
-    MinIOConnection,
-)
-from infrastructure.external.services import (
-    FileService,
-)
+from config.const import HEALTH_CHECK_BUCKET_NAME
+from infrastructure.connection import MinIOConnection
+from infrastructure.external.services import FileService
 
 
 class HealthCheckService:

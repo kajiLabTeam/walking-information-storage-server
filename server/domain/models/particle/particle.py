@@ -1,14 +1,9 @@
 import math
 import secrets
-from typing import (
-    Callable,
-)
-from domain.dataclasses.coordinate import (
-    Coordinate,
-)
-from domain.dataclasses.color import (
-    Color,
-)
+from typing import Callable
+
+from domain.dataclasses.color import Color
+from domain.dataclasses.coordinate import Coordinate
 
 
 class Particle:
@@ -67,13 +62,13 @@ class Particle:
     def set_weight(
         self,
         weight: float,
-    ):
+    ) -> None:
         self.__weight = weight
 
     def set_color(
         self,
         color: Color,
-    ):
+    ) -> None:
         self.__color = color
 
     def new(
@@ -137,7 +132,7 @@ class Particle:
             bool,
         ],
     ) -> bool:
-        """## パーティクルの歩幅以内に壁に向いているかを判定する"""
+        """## パーティクルの歩幅以内に壁に向いているかを判定する."""
         radian = math.radians(self.__direction)
 
         for i in range(
@@ -151,7 +146,7 @@ class Particle:
                 Coordinate(
                     x=move_x,
                     y=move_y,
-                )
+                ),
             ):
                 return True
 
@@ -165,7 +160,7 @@ class Particle:
             bool,
         ],
     ) -> bool:
-        """## 90度回転したパーティクルが壁に埋まっているかを判定する"""
+        """## 90度回転したパーティクルが壁に埋まっているかを判定する."""
         plus_turn_move_particle = self.move(
             angle_change=90,
             step=step,
@@ -194,7 +189,7 @@ class Particle:
         circle_center_position: Coordinate,
         radius: int,
     ) -> bool:
-        """## 指定された座標が円の中にあるかどうかを判定する。"""
+        """## 指定された座標が円の中にあるかどうかを判定する."""
         (
             cx,
             cy,

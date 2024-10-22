@@ -1,20 +1,11 @@
-from typing import (
-    List,
-    Literal,
-)
+from typing import Literal, list
 
-from domain.models.estimated_position.estimated_position import (
-    EstimatedPosition,
-)
-from domain.models.reversed_estimated_trajectory.cluster_tracking import (
-    ClusterTracking,
-)
+from domain.dataclasses.coordinate import Pose
+from domain.models.reversed_estimated_trajectory.cluster_tracking import ClusterTracking
 from domain.models.reversed_estimated_trajectory.reversed_particle_filter import (
     ReversedEstimationParticleFilter,
 )
-from domain.models.tracking_particle.tracking_particle import (
-    TrackingParticle,
-)
+from domain.models.tracking_particle.tracking_particle import TrackingParticle
 
 
 class ReversedEstimatedTrajectory:
@@ -27,7 +18,7 @@ class ReversedEstimatedTrajectory:
         ],
     ) -> None:
         self.__tracking_particle = tracking_particle
-        self.__reversed_estimated_trajectory: List[EstimatedPosition] = []
+        self.__reversed_estimated_trajectory: list[Pose] = []
 
         if method == "cluster":
             self.__cluster_tracking()
@@ -38,26 +29,26 @@ class ReversedEstimatedTrajectory:
 
     def get_reversed_estimated_trajectory(
         self,
-    ) -> List[EstimatedPosition]:
+    ) -> list[Pose]:
         return self.__reversed_estimated_trajectory
 
     def last_position(
         self,
-    ) -> EstimatedPosition:
+    ) -> Pose:
         return self.__reversed_estimated_trajectory[-1]
 
     def __cluster_tracking(
         self,
     ):
         self.__reversed_estimated_trajectory = ClusterTracking.run(
-            self.__tracking_particle
+            self.__tracking_particle,
         )
 
     def __particle_filter(
         self,
     ):
-        self.__reversed_estimated_trajectory = (
-            ReversedEstimationParticleFilter.run(self.__tracking_particle)
+        self.__reversed_estimated_trajectory = ReversedEstimationParticleFilter.run(
+            self.__tracking_particle,
         )
 
     def __reversed(

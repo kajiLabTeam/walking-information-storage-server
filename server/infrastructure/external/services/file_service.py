@@ -1,13 +1,7 @@
-from io import (
-    BytesIO,
-)
-from typing import (
-    Any,
-)
+from io import BytesIO
+from typing import Any
 
-from config.const import (
-    BUCKET_NAME,
-)
+from config.const import BUCKET_NAME
 from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,

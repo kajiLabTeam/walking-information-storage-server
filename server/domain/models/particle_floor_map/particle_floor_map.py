@@ -1,13 +1,6 @@
-from config.const import (
-    CANDIDATE_PARTICLES_COLOR,
-    PARTICLE_OUTLINE_COLOR,
-)
-from domain.models.estimated_particle.estimated_particle import (
-    EstimatedParticle,
-)
-from domain.models.floor_map.floor_map import (
-    FloorMap,
-)
+from config.const import CANDIDATE_PARTICLES_COLOR, PARTICLE_OUTLINE_COLOR
+from domain.models.estimated_particle.estimated_particle import EstimatedParticle
+from domain.models.floor_map.floor_map import FloorMap
 
 
 class ParticleFloorMap:
@@ -15,7 +8,7 @@ class ParticleFloorMap:
     def generate_image(
         floor_map: FloorMap,
         estimated_particle: EstimatedParticle,
-    ):
+    ) -> None:
         floor_map_copy = floor_map.clone()
 
         # パーティクルの位置を描画

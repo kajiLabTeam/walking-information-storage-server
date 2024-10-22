@@ -1,12 +1,7 @@
 import os
 
-from fastapi import (
-    APIRouter,
-    HTTPException,
-)
-from fastapi.responses import (
-    FileResponse,
-)
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse
 
 router = APIRouter()
 

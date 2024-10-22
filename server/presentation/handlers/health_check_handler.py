@@ -1,23 +1,9 @@
-from io import (
-    BytesIO,
-)
-from typing import (
-    Annotated,
-)
+from io import BytesIO
+from typing import Annotated
 
-from application.services import (
-    HealthCheckService,
-)
-from fastapi import (
-    APIRouter,
-    File,
-    Form,
-    HTTPException,
-    UploadFile,
-)
-from fastapi.responses import (
-    StreamingResponse,
-)
+from application.services import HealthCheckService
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi.responses import StreamingResponse
 
 health_check_service = HealthCheckService()
 
@@ -52,9 +38,7 @@ async def check_minio_csv_health(
         return StreamingResponse(
             content=BytesIO(download_file),
             media_type="text/csv",
-            headers={
-                "Content-Disposition": "attachment; filename=download.csv"
-            },
+            headers={"Content-Disposition": "attachment; filename=download.csv"},
         )
 
     except Exception as e:

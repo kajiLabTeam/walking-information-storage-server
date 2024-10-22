@@ -1,7 +1,4 @@
-from typing import (
-    List,
-    Literal,
-)
+from typing import Iterator, Literal
 
 import numpy as np
 from config.const import (
@@ -15,28 +12,13 @@ from config.const import (
     REVERSE_RADIUS,
     SEARCH_NEAREST_INSIDE_RANGE,
 )
-from domain.dataclasses.coordinate import (
-    Coordinate,
-    Pose,
-)
-from domain.models.estimated_particle.convergence_judgment import (
-    ConvergenceJudgment,
-)
-from domain.models.floor_map.floor_map import (
-    FloorMap,
-)
-from domain.models.particle.particle import (
-    Particle,
-)
-from domain.models.particle_collection.particle_collection import (
-    ParticleCollection,
-)
-from domain.models.walking_parameter.walking_parameter import (
-    WalkingParameter,
-)
-from utils import (
-    get_random_angle,
-)
+from domain.dataclasses.coordinate import Coordinate, Pose
+from domain.models.estimated_particle.convergence_judgment import ConvergenceJudgment
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.particle.particle import Particle
+from domain.models.particle_collection.particle_collection import ParticleCollection
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
+from utils import get_random_angle
 
 
 class EstimatedParticle:
@@ -45,7 +27,7 @@ class EstimatedParticle:
         floor_map: FloorMap,
         current_walking_parameter: WalkingParameter,
         particle_collection: ParticleCollection,
-    ):
+    ) -> None:
         particle_collection.shuffle()
 
         self.__floor_map = floor_map
@@ -58,15 +40,14 @@ class EstimatedParticle:
         cls,
         floor_map: FloorMap,
         initial_walking_parameter: WalkingParameter,
-    ):
-        """
-        ## 初期パーティクルを散布する
-        """
+    ) -> "EstimatedParticle":
+        """## 初期パーティクルを散布する."""
         particle_collection = ParticleCollection()
 
         while len(particle_collection) < INITIAL_PARTICLES_AMOUNT:
-            x = np.random.randint(floor_map.get_map_width())
-            y = np.random.randint(floor_map.get_map_height())
+            rng = np.random.default_rng()
+            x = rng.integers(floor_map.get_map_width())
+            y = rng.integers(floor_map.get_map_height())
             direction = get_random_angle()
             weight = 1 / INITIAL_PARTICLES_AMOUNT
 
@@ -74,7 +55,7 @@ class EstimatedParticle:
                 Coordinate(
                     x=x,
                     y=y,
-                )
+                ),
             ):
                 continue
 
@@ -86,7 +67,7 @@ class EstimatedParticle:
                     ),
                     direction=direction,
                     weight=weight,
-                )
+                ),
             )
 
         return EstimatedParticle(
@@ -101,18 +82,17 @@ class EstimatedParticle:
         floor_map: FloorMap,
         final_pose: Pose,
         walking_parameter: WalkingParameter,
-    ):
-        """
-        ## 逆算軌跡推定の際に行うパーティクルフィルタのパーティクルを散布する
-        """
+    ) -> "EstimatedParticle":
+        """## 逆算軌跡推定の際に行うパーティクルフィルタのパーティクルを散布する."""
         particle_collection = ParticleCollection()
 
         while len(particle_collection) < INITIAL_PARTICLES_AMOUNT:
-            x = final_pose.coordinate.x + np.random.randint(
+            rng = np.random.default_rng()
+            x = final_pose.coordinate.x + rng.integers(
                 -REVERSE_RADIUS,
                 REVERSE_RADIUS,
             )
-            y = final_pose.coordinate.y + np.random.randint(
+            y = final_pose.coordinate.y + rng.integers(
                 -REVERSE_RADIUS,
                 REVERSE_RADIUS,
             )
@@ -123,7 +103,7 @@ class EstimatedParticle:
                 Coordinate(
                     x=x,
                     y=y,
-                )
+                ),
             ):
                 continue
 
@@ -135,7 +115,7 @@ class EstimatedParticle:
                     ),
                     direction=direction,
                     weight=weight,
-                )
+                ),
             )
 
         return EstimatedParticle(
@@ -167,9 +147,7 @@ class EstimatedParticle:
     def is_converged(
         self,
     ) -> bool:
-        """
-        ## パーティクルのクラスタ数を計算する
-        """
+        """## パーティクルのクラスタ数を計算する."""
         X = np.array(
             [
                 [
@@ -177,14 +155,13 @@ class EstimatedParticle:
                     particle.get_coordinate().y,
                 ]
                 for particle in self.__particle_collection
-            ]
+            ],
         )
         cluster_amount = ConvergenceJudgment.calculate_cluster_amount(X=X)
 
         if (
             cluster_amount <= CLUSTER_AMOUNT_THRESHOLD
-            and self.get_convergence_ratio()
-            >= CONVERGENCE_DECENTRALIZATION_THRESHOLD
+            and self.get_convergence_ratio() >= CONVERGENCE_DECENTRALIZATION_THRESHOLD
         ):
             return True
 
@@ -192,13 +169,10 @@ class EstimatedParticle:
 
     def get_particles_within_radius(
         self,
-        x: int,
-        y: int,
+        coordinate: Coordinate,
         radius: int,
     ) -> "EstimatedParticle":
-        """
-        指定された座標を中心とする半径radiusの範囲内に存在するパーティクルを取得する
-        """
+        """指定された座標を中心とする半径radiusの範囲内に存在するパーティクルを取得する."""
         radius_squared = radius**2
 
         particles_within_radius = ParticleCollection()
@@ -206,10 +180,10 @@ class EstimatedParticle:
             [
                 particle
                 for particle in self.__particle_collection
-                if (particle.get_coordinate().x - x) ** 2
-                + (particle.get_coordinate().y - y) ** 2
+                if (particle.get_coordinate().x - coordinate.x) ** 2
+                + (particle.get_coordinate().y - coordinate.y) ** 2
                 <= radius_squared
-            ]
+            ],
         )
 
         return EstimatedParticle(
@@ -221,18 +195,14 @@ class EstimatedParticle:
     def get_convergence_ratio(
         self,
     ) -> float:
-        """
-        ## パーティクルの分散をもとに、収束度を計算する
-        """
+        """## パーティクルの分散をもとに、収束度を計算する."""
         return 1 / self.__particle_collection.get_decentralization()
 
     def move(
         self,
         current_walking_parameter: WalkingParameter,
     ) -> "EstimatedParticle":
-        """
-        ## ベクトルの向きに合わせてパーティクルを移動させる
-        """
+        """## ベクトルの向きに合わせてパーティクルを移動させる."""
         step = current_walking_parameter.get_step()
         angle_change = current_walking_parameter.get_angle_change()
 
@@ -258,9 +228,7 @@ class EstimatedParticle:
     def get_estimated_pose(
         self,
     ) -> Pose:
-        """
-        ## 重みづけ平均を元に歩行座標を推定する
-        """
+        """## 重みづけ平均を元に歩行座標を推定する."""
         estimated_x = self.__particle_collection.get_x_mean()
         estimated_y = self.__particle_collection.get_y_mean()
         estimated_direction = self.__particle_collection.get_direction_mean()
@@ -276,16 +244,14 @@ class EstimatedParticle:
             Coordinate(
                 x=estimated_x,
                 y=estimated_y,
-            )
+            ),
         ):
-            estimated_coordinate = (
-                self.__floor_map.get_nearest_inside_coordinate(
-                    outside_position=Coordinate(
-                        x=estimated_x,
-                        y=estimated_y,
-                    ),
-                    search_range=SEARCH_NEAREST_INSIDE_RANGE,
-                )
+            estimated_coordinate = self.__floor_map.get_nearest_inside_coordinate(
+                outside_position=Coordinate(
+                    x=estimated_x,
+                    y=estimated_y,
+                ),
+                search_range=SEARCH_NEAREST_INSIDE_RANGE,
             )
             estimated_pose = Pose(
                 coordinate=estimated_coordinate,
@@ -296,15 +262,13 @@ class EstimatedParticle:
 
     def remove_by_floor_map(
         self,
-    ):
-        """
-        ## パーティクルが歩行可能領域外に存在する場合、パーティクルを削除する
-        """
+    ) -> None:
+        """## パーティクルが歩行可能領域外に存在する場合、パーティクルを削除する."""
         remove_particle_indexes = [
             i
             for i, particle in enumerate(self.__particle_collection)
             if not self.__floor_map.is_inside_floor(
-                coordinate=particle.get_coordinate()
+                coordinate=particle.get_coordinate(),
             )
         ]
 
@@ -314,10 +278,8 @@ class EstimatedParticle:
     def remove_by_direction(
         self,
         step: int,
-    ):
-        """
-        ## パーティクルの向きが歩行不可能領域を向いている場合、パーティクルを削除する
-        """
+    ) -> None:
+        """## パーティクルの向きが歩行不可能領域を向いている場合、パーティクルを削除する."""  # noqa: E501
         remove_particle_indexes = [
             i
             for i, particle in enumerate(self.__particle_collection)
@@ -331,19 +293,6 @@ class EstimatedParticle:
             )
         ]
 
-        # for i, particle in enumerate(self.__particle_collection):
-        #     if particle.is_straight_direction_to_wall(
-        #         step=step, is_inside_floor=self.__floor_map.is_inside_floor
-        #     ):
-        #         remove_particle_indexes.append(i)
-        #         continue
-
-        #     if particle.is_turn_direction_to_wall(
-        #         step=step,
-        #         is_inside_floor=self.__floor_map.is_inside_floor,
-        #     ):
-        #         remove_particle_indexes.append(i)
-
         self.__missing_particle_count += len(remove_particle_indexes)
         self.__particle_collection.pop_all(indexes=remove_particle_indexes)
 
@@ -354,12 +303,10 @@ class EstimatedParticle:
             "normal",
             "reversed",
         ] = "normal",
-    ):
-        """
-        ## リサンプリングを実行する
-        """
+    ) -> None:
+        """## リサンプリングを実行する."""
         placeable_count = self.__count_placeable()
-        new_particles: List[Particle] = []
+        new_particles: list[Particle] = []
 
         if placeable_count >= MISSING_PARTICLE_THRESHOLD and mode == "normal":
             while placeable_count > 0:
@@ -388,26 +335,26 @@ class EstimatedParticle:
 
     def resampling_by_weight(
         self,
-    ):
+    ) -> None:
         num_particles = len(self.__particle_collection)
         weights = np.array([p.get_weight() for p in self.__particle_collection])
 
-        # TODO 重みの正規化のロジックここじゃない
+        # TODO: 重みの正規化
         weights /= np.sum(weights)
 
-        # 累積分布関数（CDF）の計算
+        # 累積分布関数CDFの計算
         cdf = np.cumsum(weights)
 
         # リサンプリング位置の決定
         positions = (
             np.arange(num_particles)
-            + np.random.uniform(
+            + np.random.default_rng().uniform(
                 0,
                 1,
             )
         ) / num_particles
 
-        new_particles: List[Particle] = []
+        new_particles: list[Particle] = []
         index = 0
         for pos in positions:
             while pos > cdf[index]:
@@ -429,10 +376,10 @@ class EstimatedParticle:
 
     def __iter__(
         self,
-    ):
+    ) -> Iterator:
         return iter(self.__particle_collection)
 
     def __len__(
         self,
-    ):
+    ) -> int:
         return len(self.__particle_collection)

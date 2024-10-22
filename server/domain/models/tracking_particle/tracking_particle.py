@@ -1,36 +1,15 @@
-from typing import (
-    List,
-    Optional,
-    Tuple,
-)
+from __future__ import annotations
 
-from config.const import (
-    CONVERGENCE_JUDGEMENT_NUMBER,
-    RSSI_MODEL_PATH,
-)
-from domain.dataclasses.coordinate import (
-    Coordinate,
-    Pose,
-)
-from domain.errors.domain_error import (
-    DomainError,
-    DomainErrorType,
-)
-from domain.models.estimated_particle.estimated_particle import (
-    EstimatedParticle,
-)
-from domain.models.floor_map.floor_map import (
-    FloorMap,
-)
-from domain.models.walking_parameter.walking_parameter import (
-    WalkingParameter,
-)
+from config.const import CONVERGENCE_JUDGEMENT_NUMBER, RSSI_MODEL_PATH
+from domain.dataclasses.coordinate import Coordinate, Pose
+from domain.errors.domain_error import DomainError, DomainErrorType
+from domain.models.estimated_particle.estimated_particle import EstimatedParticle
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from domain.models.walking_parameter_collection.walking_parameter_collection import (
     WalkingParameterCollection,
 )
-from utils import (
-    reverse_angle,
-)
+from utils import reverse_angle
 
 
 class TrackingParticle:
@@ -42,8 +21,8 @@ class TrackingParticle:
         self.__floor_map = floor_map
         self.__tracking_count = 0
         self.__coverage_count = 0
-        self.__coverage_pose: Optional[Pose] = None
-        self.__estimation_particles: List[EstimatedParticle] = []
+        self.__coverage_pose: Pose | None = None
+        self.__estimation_particles: list[EstimatedParticle] = []
         self.__walking_parameter_collection = WalkingParameterCollection()
         self._initialized = True
 
@@ -59,13 +38,13 @@ class TrackingParticle:
 
     def get_estimation_particles(
         self,
-    ) -> List[EstimatedParticle]:
+    ) -> list[EstimatedParticle]:
         return self.__estimation_particles
 
     def get_walking_parameter_reverse(
         self,
         index: int,
-    ) -> List[WalkingParameter]:
+    ) -> list[WalkingParameter]:
         walking_positions = [
             wpc.reverse() for wpc in self.__walking_parameter_collection[:index]
         ]
@@ -78,7 +57,7 @@ class TrackingParticle:
         Pose,
         int,
     ]:
-        if self.__coverage_position is None:
+        if self.__coverage_pose is None:
             raise DomainError(
                 error_type=DomainErrorType.COVERAGE_POSITION_IS_NONE,
                 status_code=500,
@@ -88,11 +67,11 @@ class TrackingParticle:
         return (
             Pose(
                 coordinate=Coordinate(
-                    x=self.__coverage_position.get_x(),
-                    y=self.__coverage_position.get_y(),
+                    x=self.__coverage_pose.get_x(),
+                    y=self.__coverage_pose.get_y(),
                 ),
                 direction=reverse_angle(
-                    self.__coverage_position.get_direction()
+                    self.__coverage_pose.get_direction(),
                 ),
             ),
             self.__coverage_count,
@@ -100,7 +79,7 @@ class TrackingParticle:
 
     def set_estimation_particles(
         self,
-        estimation_particles: List[EstimatedParticle],
+        estimation_particles: list[EstimatedParticle],
     ) -> None:
         self.__estimation_particles = estimation_particles
 
@@ -114,9 +93,9 @@ class TrackingParticle:
     ) -> WalkingParameter:
         return self.__walking_parameter_collection[-1]
 
-    def last_estimated_position(
+    def last_estimated_pose(
         self,
-    ) -> EstimatedPosition:
+    ) -> Pose:
         return self.last_estimation_particles().get_estimated_pose()
 
     def reverse(
@@ -145,25 +124,23 @@ class TrackingParticle:
         estimation_particles = self.last_estimation_particles()
         estimation_particles.remove_by_floor_map()
         move_estimation_particles = estimation_particles.move(
-            current_walking_parameter=walking_parameter
+            current_walking_parameter=walking_parameter,
         )
         move_estimation_particles.remove_by_floor_map()
         move_estimation_particles.remove_by_direction(
-            step=walking_parameter.get_step()
+            step=walking_parameter.get_step(),
         )
         move_estimation_particles.resampling(step=walking_parameter.get_step())
 
         if (
-            self.__coverage_position is None
+            self.__coverage_pose is None
             and self.__tracking_count != 0
             and self.__tracking_count % CONVERGENCE_JUDGEMENT_NUMBER == 0
             and estimation_particles.is_converged()
         ):
             print("収束しました")
             self.__coverage_count = self.__tracking_count
-            self.__coverage_position = (
-                move_estimation_particles.get_estimated_pose()
-            )
+            self.__coverage_pose = move_estimation_particles.get_estimated_pose()
 
         self.add(move_estimation_particles)
         self.__walking_parameter_collection.add(walking_parameter)

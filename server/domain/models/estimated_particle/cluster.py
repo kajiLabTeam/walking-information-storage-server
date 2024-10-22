@@ -1,17 +1,9 @@
-from typing import (
-    List,
-)
+from __future__ import annotations
 
 import numpy as np
-from numpy.typing import (
-    NDArray,
-)
-from scipy import (
-    stats,
-)
-from sklearn.cluster import (
-    KMeans,
-)
+from numpy.typing import NDArray
+from scipy import stats
+from sklearn.cluster import KMeans
 
 
 class Cluster:
@@ -20,7 +12,7 @@ class Cluster:
         X: NDArray,
         k_means: KMeans,
         index=None,
-    ) -> List["Cluster"]:
+    ) -> list["Cluster"]:
         if index is None:
             index = np.arange(X.shape[0])
 
@@ -60,11 +52,7 @@ class Cluster:
         self,
     ) -> float:
         self.data = np.array(
-            [
-                x
-                for x in self.data
-                if not (np.isnan(x).any() or np.isinf(x).any())
-            ]
+            [x for x in self.data if not (np.isnan(x).any() or np.isinf(x).any())],
         )
         if len(self.data) == 0:
             return -np.inf

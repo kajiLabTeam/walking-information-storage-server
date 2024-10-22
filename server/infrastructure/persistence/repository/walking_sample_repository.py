@@ -1,30 +1,18 @@
-from domain.models.estimated_position.estimated_position import (
-    EstimatedPosition,
-)
-from domain.models.particle.particle import (
-    Particle,
-)
-from domain.models.particle_collection.particle_collection import (
-    ParticleCollection,
-)
+from domain.dataclasses.coordinate import Pose
+from domain.models.particle.particle import Particle
+from domain.models.particle_collection.particle_collection import ParticleCollection
 from domain.repository_impl import (
-    EstimatedPositionRepositoryImpl,
     ParticleRepositoryImpl,
+    PoseRepositoryImpl,
     WalkingSampleRepositoryImpl,
 )
-from domain.repository_impl.dto.infrastructure_dto import (
-    WalkingSampleRepositoryDto,
-)
+from domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
 from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from psycopg2.extensions import (
-    connection,
-)
-from ulid import (
-    ULID,
-)
+from psycopg2.extensions import connection
+from ulid import ULID
 
 
 class WalkingSampleRepository(WalkingSampleRepositoryImpl):
@@ -168,11 +156,11 @@ class ParticleRepository(ParticleRepositoryImpl):
         return particle_collection
 
 
-class EstimatedPositionRepository(EstimatedPositionRepositoryImpl):
+class PoseRepository(PoseRepositoryImpl):
     def save(
         self,
         conn: connection,
-        estimated_position: EstimatedPosition,
+        estimated_position: Pose,
         walking_sample_id: str,
     ) -> str:
         with conn:

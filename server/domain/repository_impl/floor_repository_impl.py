@@ -1,7 +1,4 @@
-from abc import (
-    ABCMeta,
-    abstractmethod,
-)
+from abc import ABCMeta, abstractmethod
 
 from domain.repository_impl.dto.infrastructure_dto import (
     FloorInformationDto,
@@ -9,9 +6,7 @@ from domain.repository_impl.dto.infrastructure_dto import (
     FloorRepositoryDto,
     FpModelRepositoryDto,
 )
-from psycopg2.extensions import (
-    connection,
-)
+from psycopg2.extensions import connection
 
 
 class FloorRepositoryImpl(metaclass=ABCMeta):
@@ -20,7 +15,7 @@ class FloorRepositoryImpl(metaclass=ABCMeta):
         self,
         conn: connection,
         floor_name: str,
-        building_id,
+        building_id: str,
     ) -> FloorRepositoryDto:
         pass
 

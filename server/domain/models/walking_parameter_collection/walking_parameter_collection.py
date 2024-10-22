@@ -1,21 +1,17 @@
-from typing import (
-    List,
-)
+from typing import list
 
-from domain.models.walking_parameter.walking_parameter import (
-    WalkingParameter,
-)
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
 class WalkingParameterCollection:
     def __init__(
         self,
     ):
-        self.__walking_parameters: List[WalkingParameter] = []
+        self.__walking_parameters: list[WalkingParameter] = []
 
     def get_walking_parameters(
         self,
-    ) -> List[WalkingParameter]:
+    ) -> list[WalkingParameter]:
         return self.__walking_parameters
 
     def add(

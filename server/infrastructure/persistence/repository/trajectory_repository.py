@@ -1,19 +1,11 @@
-from domain.repository_impl import (
-    TrajectoryRepositoryImpl,
-)
-from domain.repository_impl.dto.infrastructure_dto import (
-    TrajectoryRepositoryDto,
-)
+from domain.repository_impl import TrajectoryRepositoryImpl
+from domain.repository_impl.dto.infrastructure_dto import TrajectoryRepositoryDto
 from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from psycopg2.extensions import (
-    connection,
-)
-from ulid import (
-    ULID,
-)
+from psycopg2.extensions import connection
+from ulid import ULID
 
 
 class TrajectoryRepository(TrajectoryRepositoryImpl):

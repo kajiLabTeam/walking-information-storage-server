@@ -1,18 +1,9 @@
-from typing import (
-    Any,
-)
+from typing import Any
 
 import boto3
-from config import (
-    MinioEnv,
-    PostgresEnv,
-)
-from psycopg2 import (
-    connect,
-)
-from psycopg2.extensions import (
-    connection,
-)
+from config import MinioEnv, PostgresEnv
+from psycopg2 import connect
+from psycopg2.extensions import connection
 
 
 class DBConnection:

@@ -1,48 +1,30 @@
-from application.dto import (
-    MovePedestrianServiceDto,
-)
-from application.errors import (
-    ApplicationError,
-    ApplicationErrorType,
-)
-from config.const import (
-    STEP,
-)
-from domain.models.estimated_particle.estimated_particle import (
-    EstimatedParticle,
-)
-from domain.models.floor_map.floor_map import (
-    FloorMap,
-)
-from domain.models.walking_parameter.walking_parameter import (
-    WalkingParameter,
-)
+from application.dto import MovePedestrianServiceDto
+from application.errors import ApplicationError, ApplicationErrorType
+from config.const import STEP
+from domain.models.estimated_particle.estimated_particle import EstimatedParticle
+from domain.models.floor_map.floor_map import FloorMap
+from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from domain.repository_impl import (
     AccelerometerRepositoryImpl,
     AtmosphericPressureRepositoryImpl,
-    EstimatedPositionRepositoryImpl,
     FloorInformationRepositoryImpl,
     FloorMapRepositoryImpl,
     FloorRepositoryImpl,
     GpsRepositoryImpl,
     GyroscopeRepositoryImpl,
     ParticleRepositoryImpl,
+    PoseRepositoryImpl,
     RatioWaveRepositoryImpl,
     TrajectoryRepositoryImpl,
     WalkingInformationRepositoryImpl,
     WalkingSampleRepositoryImpl,
 )
-from infrastructure.connection import (
-    DBConnection,
-    MinIOConnection,
-)
+from infrastructure.connection import DBConnection, MinIOConnection
 from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from infrastructure.external.services import (
-    FileService,
-)
+from infrastructure.external.services import FileService
 from utils import (
     get_accelerometer_bucket_name,
     get_atmospheric_pressure_bucket_name,
@@ -67,7 +49,7 @@ class MovePedestrianService:
         trajectory_repo: TrajectoryRepositoryImpl,
         walking_sample_repo: WalkingSampleRepositoryImpl,
         floor_information_repo: FloorInformationRepositoryImpl,
-        estimated_position_repo: EstimatedPositionRepositoryImpl,
+        pose_repo: PoseRepositoryImpl,
         walking_information_repo: WalkingInformationRepositoryImpl,
     ):
         self.__floor_repo = floor_repo
@@ -81,7 +63,7 @@ class MovePedestrianService:
         self.__trajectory_repo = trajectory_repo
         self.__walking_sample_repo = walking_sample_repo
         self.__floor_information_repo = floor_information_repo
-        self.__estimated_position_repo = estimated_position_repo
+        self.__pose_repo = pose_repo
         self.__walking_information_repo = walking_information_repo
 
     def run(
@@ -111,17 +93,14 @@ class MovePedestrianService:
 
         # 歩行データから、歩行パラメータを取得
         walking_parameter = WalkingParameter(
-            id=None,
             step=STEP,
             gyroscope_file=gyroscope_file,
         )
 
         # 歩行情報
-        walking_information_infrastructure_dto = (
-            self.__walking_information_repo.save(
-                conn=conn,
-                pedestrian_id=pedestrian_id,
-            )
+        walking_information_infrastructure_dto = self.__walking_information_repo.save(
+            conn=conn,
+            pedestrian_id=pedestrian_id,
         )
         walking_information_id = (
             walking_information_infrastructure_dto.walking_information_id
@@ -132,9 +111,7 @@ class MovePedestrianService:
             conn=conn,
             trajectory_id=trajectory_id,
         )
-        floor_information_id = (
-            trajectory_infrastructure_dto.floor_information_id
-        )
+        floor_information_id = trajectory_infrastructure_dto.floor_information_id
 
         floor_map_infrastructure_dto = (
             self.__floor_map_repo.find_for_floor_information_id(
@@ -157,7 +134,7 @@ class MovePedestrianService:
                 floor_id=floor_id,
                 floor_information_id=floor_information_id,
                 floor_map_id=floor_map_id,
-            )
+            ),
         )
         floor_map = FloorMap(
             floor_map_image_bytes=floor_map_image_bytes,
@@ -177,9 +154,7 @@ class MovePedestrianService:
                     initial_walking_parameter=walking_parameter,
                 )
         else:
-            walking_sample_id = (
-                walking_sample_infrastructure_dto.walking_sample_id
-            )
+            walking_sample_id = walking_sample_infrastructure_dto.walking_sample_id
             # 最新のパーティクルの状態を取得
             latest_particle_collection = (
                 self.__particle_repo.find_for_walking_sample_id(
@@ -201,16 +176,14 @@ class MovePedestrianService:
         # パーティクルフィルタの実行
         estimated_particle.remove_by_floor_map()
         move_estimation_particles = estimated_particle.move(
-            current_walking_parameter=walking_parameter
+            current_walking_parameter=walking_parameter,
         )
         move_estimation_particles.remove_by_floor_map()
-        move_estimation_particles.remove_by_direction(
-            step=walking_parameter.get_step()
-        )
+        move_estimation_particles.remove_by_direction(step=walking_parameter.get_step())
         move_estimation_particles.resampling(step=walking_parameter.get_step())
 
         # その時点で、パーティクルフィルタをかけた時の推定位置を取得
-        estimated_position = move_estimation_particles.get_estimated_pose()
+        estimated_pose = move_estimation_particles.get_estimated_pose()
 
         # パーティクルフィルタの結果を保存
         walking_sample = self.__walking_sample_repo.save(
@@ -228,18 +201,16 @@ class MovePedestrianService:
         )
 
         # 推定位置を保存
-        self.__estimated_position_repo.save(
+        self.__pose_repo.save(
             conn=conn,
-            estimated_position=estimated_position,
+            estimated_position=estimated_pose,
             walking_sample_id=walking_sample_id,
         )
 
         # 歩行情報を保存
-        walking_information_infrastructure_dto = (
-            self.__walking_information_repo.save(
-                conn=conn,
-                pedestrian_id=pedestrian_id,
-            )
+        walking_information_infrastructure_dto = self.__walking_information_repo.save(
+            conn=conn,
+            pedestrian_id=pedestrian_id,
         )
         walking_information_id = (
             walking_information_infrastructure_dto.walking_information_id
@@ -311,6 +282,6 @@ class MovePedestrianService:
         )
 
         return MovePedestrianServiceDto(
-            estimated_position=estimated_position,
+            pose=estimated_pose,
             walking_parameter=walking_parameter,
         )

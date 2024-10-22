@@ -1,10 +1,6 @@
-from enum import (
-    Enum,
-)
+from enum import Enum
 
-from fastapi import (
-    HTTPException,
-)
+from fastapi import HTTPException
 
 
 class InfrastructureErrorType(Enum):
@@ -36,7 +32,7 @@ class InfrastructureError(HTTPException):
         error_type: InfrastructureErrorType,
         status_code: int,
         detail: str,
-    ):
+    ) -> None:
         self._type = error_type
         super().__init__(
             status_code,
@@ -46,5 +42,5 @@ class InfrastructureError(HTTPException):
     @property
     def type(
         self,
-    ):
+    ) -> InfrastructureErrorType:
         return self._type

@@ -1,39 +1,37 @@
+from __future__ import annotations
+
 import random
-from typing import (
-    List,
-    Tuple,
-)
+from typing import TYPE_CHECKING, Iterator
 
 import numpy as np
-from domain.dataclasses.coordinate import (
-    Coordinate,
-)
-from domain.models.particle.particle import (
-    Particle,
-)
+
+if TYPE_CHECKING:
+    from domain.dataclasses.color import Color
+    from domain.dataclasses.coordinate import Coordinate
+    from domain.models.particle.particle import Particle
 
 
 class ParticleCollection:
     def __init__(
         self,
-    ):
-        self.__particles: List[Particle] = []
+    ) -> None:
+        self.__particles: list[Particle] = []
 
     def get_particles(
         self,
-    ) -> List[Particle]:
+    ) -> list[Particle]:
         return self.__particles
 
     def clone(
         self,
-    ) -> "ParticleCollection":
+    ) -> ParticleCollection:
         clone = ParticleCollection()
         clone.add_all(self.__particles)
         return clone
 
     def get_weights(
         self,
-    ) -> List[float]:
+    ) -> list[float]:
         return [particle.get_weight() for particle in self.__particles]
 
     def get_x_mean(
@@ -58,20 +56,20 @@ class ParticleCollection:
             np.arctan2(
                 y,
                 x,
-            )
+            ),
         )
 
         return int((average_angle + 360) % 360)
 
     def get_normalized_distances(
         self,
-    ) -> List[float]:
+    ) -> list[float]:
         distances_x = np.abs(np.array(self.__get_x_list()) - self.get_x_mean())
         distances_y = np.abs(np.array(self.__get_y_list()) - self.get_y_mean())
         distances = np.sqrt(distances_x**2 + distances_y**2)
 
         weights = list(
-            1 / (1 + distances / (self.__get_x_std() + self.__get_y_std()))
+            1 / (1 + distances / (self.__get_x_std() + self.__get_y_std())),
         )
 
         return weights / np.sum(weights)
@@ -80,15 +78,8 @@ class ParticleCollection:
         self,
     ) -> float:
         distances_to_mean = np.sqrt(
-            (
-                np.array(self.__get_weighted_x_list())
-                - self.__get_weighted_x_mean()
-            )
-            ** 2
-            + (
-                np.array(self.__get_weighted_y_list())
-                - self.__get_weighted_y_mean()
-            )
+            (np.array(self.__get_weighted_x_list()) - self.__get_weighted_x_mean()) ** 2
+            + (np.array(self.__get_weighted_y_list()) - self.__get_weighted_y_mean())
             ** 2,
         )
 
@@ -98,12 +89,12 @@ class ParticleCollection:
         self,
         estimated_x: int,
         estimated_y: int,
-    ) -> Tuple[
+    ) -> tuple[
         float,
         float,
     ]:
         residuals = np.abs(
-            np.array(self.__get_weighted_x_list()) - estimated_x
+            np.array(self.__get_weighted_x_list()) - estimated_x,
         ) + np.abs(
             np.array(self.__get_weighted_y_list()) - estimated_y,
         )
@@ -140,25 +131,25 @@ class ParticleCollection:
     def add(
         self,
         particle: Particle,
-    ):
+    ) -> None:
         self.__particles.append(particle)
 
     def add_all(
         self,
-        particles: List[Particle],
-    ):
+        particles: list[Particle],
+    ) -> None:
         self.__particles.extend(particles)
 
     def reset(
         self,
-    ):
+    ) -> None:
         self.__particles = []
 
     def set_color_by_coordinate(
         self,
         coordinate: Coordinate,
         color: Color,
-    ):
+    ) -> None:
         for particle in self.__particles:
             if (
                 particle.get_coordinate().x == coordinate.x
@@ -169,19 +160,19 @@ class ParticleCollection:
 
     def shuffle(
         self,
-    ):
+    ) -> None:
         random.shuffle(self.__particles)
 
     def pop(
         self,
         index: int,
-    ):
+    ) -> None:
         self.__particles.pop(index)
 
     def pop_all(
         self,
-        indexes: List[int],
-    ):
+        indexes: list[int],
+    ) -> None:
         indexes.sort(reverse=True)
 
         for index in indexes:
@@ -190,7 +181,7 @@ class ParticleCollection:
     def pop_random(
         self,
         amount: int,
-    ):
+    ) -> None:
         indexes = random.sample(
             range(len(self.__particles)),
             amount,
@@ -199,32 +190,32 @@ class ParticleCollection:
 
     def __get_x_list(
         self,
-    ) -> List[int]:
-        return [particle.get_x() for particle in self.__particles]
+    ) -> list[int]:
+        return [particle.get_coordinate().x for particle in self.__particles]
 
     def __get_y_list(
         self,
-    ) -> List[int]:
-        return [particle.get_y() for particle in self.__particles]
+    ) -> list[int]:
+        return [particle.get_coordinate().y for particle in self.__particles]
 
     def __get_direction_list(
         self,
-    ) -> List[float]:
+    ) -> list[float]:
         return [particle.get_direction() for particle in self.__particles]
 
     def __get_weighted_x_list(
         self,
-    ) -> List[float]:
+    ) -> list[float]:
         return [
-            particle.get_x() * particle.get_weight()
+            particle.get_coordinate().x * particle.get_weight()
             for particle in self.__particles
         ]
 
     def __get_weighted_y_list(
         self,
-    ) -> List[float]:
+    ) -> list[float]:
         return [
-            particle.get_y() * particle.get_weight()
+            particle.get_coordinate().y * particle.get_weight()
             for particle in self.__particles
         ]
 
@@ -250,16 +241,16 @@ class ParticleCollection:
 
     def __iter__(
         self,
-    ):
+    ) -> Iterator[Particle]:
         return iter(self.__particles)
 
     def __len__(
         self,
-    ):
+    ) -> int:
         return len(self.__particles)
 
     def __getitem__(
         self,
-        index,
-    ):
+        index: int,
+    ) -> Particle:
         return self.__particles[index]

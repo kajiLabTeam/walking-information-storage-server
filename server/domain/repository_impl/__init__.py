@@ -3,9 +3,7 @@ from .floor_repository_impl import (
     FloorMapRepositoryImpl,
     FloorRepositoryImpl,
 )
-from .trajectory_repository_impl import (
-    TrajectoryRepositoryImpl,
-)
+from .trajectory_repository_impl import TrajectoryRepositoryImpl
 from .walking_information_repository_impl import (
     AccelerometerRepositoryImpl,
     AtmosphericPressureRepositoryImpl,
@@ -15,8 +13,8 @@ from .walking_information_repository_impl import (
     WalkingInformationRepositoryImpl,
 )
 from .walking_sample_repository_impl import (
-    EstimatedPositionRepositoryImpl,
     ParticleRepositoryImpl,
+    PoseRepositoryImpl,
     WalkingSampleRepositoryImpl,
 )
 
@@ -31,7 +29,7 @@ __all__ = [
     "GyroscopeRepositoryImpl",
     "RatioWaveRepositoryImpl",
     "WalkingInformationRepositoryImpl",
-    "EstimatedPositionRepositoryImpl",
+    "PoseRepositoryImpl",
     "ParticleRepositoryImpl",
     "WalkingSampleRepositoryImpl",
 ]

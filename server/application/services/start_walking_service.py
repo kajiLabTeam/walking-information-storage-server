@@ -1,13 +1,9 @@
-from application.dto import (
-    StartWalkingServiceDto,
-)
+from application.dto import StartWalkingServiceDto
 from domain.repository_impl import (
     FloorInformationRepositoryImpl,
     TrajectoryRepositoryImpl,
 )
-from infrastructure.connection import (
-    DBConnection,
-)
+from infrastructure.connection import DBConnection
 
 
 class StartWalkingService:
@@ -29,9 +25,7 @@ class StartWalkingService:
         floor_information_infrastructure_dto = (
             self.__floor_information_repo.find_latest(conn=conn)
         )
-        floor_information_id = (
-            floor_information_infrastructure_dto.floor_information_id
-        )
+        floor_information_id = floor_information_infrastructure_dto.floor_information_id
 
         trajectory_infrastructure_dto = self.__trajectory_repo.save(
             conn=conn,

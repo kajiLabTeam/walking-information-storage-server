@@ -1,12 +1,6 @@
-from application.dto import (
-    FinishWalkingServiceDto,
-)
-from domain.repository_impl import (
-    TrajectoryRepositoryImpl,
-)
-from infrastructure.connection import (
-    DBConnection,
-)
+from application.dto import FinishWalkingServiceDto
+from domain.repository_impl import TrajectoryRepositoryImpl
+from infrastructure.connection import DBConnection
 
 
 class FinishWalkingService:

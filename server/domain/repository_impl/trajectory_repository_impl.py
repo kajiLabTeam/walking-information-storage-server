@@ -1,14 +1,7 @@
-from abc import (
-    ABCMeta,
-    abstractmethod,
-)
+from abc import ABCMeta, abstractmethod
 
-from domain.repository_impl.dto.infrastructure_dto import (
-    TrajectoryRepositoryDto,
-)
-from psycopg2.extensions import (
-    connection,
-)
+from domain.repository_impl.dto.infrastructure_dto import TrajectoryRepositoryDto
+from psycopg2.extensions import connection
 
 
 class TrajectoryRepositoryImpl(metaclass=ABCMeta):
@@ -16,9 +9,9 @@ class TrajectoryRepositoryImpl(metaclass=ABCMeta):
     def save(
         self,
         conn: connection,
-        is_walking: bool,
         pedestrian_id: str,
         floor_information_id: str,
+        is_walking: bool,
     ) -> TrajectoryRepositoryDto:
         pass
 
