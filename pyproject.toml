@@ -1,10 +1,13 @@
+[tool.ruff]
+line-length = 100
+indent-width = 4
+
+
 [tool.ruff.format]
 docstring-code-format = true
 
 [tool.ruff.lint]
-line-length = 88
-indent-width = 4
-select = ["I001"]
+select = ["ALL"]
 ignore = [
     "ANN1",   # missing type self and cls
     "E999",   # syntax error
@@ -20,6 +23,13 @@ ignore = [
     "TRY301", # try except pass
     "N806",   # variable in except block
     "FBT001", # assert in finally block
+    "D203",  # 1 blank line required before class docstring`
+    "D212",  # Multi-line docstring summary should start at the second line
+    "COM812", # missing space after comment hash
+    "ISC001", # implicit string concatenation
+    "N803",  # variable in except block
+    "N815", # variable in except block
+    "PLR0913", # prefer using f-strings
 ]
 unfixable = [
     "F401",   # unused import
