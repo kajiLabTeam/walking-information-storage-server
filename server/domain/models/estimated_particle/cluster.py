@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
@@ -8,12 +8,21 @@ from sklearn.cluster import KMeans
 
 class Cluster:
     @staticmethod
-    def build(X: NDArray, k_means: KMeans, index=None) -> List["Cluster"]:
+    def build(
+        X: NDArray,
+        k_means: KMeans,
+        index=None,
+    ) -> list[Cluster]:
         if index is None:
             index = np.arange(X.shape[0])
 
         clusters = [
-            Cluster(X, index, k_means, label)
+            Cluster(
+                X,
+                index,
+                k_means,
+                label,
+            )
             for label in range(k_means.get_params()["n_clusters"])
         ]
 
@@ -34,28 +43,32 @@ class Cluster:
 
         if self.size > 1:
             self.cov = np.cov(self.data.T)
-            # Check for singular matrix and adjust if necessary
             if np.linalg.matrix_rank(self.cov) < self.cov.shape[0]:
-                self.cov += (
-                    np.eye(self.cov.shape[0]) * 1e-6
-                )  # Adding a small value to diagonal
+                self.cov += np.eye(self.cov.shape[0]) * 1e-6
         else:
             self.cov = np.eye(self.data.shape[1]) * 1e-6
 
-    def log_likelihood(self) -> float:
+    def log_likelihood(
+        self,
+    ) -> float:
         self.data = np.array(
-            [x for x in self.data if not (np.isnan(x).any() or np.isinf(x).any())]
+            [x for x in self.data if not (np.isnan(x).any() or np.isinf(x).any())],
         )
         if len(self.data) == 0:
             return -np.inf
 
         log_likelihoods = [
             stats.multivariate_normal.logpdf(
-                x, self.center, self.cov, allow_singular=True
+                x,
+                self.center,
+                int(self.cov),
+                allow_singular=True,
             )
             for x in self.data
         ]
         return sum(log_likelihoods)
 
-    def bic(self):
+    def bic(
+        self,
+    ):
         return -2 * self.log_likelihood() + self.df * np.log(self.size)

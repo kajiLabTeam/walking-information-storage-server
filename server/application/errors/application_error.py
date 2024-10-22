@@ -11,10 +11,20 @@ class ApplicationErrorType(Enum):
 
 
 class ApplicationError(HTTPException):
-    def __init__(self, error_type: ApplicationErrorType, status_code: int, detail: str):
+    def __init__(
+        self,
+        error_type: ApplicationErrorType,
+        status_code: int,
+        detail: str,
+    ) -> None:
         self._type = error_type
-        super().__init__(status_code, detail=detail)
+        super().__init__(
+            status_code,
+            detail=detail,
+        )
 
     @property
-    def type(self):
+    def type(
+        self,
+    ) -> ApplicationErrorType:
         return self._type

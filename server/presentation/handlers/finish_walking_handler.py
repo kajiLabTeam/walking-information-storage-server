@@ -18,16 +18,21 @@ finish_walking_service = FinishWalkingService(trajectory_repo=TrajectoryReposito
 
 
 @router.post(
-    "/api/walking/finish", response_model=FinishWalkingRequest, status_code=201
+    "/api/walking/finish",
+    response_model=FinishWalkingRequest,
+    status_code=201,
 )
-async def finish_walking(request: FinishWalkingRequest):
-    """
-    歩行者が歩行を終了することをサーバに通知するためのエンドポイント
-    """
+async def finish_walking(
+    request: FinishWalkingRequest,
+) -> FinishWalkingResponse:
+    """歩行者が歩行を終了することをサーバに通知するためのエンドポイント."""
     try:
         finish_walking_service.run(trajectory_id=request.trajectoryId)
 
         return FinishWalkingResponse(trajectoryId=request.trajectoryId)
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        ) from e

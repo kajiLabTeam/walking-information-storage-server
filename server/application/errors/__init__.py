@@ -1,3 +1,6 @@
-from .application_error import ApplicationError
+from .application_error import ApplicationError, ApplicationErrorType
 
-__all__ = ["ApplicationError"]
+__all__ = [
+    "ApplicationError",
+    "ApplicationErrorType",
+]

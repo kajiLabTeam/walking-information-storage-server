@@ -1,6 +1,5 @@
-from typing import Any
-
 import boto3
+from botocore.client import BaseClient
 from config import MinioEnv, PostgresEnv
 from psycopg2 import connect
 from psycopg2.extensions import connection
@@ -21,7 +20,7 @@ class DBConnection:
 
 class MinIOConnection:
     @staticmethod
-    def connect() -> Any:
+    def connect() -> BaseClient:
         env = MinioEnv()
         return boto3.client(
             service_name=env.get_service_name_of_private_value(),

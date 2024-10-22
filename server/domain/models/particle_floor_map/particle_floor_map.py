@@ -8,13 +8,16 @@ class ParticleFloorMap:
     def generate_image(
         floor_map: FloorMap,
         estimated_particle: EstimatedParticle,
-    ):
+    ) -> None:
         floor_map_copy = floor_map.clone()
 
         # パーティクルの位置を描画
         for particle in estimated_particle:
             floor_map_copy.depict_circle(
-                position=(particle.get_x(), particle.get_y()),
+                position=(
+                    particle.get_coordinate().x,
+                    particle.get_coordinate().y,
+                ),
                 color=CANDIDATE_PARTICLES_COLOR,
                 outline_color=PARTICLE_OUTLINE_COLOR,
             )

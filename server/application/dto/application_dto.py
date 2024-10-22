@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from domain.models.estimated_position.estimated_position import EstimatedPosition
+from domain.dataclasses import Pose
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
@@ -12,7 +12,7 @@ class StartWalkingServiceDto:
 
 @dataclass
 class MovePedestrianServiceDto:
-    estimated_position: EstimatedPosition
+    pose: Pose
     walking_parameter: WalkingParameter
 
 

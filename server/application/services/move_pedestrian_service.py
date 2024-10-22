@@ -1,33 +1,26 @@
 from application.dto import MovePedestrianServiceDto
-from application.errors.application_error import ApplicationError, ApplicationErrorType
+from application.errors import ApplicationError, ApplicationErrorType
 from config.const import STEP
-from domain.models.angle_converter.angle_converter import AngleConverter
-from domain.models.estimated_particle.estimated_particle import (
-    EstimatedParticle,
-    EstimatedParticleFactory,
-)
+from domain.models.estimated_particle.estimated_particle import EstimatedParticle
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from domain.repository_impl import (
     AccelerometerRepositoryImpl,
     AtmosphericPressureRepositoryImpl,
-    EstimatedPositionRepositoryImpl,
     FloorInformationRepositoryImpl,
     FloorMapRepositoryImpl,
     FloorRepositoryImpl,
     GpsRepositoryImpl,
     GyroscopeRepositoryImpl,
     ParticleRepositoryImpl,
+    PoseRepositoryImpl,
     RatioWaveRepositoryImpl,
     TrajectoryRepositoryImpl,
     WalkingInformationRepositoryImpl,
     WalkingSampleRepositoryImpl,
 )
 from infrastructure.connection import DBConnection, MinIOConnection
-from infrastructure.errors.infrastructure_error import (
-    InfrastructureError,
-    InfrastructureErrorType,
-)
+from infrastructure.errors.infrastructure_error import InfrastructureError, InfrastructureErrorType
 from infrastructure.external.services import FileService
 from utils import (
     get_accelerometer_bucket_name,
@@ -53,9 +46,9 @@ class MovePedestrianService:
         trajectory_repo: TrajectoryRepositoryImpl,
         walking_sample_repo: WalkingSampleRepositoryImpl,
         floor_information_repo: FloorInformationRepositoryImpl,
-        estimated_position_repo: EstimatedPositionRepositoryImpl,
+        pose_repo: PoseRepositoryImpl,
         walking_information_repo: WalkingInformationRepositoryImpl,
-    ):
+    ) -> None:
         self.__floor_repo = floor_repo
         self.__particle_repo = particle_repo
         self.__floor_map_repo = floor_map_repo
@@ -67,7 +60,7 @@ class MovePedestrianService:
         self.__trajectory_repo = trajectory_repo
         self.__walking_sample_repo = walking_sample_repo
         self.__floor_information_repo = floor_information_repo
-        self.__estimated_position_repo = estimated_position_repo
+        self.__pose_repo = pose_repo
         self.__walking_information_repo = walking_information_repo
 
     def run(
@@ -86,7 +79,8 @@ class MovePedestrianService:
 
         # 軌跡IDがない場合は、エラーを返す
         if not self.__trajectory_repo.find_for_id(
-            conn=conn, trajectory_id=trajectory_id
+            conn=conn,
+            trajectory_id=trajectory_id,
         ):
             raise ApplicationError(
                 error_type=ApplicationErrorType.NOT_WALKING_START,
@@ -95,12 +89,9 @@ class MovePedestrianService:
             )
 
         # 歩行データから、歩行パラメータを取得
-        angle_converter = AngleConverter(gyroscope_file=gyroscope_file)
-        angle_changed = angle_converter.calculate_cumulative_angle()
         walking_parameter = WalkingParameter(
-            id=None,
             step=STEP,
-            angle_changed=angle_changed,
+            gyroscope_file=gyroscope_file,
         )
 
         # 歩行情報
@@ -114,20 +105,23 @@ class MovePedestrianService:
 
         # 引数のidを元に、必要な情報を取得
         trajectory_infrastructure_dto = self.__trajectory_repo.find_for_id(
-            conn=conn, trajectory_id=trajectory_id
+            conn=conn,
+            trajectory_id=trajectory_id,
         )
         floor_information_id = trajectory_infrastructure_dto.floor_information_id
 
         floor_map_infrastructure_dto = (
             self.__floor_map_repo.find_for_floor_information_id(
-                conn=conn, floor_information_id=floor_information_id
+                conn=conn,
+                floor_information_id=floor_information_id,
             )
         )
         floor_map_id = floor_map_infrastructure_dto.floor_map_id
 
         floor_information_infrastructure_dto = (
             self.__floor_information_repo.find_for_id(
-                conn=conn, floor_information_id=floor_information_id
+                conn=conn,
+                floor_information_id=floor_information_id,
             )
         )
         floor_id = floor_information_infrastructure_dto.floor_id
@@ -137,7 +131,7 @@ class MovePedestrianService:
                 floor_id=floor_id,
                 floor_information_id=floor_information_id,
                 floor_map_id=floor_map_id,
-            )
+            ),
         )
         floor_map = FloorMap(
             floor_map_image_bytes=floor_map_image_bytes,
@@ -146,12 +140,13 @@ class MovePedestrianService:
         try:
             walking_sample_infrastructure_dto = (
                 self.__walking_sample_repo.find_latest_for_trajectory_id(
-                    conn=conn, trajectory_id=trajectory_id
+                    conn=conn,
+                    trajectory_id=trajectory_id,
                 )
             )
         except InfrastructureError as e:
             if e.type == InfrastructureErrorType.NOT_FOUND_WALKING_SAMPLE:
-                estimated_particle = EstimatedParticleFactory.create(
+                estimated_particle = EstimatedParticle.initialize(
                     floor_map=floor_map,
                     initial_walking_parameter=walking_parameter,
                 )
@@ -160,7 +155,8 @@ class MovePedestrianService:
             # 最新のパーティクルの状態を取得
             latest_particle_collection = (
                 self.__particle_repo.find_for_walking_sample_id(
-                    conn=conn, walking_sample_id=walking_sample_id
+                    conn=conn,
+                    walking_sample_id=walking_sample_id,
                 )
             )
             estimated_particle = EstimatedParticle(
@@ -169,21 +165,22 @@ class MovePedestrianService:
                 particle_collection=latest_particle_collection,
             )
 
-        estimated_particle = EstimatedParticleFactory.create(
-            floor_map=floor_map, initial_walking_parameter=walking_parameter
+        estimated_particle = EstimatedParticle.initialize(
+            floor_map=floor_map,
+            initial_walking_parameter=walking_parameter,
         )
 
         # パーティクルフィルタの実行
         estimated_particle.remove_by_floor_map()
         move_estimation_particles = estimated_particle.move(
-            current_walking_parameter=walking_parameter
+            current_walking_parameter=walking_parameter,
         )
         move_estimation_particles.remove_by_floor_map()
         move_estimation_particles.remove_by_direction(step=walking_parameter.get_step())
         move_estimation_particles.resampling(step=walking_parameter.get_step())
 
         # その時点で、パーティクルフィルタをかけた時の推定位置を取得
-        estimated_position = move_estimation_particles.estimate_position()
+        estimated_pose = move_estimation_particles.get_estimated_pose()
 
         # パーティクルフィルタの結果を保存
         walking_sample = self.__walking_sample_repo.save(
@@ -201,9 +198,9 @@ class MovePedestrianService:
         )
 
         # 推定位置を保存
-        self.__estimated_position_repo.save(
+        self.__pose_repo.save(
             conn=conn,
-            estimated_position=estimated_position,
+            estimated_pose=estimated_pose,
             walking_sample_id=walking_sample_id,
         )
 
@@ -282,6 +279,6 @@ class MovePedestrianService:
         )
 
         return MovePedestrianServiceDto(
-            estimated_position=estimated_position,
+            pose=estimated_pose,
             walking_parameter=walking_parameter,
         )

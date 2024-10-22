@@ -1,15 +1,12 @@
 from application.services import StartWalkingService
 from fastapi import APIRouter, HTTPException
-from infrastructure.persistence.repository import (
-    FloorInformationRepository,
-    TrajectoryRepository,
-)
+from infrastructure.persistence.repository import FloorInformationRepository, TrajectoryRepository
 from pydantic import BaseModel
 
 
 class StartWalkingRequest(BaseModel):
-    pedestrianId: str
     floorId: str
+    pedestrianId: str
 
 
 class StartWalkingResponse(BaseModel):
@@ -25,11 +22,15 @@ start_walking_service = StartWalkingService(
 )
 
 
-@router.post("/api/walking/start", response_model=StartWalkingResponse, status_code=201)
-async def start_walking(request: StartWalkingRequest):
-    """
-    クライアントが歩行を開始することをサーバに通知するためのエンドポイント
-    """
+@router.post(
+    "/api/walking/start",
+    response_model=StartWalkingResponse,
+    status_code=201,
+)
+async def start_walking(
+    request: StartWalkingRequest,
+) -> StartWalkingResponse:
+    """クライアントが歩行を開始することをサーバに通知するためのエンドポイント."""
     try:
         start_walking_service_dto = start_walking_service.run(
             pedestrian_id=request.pedestrianId,
@@ -42,4 +43,7 @@ async def start_walking(request: StartWalkingRequest):
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        ) from e

@@ -14,7 +14,9 @@ from psycopg2.extensions import connection
 class WalkingInformationRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, pedestrian_id: str
+        self,
+        conn: connection,
+        pedestrian_id: str,
     ) -> WalkingInformationRepositoryDto:
         pass
 
@@ -22,7 +24,9 @@ class WalkingInformationRepositoryImpl(metaclass=ABCMeta):
 class GyroscopeRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, walking_information_id: str
+        self,
+        conn: connection,
+        walking_information_id: str,
     ) -> GyroscopeRepositoryDto:
         pass
 
@@ -30,7 +34,9 @@ class GyroscopeRepositoryImpl(metaclass=ABCMeta):
 class AccelerometerRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, walking_information_id: str
+        self,
+        conn: connection,
+        walking_information_id: str,
     ) -> AccelerometerRepositoryDto:
         pass
 
@@ -48,12 +54,18 @@ class RatioWaveRepositoryImpl(metaclass=ABCMeta):
 class AtmosphericPressureRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
     def save(
-        self, conn: connection, walking_information_id: str
+        self,
+        conn: connection,
+        walking_information_id: str,
     ) -> AtmosphericPressureRepositoryDto:
         pass
 
 
 class GpsRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save(self, conn: connection, walking_information_id: str) -> GpsRepositoryDto:
+    def save(
+        self,
+        conn: connection,
+        walking_information_id: str,
+    ) -> GpsRepositoryDto:
         pass
