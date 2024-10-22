@@ -16,7 +16,7 @@ class ApplicationError(HTTPException):
         error_type: ApplicationErrorType,
         status_code: int,
         detail: str,
-    ):
+    ) -> None:
         self._type = error_type
         super().__init__(
             status_code,
@@ -26,5 +26,5 @@ class ApplicationError(HTTPException):
     @property
     def type(
         self,
-    ):
+    ) -> ApplicationErrorType:
         return self._type

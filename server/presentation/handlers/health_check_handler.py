@@ -23,10 +23,8 @@ async def check_minio_csv_health(
         UploadFile,
         File(),
     ],
-):
-    """
-    MinIOサーバへのファイルアップロード及びダウンロードが正常に行えるかを確認するためのエンドポイント
-    """
+) -> StreamingResponse:
+    """MinIOサーバへのファイルアップロード及びダウンロードが正常に行えるかを確認するためのエンドポイント."""
     try:
         upload_file = await uploadFile.read()
 
@@ -61,10 +59,8 @@ async def check_minio_image_health(
         UploadFile,
         File(),
     ],
-):
-    """
-    MinIOサーバへのファイルアップロード及びダウンロードが正常に行えるかを確認するためのエンドポイント
-    """
+) -> StreamingResponse:
+    """MinIOサーバへのファイルアップロード及びダウンロードが正常に行えるかを確認するためのエンドポイント."""
     try:
         upload_file = await uploadFile.read()
 

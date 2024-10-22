@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from domain.dataclasses.coordinate import Pose
+from domain.dataclasses import Pose
 from domain.models.particle_collection.particle_collection import ParticleCollection
 from domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
 from psycopg2.extensions import connection
@@ -50,7 +50,7 @@ class PoseRepositoryImpl(metaclass=ABCMeta):
     def save(
         self,
         conn: connection,
-        estimated_position: Pose,
+        estimated_pose: Pose,
         walking_sample_id: str,
     ) -> str:
         pass

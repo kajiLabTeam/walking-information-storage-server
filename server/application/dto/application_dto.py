@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from domain.dataclasses.coordinate import Pose
+from domain.dataclasses import Pose
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 

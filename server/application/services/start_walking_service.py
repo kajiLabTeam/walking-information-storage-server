@@ -1,8 +1,5 @@
 from application.dto import StartWalkingServiceDto
-from domain.repository_impl import (
-    FloorInformationRepositoryImpl,
-    TrajectoryRepositoryImpl,
-)
+from domain.repository_impl import FloorInformationRepositoryImpl, TrajectoryRepositoryImpl
 from infrastructure.connection import DBConnection
 
 
@@ -11,14 +8,13 @@ class StartWalkingService:
         self,
         trajectory_repo: TrajectoryRepositoryImpl,
         floor_information_repo: FloorInformationRepositoryImpl,
-    ):
+    ) -> None:
         self.__trajectory_repo = trajectory_repo
         self.__floor_information_repo = floor_information_repo
 
     def run(
         self,
         pedestrian_id: str,
-        floor_id: str,
     ) -> StartWalkingServiceDto:
         conn = DBConnection.connect()
 

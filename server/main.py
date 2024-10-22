@@ -34,9 +34,9 @@ app.include_router(health_check_router)
 
 @app.exception_handler(ApplicationError)
 async def application_error_handler(
-    request: Request,
+    _: Request,
     exc: ApplicationError,
-):
+) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content={
@@ -48,9 +48,9 @@ async def application_error_handler(
 
 @app.exception_handler(InfrastructureError)
 async def infrastructure_error_handler(
-    request: Request,
+    _: Request,
     exc: InfrastructureError,
-):
+) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content={
@@ -62,9 +62,9 @@ async def infrastructure_error_handler(
 
 @app.exception_handler(DomainError)
 async def domain_error_handler(
-    request: Request,
+    _: Request,
     exc: DomainError,
-):
+) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content={
@@ -76,9 +76,9 @@ async def domain_error_handler(
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(
-    request: Request,
+    _: Request,
     exc: HTTPException,
-):
+) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content={"error": exc.detail},

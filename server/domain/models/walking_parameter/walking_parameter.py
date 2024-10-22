@@ -10,7 +10,7 @@ class WalkingParameter:
         self,
         step: int,
         gyroscope_file: bytes,
-    ):
+    ) -> None:
         self.__step = step
         self.__angle_change = self.__calculate_cumulative_angle(gyroscope_file)
 

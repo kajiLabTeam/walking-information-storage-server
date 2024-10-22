@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
@@ -12,10 +12,13 @@ image_path = "particle_floor_map.png"
     "/api/floor_map/get",
     status_code=200,
 )
-async def get_particles_floor_map():
+async def get_particles_floor_map() -> FileResponse:
     try:
-        if not os.path.exists(image_path):
-            return {"error": "File not found"}
+        if not Path(image_path).exists():
+            raise HTTPException(
+                status_code=404,
+                detail="Image file not found",
+            )
 
         return FileResponse(
             image_path,

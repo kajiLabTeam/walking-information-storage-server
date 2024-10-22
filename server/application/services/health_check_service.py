@@ -18,8 +18,4 @@ class HealthCheckService:
             file=upload_file,
         )
 
-        download_file = file_service.download(
-            key=f"{HEALTH_CHECK_BUCKET_NAME}/{bucket_name}"
-        )
-
-        return download_file
+        return file_service.download(key=f"{HEALTH_CHECK_BUCKET_NAME}/{bucket_name}")

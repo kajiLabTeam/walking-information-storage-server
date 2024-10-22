@@ -53,36 +53,15 @@ move_pedestrian_service = MovePedestrianService(
     status_code=201,
 )
 async def move_pedestrian(
-    pedestrianId: Annotated[
-        str,
-        Form(),
-    ],
-    trajectoryId: Annotated[
-        str,
-        Form(),
-    ],
-    gpsFile: Annotated[
-        UploadFile,
-        File(),
-    ],
-    wifiFile: Annotated[
-        UploadFile,
-        File(),
-    ],
-    gyroscopeFile: Annotated[
-        UploadFile,
-        File(),
-    ],
-    accelerometerFile: Annotated[
-        UploadFile,
-        File(),
-    ],
-    atmosphericPressureFile: Annotated[
-        UploadFile,
-        File(),
-    ],
-):
-    """クライアントが歩行開始からの歩行データをサーバに送信するためのエンドポイント"""
+    pedestrianId: Annotated[str, Form()],
+    trajectoryId: Annotated[str, Form()],
+    gpsFile: Annotated[UploadFile, File()],
+    wifiFile: Annotated[UploadFile, File()],
+    gyroscopeFile: Annotated[UploadFile, File()],
+    accelerometerFile: Annotated[UploadFile, File()],
+    atmosphericPressureFile: Annotated[UploadFile, File()],
+) -> CreateWalkingSampleResponse:
+    """クライアントが歩行開始からの歩行データをサーバに送信するためのエンドポイント."""
     gps_file = await gpsFile.read()
     wifi_file = await wifiFile.read()
     gyroscope_file = await gyroscopeFile.read()

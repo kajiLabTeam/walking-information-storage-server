@@ -1,7 +1,7 @@
 from .application_dto import (
-    FinishWalkingServiceDto,
-    MovePedestrianServiceDto,
-    StartWalkingServiceDto,
+                              FinishWalkingServiceDto,
+                              MovePedestrianServiceDto,
+                              StartWalkingServiceDto,
 )
 
 __all__ = [

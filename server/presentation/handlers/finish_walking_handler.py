@@ -24,10 +24,8 @@ finish_walking_service = FinishWalkingService(trajectory_repo=TrajectoryReposito
 )
 async def finish_walking(
     request: FinishWalkingRequest,
-):
-    """
-    歩行者が歩行を終了することをサーバに通知するためのエンドポイント
-    """
+) -> FinishWalkingResponse:
+    """歩行者が歩行を終了することをサーバに通知するためのエンドポイント."""
     try:
         finish_walking_service.run(trajectory_id=request.trajectoryId)
 

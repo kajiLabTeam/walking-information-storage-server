@@ -6,8 +6,7 @@ from typing import TYPE_CHECKING, Iterator
 import numpy as np
 
 if TYPE_CHECKING:
-    from domain.dataclasses.color import Color
-    from domain.dataclasses.coordinate import Coordinate
+    from domain.dataclasses import Color, Coordinate
     from domain.models.particle.particle import Particle
 
 

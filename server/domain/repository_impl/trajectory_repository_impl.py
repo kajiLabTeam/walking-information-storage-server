@@ -9,9 +9,9 @@ class TrajectoryRepositoryImpl(metaclass=ABCMeta):
     def save(
         self,
         conn: connection,
+        is_walking: bool,
         pedestrian_id: str,
         floor_information_id: str,
-        is_walking: bool,
     ) -> TrajectoryRepositoryDto:
         pass
 

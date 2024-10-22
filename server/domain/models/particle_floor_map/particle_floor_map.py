@@ -15,8 +15,8 @@ class ParticleFloorMap:
         for particle in estimated_particle:
             floor_map_copy.depict_circle(
                 position=(
-                    particle.get_x(),
-                    particle.get_y(),
+                    particle.get_coordinate().x,
+                    particle.get_coordinate().y,
                 ),
                 color=CANDIDATE_PARTICLES_COLOR,
                 outline_color=PARTICLE_OUTLINE_COLOR,

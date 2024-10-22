@@ -12,7 +12,7 @@ from config.const import (
     REVERSE_RADIUS,
     SEARCH_NEAREST_INSIDE_RANGE,
 )
-from domain.dataclasses.coordinate import Coordinate, Pose
+from domain.dataclasses import Coordinate, Pose
 from domain.models.estimated_particle.convergence_judgment import ConvergenceJudgment
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.particle.particle import Particle
@@ -279,7 +279,7 @@ class EstimatedParticle:
         self,
         step: int,
     ) -> None:
-        """## パーティクルの向きが歩行不可能領域を向いている場合、パーティクルを削除する."""  # noqa: E501
+        """## パーティクルの向きが歩行不可能領域を向いている場合、パーティクルを削除する."""
         remove_particle_indexes = [
             i
             for i, particle in enumerate(self.__particle_collection)
@@ -339,7 +339,6 @@ class EstimatedParticle:
         num_particles = len(self.__particle_collection)
         weights = np.array([p.get_weight() for p in self.__particle_collection])
 
-        # TODO: 重みの正規化
         weights /= np.sum(weights)
 
         # 累積分布関数CDFの計算
@@ -376,7 +375,7 @@ class EstimatedParticle:
 
     def __iter__(
         self,
-    ) -> Iterator:
+    ) -> Iterator[Particle]:
         return iter(self.__particle_collection)
 
     def __len__(

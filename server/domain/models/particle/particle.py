@@ -2,8 +2,7 @@ import math
 import secrets
 from typing import Callable
 
-from domain.dataclasses.color import Color
-from domain.dataclasses.coordinate import Coordinate
+from domain.dataclasses import Color, Coordinate
 
 
 class Particle:

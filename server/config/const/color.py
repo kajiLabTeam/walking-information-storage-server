@@ -1,4 +1,4 @@
-from domain.dataclasses.color import Color
+from domain.dataclasses import Color
 
 CORRECT_TRAJECTORY_COLOR = Color(
     0,

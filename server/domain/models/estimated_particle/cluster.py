@@ -12,7 +12,7 @@ class Cluster:
         X: NDArray,
         k_means: KMeans,
         index=None,
-    ) -> list["Cluster"]:
+    ) -> list[Cluster]:
         if index is None:
             index = np.arange(X.shape[0])
 

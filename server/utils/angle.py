@@ -1,11 +1,10 @@
-import random
+from __future__ import annotations
+
+import secrets
 
 
 def get_random_angle() -> float:
-    return random.randint(
-        0,
-        360,
-    )
+    return secrets.randbelow(361)
 
 
 def reverse_angle(
@@ -15,7 +14,7 @@ def reverse_angle(
 
 
 def correction_angle(
-    angle: float | int,
+    angle: float,
 ) -> float:
     return angle % 360
 

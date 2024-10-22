@@ -20,10 +20,7 @@ from domain.repository_impl import (
     WalkingSampleRepositoryImpl,
 )
 from infrastructure.connection import DBConnection, MinIOConnection
-from infrastructure.errors.infrastructure_error import (
-    InfrastructureError,
-    InfrastructureErrorType,
-)
+from infrastructure.errors.infrastructure_error import InfrastructureError, InfrastructureErrorType
 from infrastructure.external.services import FileService
 from utils import (
     get_accelerometer_bucket_name,
@@ -51,7 +48,7 @@ class MovePedestrianService:
         floor_information_repo: FloorInformationRepositoryImpl,
         pose_repo: PoseRepositoryImpl,
         walking_information_repo: WalkingInformationRepositoryImpl,
-    ):
+    ) -> None:
         self.__floor_repo = floor_repo
         self.__particle_repo = particle_repo
         self.__floor_map_repo = floor_map_repo
@@ -203,7 +200,7 @@ class MovePedestrianService:
         # 推定位置を保存
         self.__pose_repo.save(
             conn=conn,
-            estimated_position=estimated_pose,
+            estimated_pose=estimated_pose,
             walking_sample_id=walking_sample_id,
         )
 

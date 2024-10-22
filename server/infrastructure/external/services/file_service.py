@@ -1,18 +1,15 @@
 from io import BytesIO
-from typing import Any
 
+from botocore.client import BaseClient
 from config.const import BUCKET_NAME
-from infrastructure.errors.infrastructure_error import (
-    InfrastructureError,
-    InfrastructureErrorType,
-)
+from infrastructure.errors.infrastructure_error import InfrastructureError, InfrastructureErrorType
 
 
 class FileService:
     def __init__(
         self,
-        s3: Any,
-    ):
+        s3: BaseClient,
+    ) -> None:
         self.__s3 = s3
 
     def download(

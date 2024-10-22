@@ -7,7 +7,7 @@ class FinishWalkingService:
     def __init__(
         self,
         trajectory_repo: TrajectoryRepositoryImpl,
-    ):
+    ) -> None:
         self.__trajectory_repo = trajectory_repo
 
     def run(
