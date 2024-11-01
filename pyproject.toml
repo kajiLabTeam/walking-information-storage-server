@@ -30,6 +30,9 @@ ignore = [
     "N803",  # variable in except block
     "N815", # variable in except block
     "PLR0913", # prefer using f-strings
+    "N802", # function name should be lowercase
+    "D400", # first line should end with a period
+    "D415", # first line should end with a period
 ]
 unfixable = [
     "F401",   # unused import
