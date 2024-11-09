@@ -83,3 +83,23 @@ class ParticleRepositoryDto:
     particle_id: str
     walking_sample_id: str
     particle_collection: bytes
+
+
+@dataclass
+class CoordinateRepositoryDto:
+    coordinate_id: str
+    x: float
+    y: float
+    floor_id: str
+
+
+@dataclass
+class WifiFingerprintingRepositoryDto:
+    wifi_fingerprinting_id: str
+    coordinate_id: str
+
+
+@dataclass
+class GeomagneticRepositoryDto:
+    geomagnetic_id: str
+    coordinate_id: str
