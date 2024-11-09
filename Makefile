@@ -16,7 +16,7 @@ app-logs:
 	docker compose logs -f
 
 app-restart:
-	docker compose down && docker compose build && docker compose up -d && docker compose logs -f
+	rm -rf ./docker/postgres/data && docker compose down && docker compose build && docker compose up -d && docker compose logs -f
 
 spy-up:
 	docker compose -f docker-compose-spy.yml up --build --force-recreate spy
