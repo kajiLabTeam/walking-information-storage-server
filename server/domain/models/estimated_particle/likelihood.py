@@ -8,12 +8,14 @@ if TYPE_CHECKING:
     from domain.models.particle.particle import Particle
     from numpy.typing import NDArray
 
+import io
+
 import pandas as pd
 
 
 class Likelihood:
-    def __init__(self, mode_path: str) -> None:
-        self.__rssi_model_df = pd.read_csv(mode_path)
+    def __init__(self, model: bytes) -> None:
+        self.__rssi_model_df = pd.read_csv(io.BytesIO(model))
         self.__x = np.linspace(
             0, int(max(self.__rssi_model_df["x"])), int(max(self.__rssi_model_df["x"]))
         )

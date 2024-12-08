@@ -8,6 +8,7 @@ from domain.models.estimated_particle.cluster import Cluster
 if TYPE_CHECKING:
     from numpy.typing import NDArray
 
+from config.const.amount import X_MEANS_CLUSTER_AMOUNT
 from scipy import stats
 from sklearn.cluster import KMeans
 
@@ -38,7 +39,7 @@ class ConvergenceJudgment:
     def fit(
         self,
         X: NDArray[np.float64],
-    ):
+    ) -> ConvergenceJudgment:
         self.__clusters: list[Cluster] = []
 
         clusters = Cluster.build(
@@ -71,9 +72,9 @@ class ConvergenceJudgment:
     def __recursively_split(
         self,
         clusters: list[Cluster],
-    ):
+    ) -> None:
         for cluster in clusters:
-            if cluster.size <= 3:
+            if cluster.size <= X_MEANS_CLUSTER_AMOUNT:
                 self.__clusters.append(cluster)
                 continue
 

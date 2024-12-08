@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import numpy as np
-from numpy.typing import NDArray
 from scipy import stats
-from sklearn.cluster import KMeans
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
+    from sklearn.cluster import KMeans
 
 
 class Cluster:
@@ -11,12 +15,12 @@ class Cluster:
     def build(
         X: NDArray,
         k_means: KMeans,
-        index=None,
+        index: NDArray | None = None,
     ) -> list[Cluster]:
         if index is None:
             index = np.arange(X.shape[0])
 
-        clusters = [
+        return [
             Cluster(
                 X,
                 index,
@@ -26,15 +30,13 @@ class Cluster:
             for label in range(k_means.get_params()["n_clusters"])
         ]
 
-        return clusters
-
     def __init__(
         self,
         X: NDArray,
         index: NDArray,
         k_means: KMeans,
         label: int,
-    ):
+    ) -> None:
         self.data: NDArray = X[k_means.labels_ == label]
         self.index = index[k_means.labels_ == label]
         self.size = self.data.shape[0]
@@ -70,5 +72,5 @@ class Cluster:
 
     def bic(
         self,
-    ):
+    ) -> float:
         return -2 * self.log_likelihood() + self.df * np.log(self.size)
