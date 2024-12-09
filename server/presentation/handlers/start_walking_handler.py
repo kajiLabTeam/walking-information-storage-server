@@ -34,7 +34,6 @@ async def start_walking(
     try:
         start_walking_service_dto = start_walking_service.run(
             pedestrian_id=request.pedestrianId,
-            floor_id=request.floorId,
         )
 
         return StartWalkingResponse(
