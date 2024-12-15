@@ -49,9 +49,9 @@ CREATE TABLE trajectories (
 
 CREATE TABLE correct_positions (
     id VARCHAR(26) PRIMARY KEY,
-    x DECIMAL NOT NULL,
-    y DECIMAL NOT NULL,
-    direction DECIMAL NOT NULL,
+    x INTEGER NOT NULL,
+    y INTEGER NOT NULL,
+    direction INTEGER NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     trajectory_id VARCHAR(26) REFERENCES trajectories(id)
 );

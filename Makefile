@@ -1,7 +1,7 @@
 -include .env
 
 app-up:
-	docker compose build && docker compose up -d
+	docker compose build && docker compose up -d && docker compose logs -f
 
 app-db:
 	docker exec -it $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME)
