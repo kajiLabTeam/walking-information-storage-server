@@ -72,7 +72,14 @@ class TrajectoryRepository(TrajectoryRepositoryImpl):
                     pedestrian_id=pedestrian_id,
                     floor_information_id=floor_information_id,
                 )
-
+            except InfrastructureError as e:
+                if e.type == InfrastructureErrorType.NOT_FOUND_TRAJECTORY:
+                    raise
+                raise InfrastructureError(
+                    InfrastructureErrorType.TRAJECTORY_DB_ERROR,
+                    500,
+                    "Failed to find trajectory",
+                ) from e
             except Exception as e:
                 raise InfrastructureError(
                     InfrastructureErrorType.TRAJECTORY_DB_ERROR,
