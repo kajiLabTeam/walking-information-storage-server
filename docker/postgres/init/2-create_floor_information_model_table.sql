@@ -9,7 +9,7 @@ CREATE TABLE floor_maps (
 );
 
 CREATE TABLE coordinates (
-    id VARCHAR(26),
+    id SERIAL,
     x INTEGER NOT NULL,
     y INTEGER NOT NULL,
     is_walkable BOOLEAN NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE geomagnetic_fingerprinting (
     id VARCHAR(26),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    coordinate_id VARCHAR(26) REFERENCES coordinates(id),
+    coordinate_id SERIAL REFERENCES coordinates(id),
     PRIMARY KEY (id)
 );
 
@@ -32,6 +32,6 @@ CREATE TABLE wifi_fingerprinting (
     mac_address VARCHAR(17),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    coordinate_id VARCHAR(26) REFERENCES coordinates(id),
+    coordinate_id SERIAL REFERENCES coordinates(id),
     PRIMARY KEY (id)
 );
