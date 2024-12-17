@@ -8,6 +8,7 @@ class ApplicationErrorType(Enum):
     NOT_FLOOR_INFORMATION = "NotFloorInformation"
     NOT_FLOOR_MAP = "NotFloorMap"
     NOT_FLOOR = "NotFloor"
+    UNKNOWN = "Unknown"
 
 
 class ApplicationError(HTTPException):

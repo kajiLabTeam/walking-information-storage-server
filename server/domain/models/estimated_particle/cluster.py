@@ -59,11 +59,17 @@ class Cluster:
         if len(self.data) == 0:
             return -np.inf
 
+        covariance_matrix = (
+            self.cov
+            if isinstance(self.cov, np.ndarray)
+            else np.eye(len(self.center)) * self.cov
+        )
+
         log_likelihoods = [
             stats.multivariate_normal.logpdf(
                 x,
                 self.center,
-                int(self.cov),
+                covariance_matrix,  # type: ignore  # noqa: PGH003
                 allow_singular=True,
             )
             for x in self.data

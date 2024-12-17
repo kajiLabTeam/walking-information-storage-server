@@ -192,11 +192,11 @@ class EstimatedParticle:
             particle_collection=particles_within_radius,
         )
 
-    def get_convergence_ratio(
-        self,
-    ) -> float:
-        """## パーティクルの分散をもとに、収束度を計算する."""
-        return 1 / self.__particle_collection.get_decentralization()
+    def get_convergence_ratio(self) -> float:
+        decentralization = self.__particle_collection.get_decentralization()
+        if decentralization == 0:
+            return float("inf")
+        return 1 / decentralization
 
     def move(
         self,

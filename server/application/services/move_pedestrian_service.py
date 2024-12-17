@@ -77,16 +77,18 @@ class MovePedestrianService:
         s3 = MinIOConnection.connect()
         file_service = FileService(s3)
 
-        # 軌跡IDがない場合は、エラーを返す
-        if not self.__trajectory_repo.find_for_id(
-            conn=conn,
-            trajectory_id=trajectory_id,
-        ):
-            raise ApplicationError(
-                error_type=ApplicationErrorType.NOT_WALKING_START,
-                status_code=412,
-                detail="The trajectory is not walking start.",
+        try:
+            self.__trajectory_repo.find_for_id(
+                conn=conn,
+                trajectory_id=trajectory_id,
             )
+        except InfrastructureError as e:
+            if e.type == InfrastructureErrorType.NOT_FOUND_TRAJECTORY:
+                raise ApplicationError(
+                    error_type=ApplicationErrorType.NOT_WALKING_START,
+                    status_code=404,
+                    detail="Trajectory not found.",
+                ) from e
 
         # 歩行データから、歩行パラメータを取得
         walking_parameter = WalkingParameter(
@@ -150,6 +152,12 @@ class MovePedestrianService:
                     floor_map=floor_map,
                     initial_walking_parameter=walking_parameter,
                 )
+            else:
+                raise ApplicationError(
+                    error_type=ApplicationErrorType.UNKNOWN,
+                    status_code=500,
+                    detail="An unknown error occurred.",
+                ) from e
         else:
             walking_sample_id = walking_sample_infrastructure_dto.walking_sample_id
             # 最新のパーティクルの状態を取得
@@ -164,11 +172,6 @@ class MovePedestrianService:
                 current_walking_parameter=walking_parameter,
                 particle_collection=latest_particle_collection,
             )
-
-        estimated_particle = EstimatedParticle.initialize(
-            floor_map=floor_map,
-            initial_walking_parameter=walking_parameter,
-        )
 
         # パーティクルフィルタの実行
         estimated_particle.remove_by_floor_map()
