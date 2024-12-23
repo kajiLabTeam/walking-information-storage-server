@@ -47,6 +47,7 @@ from .extension import (
                      GYROSCOPE_EXTENSION,
                      RATIO_WAVE_EXTENSION,
 )
+from .mac_address import BEACON_MAC_ADDRESS
 from .path import IMAGE_PATH, OUTPUT_NORMAL_PATH, OUTPUT_REVERSED_PATH, RSSI_MODEL_PATH
 
 __all__ = [
@@ -98,4 +99,5 @@ __all__ = [
     "SEARCH_NEAREST_INSIDE_RANGE",
     "STEP",
     "WALKING_INFORMATION_BUCKET_NAME",
+    "BEACON_MAC_ADDRESS",
 ]
