@@ -10,6 +10,9 @@ class RatioWaveFingerprint:
         self.fp_model_df = pd.read_csv(BytesIO(fp_model_file))
         self.ratio_wave_df = pd.read_csv(BytesIO(ratio_wave_file))
 
+    def is_include_mac_address(self, mac_address: str) -> bool:
+        return mac_address in self.ratio_wave_df["mac_address"].values
+
     def aggregate_rssi_by_mac_address(self, df: pd.DataFrame) -> pd.DataFrame:
         result = df.groupby("mac_address", as_index=False).agg(
             {"gets": "first", "rssi": "mean", "type": "first"}

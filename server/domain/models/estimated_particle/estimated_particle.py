@@ -2,6 +2,7 @@ from typing import Iterator, Literal
 
 import numpy as np
 from config.const import (
+    BEACON_MAC_ADDRESS,
     CLUSTER_AMOUNT_THRESHOLD,
     CONVERGENCE_DECENTRALIZATION_THRESHOLD,
     INITIAL_PARTICLES_AMOUNT,
@@ -17,6 +18,7 @@ from domain.models.estimated_particle.convergence_judgment import ConvergenceJud
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.particle.particle import Particle
 from domain.models.particle_collection.particle_collection import ParticleCollection
+from domain.models.radio_wave_fingerprint.radio_wave_fingerprint import RatioWaveFingerprint
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from utils import get_random_angle
 
@@ -269,6 +271,31 @@ class EstimatedParticle:
             for i, particle in enumerate(self.__particle_collection)
             if not self.__floor_map.is_inside_floor(
                 coordinate=particle.get_coordinate(),
+            )
+        ]
+
+        self.__missing_particle_count += len(remove_particle_indexes)
+        self.__particle_collection.pop_all(indexes=remove_particle_indexes)
+
+    def remove_by_ratio_wave(self, ratio_wave_file: bytes) -> None:
+        ratio_wave_fp = RatioWaveFingerprint(
+            fp_model_file=ratio_wave_file,
+            ratio_wave_file=ratio_wave_file,
+        )
+        if not ratio_wave_fp.is_include_mac_address(
+            mac_address=BEACON_MAC_ADDRESS,
+        ):
+            return
+
+        remove_particle_indexes = [
+            i
+            for i, particle in enumerate(self.__particle_collection)
+            if not particle.is_inside_circle(
+                circle_center_position=Coordinate(
+                    x=2700,
+                    y=800,
+                ),
+                radius=350,
             )
         ]
 
