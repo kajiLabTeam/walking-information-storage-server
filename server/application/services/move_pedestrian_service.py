@@ -20,7 +20,10 @@ from domain.repository_impl import (
     WalkingSampleRepositoryImpl,
 )
 from infrastructure.connection import DBConnection, MinIOConnection
-from infrastructure.errors.infrastructure_error import InfrastructureError, InfrastructureErrorType
+from infrastructure.errors.infrastructure_error import (
+    InfrastructureError,
+    InfrastructureErrorType,
+)
 from infrastructure.external.services import FileService
 from utils import (
     get_accelerometer_bucket_name,

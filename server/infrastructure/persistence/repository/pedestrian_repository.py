@@ -1,5 +1,8 @@
 from domain.repository_impl.pedestrian_repository_impl import PedestrianRepositoryImpl
-from infrastructure.errors.infrastructure_error import InfrastructureError, InfrastructureErrorType
+from infrastructure.errors.infrastructure_error import (
+    InfrastructureError,
+    InfrastructureErrorType,
+)
 from psycopg2.extensions import connection
 from ulid import ULID
 
