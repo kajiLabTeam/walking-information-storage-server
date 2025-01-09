@@ -7,3 +7,12 @@ repos:
       - id: ruff
       # Run the formatter.
       - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: compile-requirements
+        name: Compile requirements from pyproject.toml
+        entry: bash -c "cd server && uv pip compile pyproject.toml > ../requirements.txt"
+        language: system
+        types: [file]
+        files: ^server/pyproject\.toml$
