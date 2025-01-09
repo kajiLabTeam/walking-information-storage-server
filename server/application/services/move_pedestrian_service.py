@@ -179,7 +179,7 @@ class MovePedestrianService:
             current_walking_parameter=walking_parameter,
         )
         move_estimation_particles.remove_by_floor_map()
-        move_estimation_particles.remove_by_ratio_wave(ratio_wave_file=wifi_file)
+        # move_estimation_particles.remove_by_ratio_wave(ratio_wave_file=wifi_file)
         move_estimation_particles.remove_by_direction(step=walking_parameter.get_step())
         move_estimation_particles.resampling(step=walking_parameter.get_step())
 
