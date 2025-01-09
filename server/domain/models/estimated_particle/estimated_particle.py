@@ -2,7 +2,6 @@ from typing import Iterator, Literal
 
 import numpy as np
 from config.const import (
-    BEACON_MAC_ADDRESS,
     CLUSTER_AMOUNT_THRESHOLD,
     CONVERGENCE_DECENTRALIZATION_THRESHOLD,
     INITIAL_PARTICLES_AMOUNT,
@@ -284,9 +283,7 @@ class EstimatedParticle:
             fp_model_file=ratio_wave_file,
             ratio_wave_file=ratio_wave_file,
         )
-        if not ratio_wave_fp.is_include_mac_address(
-            mac_address=BEACON_MAC_ADDRESS,
-        ):
+        if not ratio_wave_fp.is_include_mac_address():
             return
 
         remove_particle_indexes = [
