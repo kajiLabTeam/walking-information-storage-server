@@ -1,0 +1,4 @@
+./server/.pre-commit-config.yaml
+./server/.python-version
+./server/pyproject.toml
+./server/uv.lock

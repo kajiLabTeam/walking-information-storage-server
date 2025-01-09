@@ -1,5 +1,8 @@
 from application.dto import StartWalkingServiceDto
-from domain.repository_impl import FloorInformationRepositoryImpl, TrajectoryRepositoryImpl
+from domain.repository_impl import (
+    FloorInformationRepositoryImpl,
+    TrajectoryRepositoryImpl,
+)
 from infrastructure.connection import DBConnection
 
 

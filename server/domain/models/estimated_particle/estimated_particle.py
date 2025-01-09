@@ -18,7 +18,9 @@ from domain.models.estimated_particle.convergence_judgment import ConvergenceJud
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.particle.particle import Particle
 from domain.models.particle_collection.particle_collection import ParticleCollection
-from domain.models.radio_wave_fingerprint.radio_wave_fingerprint import RatioWaveFingerprint
+from domain.models.radio_wave_fingerprint.radio_wave_fingerprint import (
+    RatioWaveFingerprint,
+)
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from utils import get_random_angle
 
