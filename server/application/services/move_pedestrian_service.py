@@ -66,7 +66,7 @@ class MovePedestrianService:
         self.__pose_repo = pose_repo
         self.__walking_information_repo = walking_information_repo
 
-    def run(
+    def run(  # noqa: PLR0915
         self,
         pedestrian_id: str,
         trajectory_id: str,
@@ -104,9 +104,7 @@ class MovePedestrianService:
             conn=conn,
             pedestrian_id=pedestrian_id,
         )
-        walking_information_id = (
-            walking_information_infrastructure_dto.walking_information_id
-        )
+        walking_information_id = walking_information_infrastructure_dto.walking_information_id
 
         # 引数のidを元に、必要な情報を取得
         trajectory_infrastructure_dto = self.__trajectory_repo.find_for_id(
@@ -115,19 +113,15 @@ class MovePedestrianService:
         )
         floor_information_id = trajectory_infrastructure_dto.floor_information_id
 
-        floor_map_infrastructure_dto = (
-            self.__floor_map_repo.find_for_floor_information_id(
-                conn=conn,
-                floor_information_id=floor_information_id,
-            )
+        floor_map_infrastructure_dto = self.__floor_map_repo.find_for_floor_information_id(
+            conn=conn,
+            floor_information_id=floor_information_id,
         )
         floor_map_id = floor_map_infrastructure_dto.floor_map_id
 
-        floor_information_infrastructure_dto = (
-            self.__floor_information_repo.find_for_id(
-                conn=conn,
-                floor_information_id=floor_information_id,
-            )
+        floor_information_infrastructure_dto = self.__floor_information_repo.find_for_id(
+            conn=conn,
+            floor_information_id=floor_information_id,
         )
         floor_id = floor_information_infrastructure_dto.floor_id
 
@@ -164,11 +158,9 @@ class MovePedestrianService:
         else:
             walking_sample_id = walking_sample_infrastructure_dto.walking_sample_id
             # 最新のパーティクルの状態を取得
-            latest_particle_collection = (
-                self.__particle_repo.find_for_walking_sample_id(
-                    conn=conn,
-                    walking_sample_id=walking_sample_id,
-                )
+            latest_particle_collection = self.__particle_repo.find_for_walking_sample_id(
+                conn=conn,
+                walking_sample_id=walking_sample_id,
             )
             estimated_particle = EstimatedParticle(
                 floor_map=floor_map,
@@ -182,7 +174,7 @@ class MovePedestrianService:
             current_walking_parameter=walking_parameter,
         )
         move_estimation_particles.remove_by_floor_map()
-        # move_estimation_particles.remove_by_ratio_wave(ratio_wave_file=wifi_file)
+        # move_estimation_particles.remove_by_ratio_wave(ratio_wave_file=wifi_file)  # noqa: ERA001
         move_estimation_particles.remove_by_direction(step=walking_parameter.get_step())
         move_estimation_particles.resampling(step=walking_parameter.get_step())
 
@@ -216,9 +208,7 @@ class MovePedestrianService:
             conn=conn,
             pedestrian_id=pedestrian_id,
         )
-        walking_information_id = (
-            walking_information_infrastructure_dto.walking_information_id
-        )
+        walking_information_id = walking_information_infrastructure_dto.walking_information_id
 
         gps = self.__gps_repo.save(
             conn=conn,

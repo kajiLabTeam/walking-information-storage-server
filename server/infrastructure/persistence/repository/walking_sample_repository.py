@@ -109,9 +109,7 @@ class ParticleRepository(ParticleRepositoryImpl):
         particle_collection = ParticleCollection()
         with conn, conn.cursor() as cursor:
             cursor.execute(
-                "SELECT x, y, weight, direction "
-                "FROM particles "
-                "WHERE walking_sample_id = %s",
+                "SELECT x, y, weight, direction FROM particles WHERE walking_sample_id = %s",
                 (walking_sample_id,),
             )
             for (

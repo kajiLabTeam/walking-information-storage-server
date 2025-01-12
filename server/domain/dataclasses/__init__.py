@@ -1,4 +1,4 @@
-from .color import Color
+from .color import Color  # noqa: A005
 from .coordinate import Coordinate, Pose
 
 __all__ = [

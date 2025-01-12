@@ -1,28 +1,22 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
 import numpy as np
+from numpy.typing import NDArray
 from scipy import stats
-
-if TYPE_CHECKING:
-    from numpy.typing import NDArray
-    from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans
 
 
 class Cluster:
     @staticmethod
     def build(
-        X: NDArray,
+        matrix_x: NDArray,
         k_means: KMeans,
         index: NDArray | None = None,
-    ) -> list[Cluster]:
+    ) -> list["Cluster"]:
         if index is None:
-            index = np.arange(X.shape[0])
+            index = np.arange(matrix_x.shape[0])
 
         return [
             Cluster(
-                X,
+                matrix_x,
                 index,
                 k_means,
                 label,
@@ -32,12 +26,12 @@ class Cluster:
 
     def __init__(
         self,
-        X: NDArray,
+        matrix_x: NDArray,
         index: NDArray,
         k_means: KMeans,
         label: int,
     ) -> None:
-        self.data: NDArray = X[k_means.labels_ == label]
+        self.data: NDArray = matrix_x[k_means.labels_ == label]
         self.index = index[k_means.labels_ == label]
         self.size = self.data.shape[0]
         self.df = self.data.shape[1] * (self.data.shape[1] + 3) / 2
@@ -60,9 +54,7 @@ class Cluster:
             return -np.inf
 
         covariance_matrix = (
-            self.cov
-            if isinstance(self.cov, np.ndarray)
-            else np.eye(len(self.center)) * self.cov
+            self.cov if isinstance(self.cov, np.ndarray) else np.eye(len(self.center)) * self.cov
         )
 
         log_likelihoods = [

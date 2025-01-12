@@ -35,9 +35,7 @@ class WalkingParameter:
             gyro_df = pd.read_csv(BytesIO(gyroscope_file))
             gyro_df["time_unit"] = (gyro_df["t"] / time_unit).astype(int)
 
-            gyro_df["norm"] = (
-                gyro_df["x"] ** 2 + gyro_df["y"] ** 2 + gyro_df["z"] ** 2
-            ) ** (1 / 2)
+            gyro_df["norm"] = (gyro_df["x"] ** 2 + gyro_df["y"] ** 2 + gyro_df["z"] ** 2) ** (1 / 2)
             gyro_df["angle"] = np.cumsum(gyro_df["x"]) / sample_freq
             gyro_df["low_x"] = gyro_df["x"].rolling(window=window_gayo).mean()
             gyro_df["angle_x"] = gyro_df["angle"].rolling(

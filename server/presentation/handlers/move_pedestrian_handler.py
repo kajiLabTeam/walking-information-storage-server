@@ -25,7 +25,7 @@ class CreateWalkingSampleResponse(BaseModel):
     y: int
     direction: float
     step: int
-    angleChanged: int
+    angleChanged: int  # noqa: N815
 
 
 router = APIRouter()
@@ -49,17 +49,16 @@ move_pedestrian_service = MovePedestrianService(
 
 @router.post(
     "/api/walk",
-    response_model=CreateWalkingSampleResponse,
     status_code=201,
 )
 async def move_pedestrian(
-    pedestrianId: Annotated[str, Form()],
-    trajectoryId: Annotated[str, Form()],
-    gpsFile: Annotated[UploadFile, File()],
-    wifiFile: Annotated[UploadFile, File()],
-    gyroscopeFile: Annotated[UploadFile, File()],
-    accelerometerFile: Annotated[UploadFile, File()],
-    atmosphericPressureFile: Annotated[UploadFile, File()],
+    pedestrianId: Annotated[str, Form()],  # noqa: N803
+    trajectoryId: Annotated[str, Form()],  # noqa: N803
+    gpsFile: Annotated[UploadFile, File()],  # noqa: N803
+    wifiFile: Annotated[UploadFile, File()],  # noqa: N803
+    gyroscopeFile: Annotated[UploadFile, File()],  # noqa: N803
+    accelerometerFile: Annotated[UploadFile, File()],  # noqa: N803
+    atmosphericPressureFile: Annotated[UploadFile, File()],  # noqa: N803
 ) -> CreateWalkingSampleResponse:
     """クライアントが歩行開始からの歩行データをサーバに送信するためのエンドポイント."""
     gps_file = await gpsFile.read()
