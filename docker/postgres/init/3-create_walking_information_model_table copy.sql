@@ -1,31 +1,12 @@
-\c indoor_location_estimation;
+\c indoor_location_estimation; -- noqa
 
-CREATE TABLE gyroscopes (
-    id VARCHAR(26) PRIMARY KEY,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    walking_information_id VARCHAR(26) UNIQUE REFERENCES walking_information(id)
-);
-
-CREATE TABLE accelerometers (
-    id VARCHAR(26) PRIMARY KEY,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    walking_information_id VARCHAR(26) UNIQUE REFERENCES walking_information(id)
-);
-
-CREATE TABLE atmospheric_pressures (
-    id VARCHAR(26) PRIMARY KEY,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    walking_information_id VARCHAR(26) UNIQUE REFERENCES walking_information(id)
-);
-
-CREATE TABLE ratio_waves (
-    id VARCHAR(26) PRIMARY KEY,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    walking_information_id VARCHAR(26) UNIQUE REFERENCES walking_information(id)
-);
-
-CREATE TABLE gps (
-    id VARCHAR(26) PRIMARY KEY,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    walking_information_id VARCHAR(26) UNIQUE REFERENCES walking_information(id)
+CREATE TABLE estimated_positions (
+    id VARCHAR(26) PRIMARY KEY
+    , x INTEGER NOT NULL
+    , y INTEGER NOT NULL
+    , is_converged BOOLEAN NOT NULL
+    , direction INTEGER NOT NULL
+    , created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    , trajectory_id VARCHAR(26) REFERENCES trajectories (id)
+    , walking_information_id VARCHAR(26) REFERENCES walking_information (id)
 );

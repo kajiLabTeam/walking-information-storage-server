@@ -1,0 +1,20 @@
+[sqlfluff]
+  dialect = postgres
+  ignore_templated_areas = true
+  templater = raw
+  max_line_length = 80
+  exclude_rules = L042
+  large_file_skip_byte_limit = 0
+
+[sqlfluff:layout:type:comma]
+  spacing_after = single
+  line_position = leading
+
+[sqlfluff:rules:aliasing.table]
+  aliasing = explicit
+
+[sqlfluff:rules:aliasing.column]
+  aliasing = explicit
+
+[sqlfluff:rules:references.consistent]
+  force_enable = true
