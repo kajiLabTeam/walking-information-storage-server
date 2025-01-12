@@ -36,4 +36,4 @@ all-restart:
 	make delete && make app-down && make spy-down && make app-destroy && make spy-destroy && make app-up && make spy-up
 
 format:
-	black . && isort . && ruff check --fix
+	uv run sqlfluff lint && uv run sqlfluff format && uv run ruff check --fix && uv run ruff format
