@@ -1,5 +1,5 @@
 [project]
-name = "server"
+name = "walking-information-storage-server"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -16,5 +16,6 @@ dependencies = [
     "python-multipart>=0.0.20",
     "python-ulid>=3.0.0",
     "scikit-learn>=1.6.0",
+    "sqlfluff>=3.3.0",
     "uvicorn>=0.34.0",
 ]
