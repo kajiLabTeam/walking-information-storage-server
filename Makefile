@@ -42,4 +42,4 @@ format-sql:
 	uv run sqlfluff lint && uv run sqlfluff format
 
 format-python:
-	uv run ruff check --fix && uv run ruff format
+	uv run ruff format && uv run ruff check --fix

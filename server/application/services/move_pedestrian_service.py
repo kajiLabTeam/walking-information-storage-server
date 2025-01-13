@@ -66,7 +66,7 @@ class MovePedestrianService:
         self.__pose_repo = pose_repo
         self.__walking_information_repo = walking_information_repo
 
-    def run(  # noqa: PLR0915
+    def run(
         self,
         pedestrian_id: str,
         trajectory_id: str,
