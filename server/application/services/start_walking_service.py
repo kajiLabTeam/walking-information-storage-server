@@ -21,9 +21,7 @@ class StartWalkingService:
     ) -> StartWalkingServiceDto:
         conn = DBConnection.connect()
 
-        floor_information_infrastructure_dto = (
-            self.__floor_information_repo.find_latest(conn=conn)
-        )
+        floor_information_infrastructure_dto = self.__floor_information_repo.find_latest(conn=conn)
         floor_information_id = floor_information_infrastructure_dto.floor_information_id
 
         trajectory_infrastructure_dto = self.__trajectory_repo.save(

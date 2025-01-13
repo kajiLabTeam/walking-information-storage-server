@@ -1,4 +1,5 @@
-from typing import Iterator, Literal
+from collections.abc import Iterator
+from typing import Literal
 
 import numpy as np
 from config.const import (
@@ -152,7 +153,7 @@ class EstimatedParticle:
         self,
     ) -> bool:
         """## パーティクルのクラスタ数を計算する."""
-        X = np.array(
+        matrix_x = np.array(
             [
                 [
                     particle.get_coordinate().x,
@@ -161,15 +162,12 @@ class EstimatedParticle:
                 for particle in self.__particle_collection
             ],
         )
-        cluster_amount = ConvergenceJudgment.calculate_cluster_amount(X=X)
+        cluster_amount = ConvergenceJudgment.calculate_cluster_amount(matrix_x=matrix_x)
 
-        if (
+        return (
             cluster_amount <= CLUSTER_AMOUNT_THRESHOLD
             and self.get_convergence_ratio() >= CONVERGENCE_DECENTRALIZATION_THRESHOLD
-        ):
-            return True
-
-        return False
+        )
 
     def get_particles_within_radius(
         self,

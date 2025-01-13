@@ -1,13 +1,9 @@
-from __future__ import annotations
-
 import random
-from typing import TYPE_CHECKING, Iterator
+from collections.abc import Iterator
 
 import numpy as np
-
-if TYPE_CHECKING:
-    from domain.dataclasses import Color, Coordinate
-    from domain.models.particle.particle import Particle
+from domain.dataclasses import Color, Coordinate
+from domain.models.particle.particle import Particle
 
 
 class ParticleCollection:
@@ -21,11 +17,12 @@ class ParticleCollection:
     ) -> list[Particle]:
         return self.__particles
 
+    @staticmethod
     def clone(
-        self,
-    ) -> ParticleCollection:
+        particles: list[Particle],
+    ) -> "ParticleCollection":
         clone = ParticleCollection()
-        clone.add_all(self.__particles)
+        clone.add_all(particles)
         return clone
 
     def get_weights(
@@ -78,8 +75,7 @@ class ParticleCollection:
     ) -> float:
         distances_to_mean = np.sqrt(
             (np.array(self.__get_weighted_x_list()) - self.__get_weighted_x_mean()) ** 2
-            + (np.array(self.__get_weighted_y_list()) - self.__get_weighted_y_mean())
-            ** 2,
+            + (np.array(self.__get_weighted_y_list()) - self.__get_weighted_y_mean()) ** 2,
         )
 
         return float(np.mean(distances_to_mean))
@@ -121,10 +117,7 @@ class ParticleCollection:
         self,
     ) -> float:
         return sum(
-            [
-                particle.get_direction() * particle.get_weight()
-                for particle in self.__particles
-            ],
+            [particle.get_direction() * particle.get_weight() for particle in self.__particles],
         ) // sum([particle.get_weight() for particle in self.__particles])
 
     def add(
@@ -206,16 +199,14 @@ class ParticleCollection:
         self,
     ) -> list[float]:
         return [
-            particle.get_coordinate().x * particle.get_weight()
-            for particle in self.__particles
+            particle.get_coordinate().x * particle.get_weight() for particle in self.__particles
         ]
 
     def __get_weighted_y_list(
         self,
     ) -> list[float]:
         return [
-            particle.get_coordinate().y * particle.get_weight()
-            for particle in self.__particles
+            particle.get_coordinate().y * particle.get_weight() for particle in self.__particles
         ]
 
     def __get_weighted_x_mean(

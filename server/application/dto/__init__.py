@@ -5,7 +5,7 @@ from .application_dto import (
 )
 
 __all__ = [
-    "StartWalkingServiceDto",
     "FinishWalkingServiceDto",
     "MovePedestrianServiceDto",
+    "StartWalkingServiceDto",
 ]

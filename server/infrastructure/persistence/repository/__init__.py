@@ -19,17 +19,17 @@ from .walking_sample_repository import (
 )
 
 __all__ = [
+    "AccelerometerRepository",
+    "AtmosphericPressureRepository",
     "FloorInformationRepository",
     "FloorMapRepository",
     "FloorRepository",
-    "TrajectoryRepository",
-    "AccelerometerRepository",
-    "AtmosphericPressureRepository",
     "GpsRepository",
     "GyroscopeRepository",
-    "RatioWaveRepository",
-    "WalkingInformationRepository",
-    "PoseRepository",
     "ParticleRepository",
+    "PoseRepository",
+    "RatioWaveRepository",
+    "TrajectoryRepository",
+    "WalkingInformationRepository",
     "WalkingSampleRepository",
 ]

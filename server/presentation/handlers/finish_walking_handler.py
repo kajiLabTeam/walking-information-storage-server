@@ -5,11 +5,11 @@ from pydantic import BaseModel
 
 
 class FinishWalkingRequest(BaseModel):
-    trajectoryId: str
+    trajectoryId: str  # noqa: N815
 
 
 class FinishWalkingResponse(BaseModel):
-    trajectoryId: str
+    trajectoryId: str  # noqa: N815
 
 
 router = APIRouter()
@@ -19,7 +19,6 @@ finish_walking_service = FinishWalkingService(trajectory_repo=TrajectoryReposito
 
 @router.post(
     "/api/walking/finish",
-    response_model=FinishWalkingRequest,
     status_code=201,
 )
 async def finish_walking(

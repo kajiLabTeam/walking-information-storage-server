@@ -12,6 +12,7 @@ from infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
+from psycopg2 import Error as psycopg2Error
 from psycopg2.extensions import connection
 from ulid import ULID
 
@@ -67,21 +68,23 @@ class FloorRepository(FloorRepositoryImpl):
     ) -> FloorRepositoryDto:
         with conn, conn.cursor() as cursor:
             try:
+                # クエリを実行
                 cursor.execute(
                     "SELECT floor_name, building_id FROM floors WHERE id = %s",
                     (floor_id,),
                 )
-
                 result = cursor.fetchone()
-                if result is not None:
-                    floor_name = result[0]
-                    building_id = result[1]
-                else:
+
+                # データが見つからない場合のエラーハンドリング
+                if result is None:
                     raise InfrastructureError(
                         InfrastructureErrorType.NOT_FOUND_FLOOR,
-                        detail="Floor not found",
+                        detail=f"Floor with ID {floor_id} not found.",
                         status_code=404,
                     )
+
+                # クエリ結果からデータを取得
+                floor_name, building_id = result
 
                 return FloorRepositoryDto(
                     floor_id=floor_id,
@@ -89,10 +92,17 @@ class FloorRepository(FloorRepositoryImpl):
                     building_id=building_id,
                 )
 
-            except Exception as e:
+            except psycopg2Error as db_error:  # psycopg2のエラーを捕捉
                 raise InfrastructureError(
                     InfrastructureErrorType.FLOOR_DB_ERROR,
-                    detail="Error occurred in floor database",
+                    detail="Database query failed.",
+                    status_code=500,
+                ) from db_error
+
+            except Exception as e:  # 他の予期しないエラーを捕捉
+                raise InfrastructureError(
+                    InfrastructureErrorType.UNKNOWN_ERROR,
+                    detail="An unexpected error occurred.",
                     status_code=500,
                 ) from e
 
@@ -126,23 +136,12 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
             try:
                 floor_information_id = str(ULID())
                 cursor.execute(
-                    "INSERT INTO floor_information (id, floor_id) "
-                    "VALUES (%s, %s) RETURNING id",
+                    "INSERT INTO floor_information (id, floor_id) VALUES (%s, %s) RETURNING id",
                     (
                         floor_information_id,
                         floor_id,
                     ),
                 )
-
-                result = cursor.fetchone()
-                if result is not None:
-                    floor_information_id = result[0]
-                else:
-                    raise InfrastructureError(
-                        InfrastructureErrorType.NOT_FOUND_FLOOR_INFORMATION,
-                        detail="Floor information not found",
-                        status_code=404,
-                    )
 
                 return FloorInformationDto(
                     floor_information_id=floor_information_id,
@@ -189,8 +188,7 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
         with conn, conn.cursor() as cursor:
             try:
                 cursor.execute(
-                    "SELECT id, floor_id FROM floor_information "
-                    "ORDER BY created_at DESC LIMIT 1",
+                    "SELECT id, floor_id FROM floor_information ORDER BY created_at DESC LIMIT 1",
                 )
 
                 result = cursor.fetchone()

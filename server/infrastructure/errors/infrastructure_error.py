@@ -24,6 +24,7 @@ class InfrastructureErrorType(Enum):
     GPS_DB_ERROR = "GPS_DB_ERROR"
     FILE_UPLOAD_ERROR = "FILE_UPLOAD_ERROR"
     FILE_DOWNLOAD_ERROR = "FILE_DOWNLOAD_ERROR"
+    UNKNOWN_ERROR = "UNKNOWN_ERROR"
 
 
 class InfrastructureError(HTTPException):

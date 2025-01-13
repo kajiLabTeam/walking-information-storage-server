@@ -15,14 +15,8 @@ router = APIRouter()
     status_code=201,
 )
 async def check_minio_csv_health(
-    bucketName: Annotated[
-        str,
-        Form(),
-    ],
-    uploadFile: Annotated[
-        UploadFile,
-        File(),
-    ],
+    bucketName: Annotated[str, Form()],  # noqa: N803
+    uploadFile: Annotated[UploadFile, File()],  # noqa: N803
 ) -> StreamingResponse:
     """MinIOサーバへのファイルアップロード及びダウンロードが正常に行えるかを確認するためのエンドポイント."""
     try:
@@ -51,14 +45,8 @@ async def check_minio_csv_health(
     status_code=201,
 )
 async def check_minio_image_health(
-    bucketName: Annotated[
-        str,
-        Form(),
-    ],
-    uploadFile: Annotated[
-        UploadFile,
-        File(),
-    ],
+    bucketName: Annotated[str, Form()],  # noqa: N803
+    uploadFile: Annotated[UploadFile, File()],  # noqa: N803
 ) -> StreamingResponse:
     """MinIOサーバへのファイルアップロード及びダウンロードが正常に行えるかを確認するためのエンドポイント."""
     try:

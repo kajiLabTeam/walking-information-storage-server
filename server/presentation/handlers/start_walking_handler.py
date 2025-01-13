@@ -8,13 +8,13 @@ from pydantic import BaseModel
 
 
 class StartWalkingRequest(BaseModel):
-    floorId: str
-    pedestrianId: str
+    floorId: str  # noqa: N815
+    pedestrianId: str  # noqa: N815
 
 
 class StartWalkingResponse(BaseModel):
-    trajectoryId: str
-    floorInformationId: str
+    trajectoryId: str  # noqa: N815
+    floorInformationId: str  # noqa: N815
 
 
 router = APIRouter()
@@ -27,7 +27,6 @@ start_walking_service = StartWalkingService(
 
 @router.post(
     "/api/walking/start",
-    response_model=StartWalkingResponse,
     status_code=201,
 )
 async def start_walking(

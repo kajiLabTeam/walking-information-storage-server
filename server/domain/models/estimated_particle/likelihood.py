@@ -1,26 +1,23 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
-import numpy as np
-
-if TYPE_CHECKING:
-    from domain.models.particle.particle import Particle
-    from numpy.typing import NDArray
-
 import io
 
+import numpy as np
 import pandas as pd
+from domain.models.particle.particle import Particle
+from numpy.typing import NDArray
 
 
 class Likelihood:
     def __init__(self, model: bytes) -> None:
         self.__rssi_model_df = pd.read_csv(io.BytesIO(model))
         self.__x = np.linspace(
-            0, int(max(self.__rssi_model_df["x"])), int(max(self.__rssi_model_df["x"]))
+            0,
+            int(max(self.__rssi_model_df["x"])),
+            int(max(self.__rssi_model_df["x"])),
         )
         self.__y = np.linspace(
-            0, int(max(self.__rssi_model_df["y"])), int(max(self.__rssi_model_df["y"]))
+            0,
+            int(max(self.__rssi_model_df["y"])),
+            int(max(self.__rssi_model_df["y"])),
         )
         self.__X, self.__Y = np.meshgrid(self.__x, self.__y)
         self.__rssi = self.__rssi_model_df["rssi"].to_numpy().reshape(self.__X.shape)
@@ -52,17 +49,14 @@ class Likelihood:
         return likelihood
 
     def __get_likelihood_from_coordinate(
-        self, coordinate: tuple[int, int], likelihood: NDArray[np.float64]
+        self,
+        coordinate: tuple[int, int],
+        likelihood: NDArray[np.float64],
     ) -> float:
         """## 座標を入力して尤度を取得"""
         x, y = coordinate
         # 座標の範囲チェック
-        if (
-            x < self.__X.min()
-            or x > self.__X.max()
-            or y < self.__Y.min()
-            or y > self.__Y.max()
-        ):
+        if x < self.__X.min() or x > self.__X.max() or y < self.__Y.min() or y > self.__Y.max():
             return 0.0
 
         # 座標に最も近いインデックスを取得
@@ -75,5 +69,6 @@ class Likelihood:
         """## パーティクルの尤度を取得する."""
         likelihood = self.__generate_likelihood_function(rssi)
         return self.__get_likelihood_from_coordinate(
-            (particle.get_coordinate().x, particle.get_coordinate().y), likelihood
+            (particle.get_coordinate().x, particle.get_coordinate().y),
+            likelihood,
         )

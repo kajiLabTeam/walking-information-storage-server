@@ -33,10 +33,7 @@ class WalkingInformationRepository(WalkingInformationRepositoryImpl):
                 walking_information_id = str(ULID())
 
                 cursor.execute(
-                    (
-                        "INSERT INTO walking_information (id, pedestrian_id) "
-                        "VALUES (%s, %s)"
-                    ),
+                    ("INSERT INTO walking_information (id, pedestrian_id) VALUES (%s, %s)"),
                     (
                         (walking_information_id),
                         pedestrian_id,
@@ -67,10 +64,7 @@ class GyroscopeRepository(GyroscopeRepositoryImpl):
                 gyroscope_id = str(ULID())
 
                 cursor.execute(
-                    (
-                        "INSERT INTO gyroscopes (id, walking_information_id) "
-                        "VALUES (%s, %s)"
-                    ),
+                    ("INSERT INTO gyroscopes (id, walking_information_id) VALUES (%s, %s)"),
                     (
                         (gyroscope_id),
                         walking_information_id,
@@ -101,10 +95,7 @@ class AccelerometerRepository(AccelerometerRepositoryImpl):
                 accelerometer_id = str(ULID())
 
                 cursor.execute(
-                    (
-                        "INSERT INTO accelerometers (id, walking_information_id) "
-                        "VALUES (%s, %s)"
-                    ),
+                    ("INSERT INTO accelerometers (id, walking_information_id) VALUES (%s, %s)"),
                     (
                         (accelerometer_id),
                         walking_information_id,
@@ -135,8 +126,7 @@ class RatioWaveRepository(RatioWaveRepositoryImpl):
                 ratio_wave_id = str(ULID())
 
                 cursor.execute(
-                    "INSERT INTO ratio_waves (id, walking_information_id) "
-                    "VALUES (%s, %s)",
+                    "INSERT INTO ratio_waves (id, walking_information_id) VALUES (%s, %s)",
                     (
                         (ratio_wave_id),
                         walking_information_id,

@@ -1,6 +1,6 @@
 import math
 import secrets
-from typing import Callable
+from collections.abc import Callable
 
 from domain.dataclasses import Color, Coordinate
 
