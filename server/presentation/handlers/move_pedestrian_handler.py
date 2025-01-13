@@ -1,8 +1,10 @@
 from typing import Annotated
 
-from application.services import MovePedestrianService
 from fastapi import APIRouter, File, Form, UploadFile
-from infrastructure.persistence.repository import (
+from pydantic import BaseModel
+
+from server.application.services import MovePedestrianService
+from server.infrastructure.persistence.repository import (
     AccelerometerRepository,
     AtmosphericPressureRepository,
     FloorInformationRepository,
@@ -17,7 +19,6 @@ from infrastructure.persistence.repository import (
     WalkingInformationRepository,
     WalkingSampleRepository,
 )
-from pydantic import BaseModel
 
 
 class CreateWalkingSampleResponse(BaseModel):

@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 
-from domain.models.walking_parameter.walking_parameter import WalkingParameter
+from server.domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
 class WalkingParameterCollection:

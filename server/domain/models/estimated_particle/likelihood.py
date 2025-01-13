@@ -2,8 +2,9 @@ import io
 
 import numpy as np
 import pandas as pd
-from domain.models.particle.particle import Particle
 from numpy.typing import NDArray
+
+from server.domain.models.particle.particle import Particle
 
 
 class Likelihood:

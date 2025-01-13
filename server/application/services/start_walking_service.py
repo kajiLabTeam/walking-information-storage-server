@@ -1,9 +1,9 @@
-from application.dto import StartWalkingServiceDto
-from domain.repository_impl import (
+from server.application.dto import StartWalkingServiceDto
+from server.domain.repository_impl import (
     FloorInformationRepositoryImpl,
     TrajectoryRepositoryImpl,
 )
-from infrastructure.connection import DBConnection
+from server.infrastructure.connection import DBConnection
 
 
 class StartWalkingService:

@@ -1,4 +1,7 @@
-from domain.repository_impl import (
+from psycopg2.extensions import connection
+from ulid import ULID
+
+from server.domain.repository_impl import (
     AccelerometerRepositoryImpl,
     AtmosphericPressureRepositoryImpl,
     GpsRepositoryImpl,
@@ -6,7 +9,7 @@ from domain.repository_impl import (
     RatioWaveRepositoryImpl,
     WalkingInformationRepositoryImpl,
 )
-from domain.repository_impl.dto.infrastructure_dto import (
+from server.domain.repository_impl.dto.infrastructure_dto import (
     AccelerometerRepositoryDto,
     AtmosphericPressureRepositoryDto,
     GpsRepositoryDto,
@@ -14,12 +17,10 @@ from domain.repository_impl.dto.infrastructure_dto import (
     RatioWaveRepositoryDto,
     WalkingInformationRepositoryDto,
 )
-from infrastructure.errors.infrastructure_error import (
+from server.infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from psycopg2.extensions import connection
-from ulid import ULID
 
 
 class WalkingInformationRepository(WalkingInformationRepositoryImpl):

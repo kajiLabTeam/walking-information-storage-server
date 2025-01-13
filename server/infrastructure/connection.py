@@ -1,8 +1,9 @@
 import boto3
 from botocore.client import BaseClient
-from config import MinioEnv, PostgresEnv
 from psycopg2 import connect
 from psycopg2.extensions import connection
+
+from server.config import MinioEnv, PostgresEnv
 
 
 class DBConnection:

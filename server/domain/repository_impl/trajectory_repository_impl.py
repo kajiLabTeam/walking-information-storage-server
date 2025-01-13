@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
 
-from domain.repository_impl.dto.infrastructure_dto import TrajectoryRepositoryDto
 from psycopg2.extensions import connection
+
+from server.domain.repository_impl.dto.infrastructure_dto import TrajectoryRepositoryDto
 
 
 class TrajectoryRepositoryImpl(metaclass=ABCMeta):

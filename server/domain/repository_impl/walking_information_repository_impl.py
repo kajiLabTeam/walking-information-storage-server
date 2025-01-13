@@ -1,6 +1,8 @@
 from abc import ABCMeta, abstractmethod
 
-from domain.repository_impl.dto.infrastructure_dto import (
+from psycopg2.extensions import connection
+
+from server.domain.repository_impl.dto.infrastructure_dto import (
     AccelerometerRepositoryDto,
     AtmosphericPressureRepositoryDto,
     GpsRepositoryDto,
@@ -8,7 +10,6 @@ from domain.repository_impl.dto.infrastructure_dto import (
     RatioWaveRepositoryDto,
     WalkingInformationRepositoryDto,
 )
-from psycopg2.extensions import connection
 
 
 class WalkingInformationRepositoryImpl(metaclass=ABCMeta):

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from domain.dataclasses import Pose
-from domain.models.walking_parameter.walking_parameter import WalkingParameter
+from server.domain.dataclasses import Pose
+from server.domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
 @dataclass

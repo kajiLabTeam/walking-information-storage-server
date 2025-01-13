@@ -1,11 +1,12 @@
 import math
 from io import BytesIO
 
-from config.const import INSIDE_PARTICLE_COLOR
-from domain.dataclasses import Color, Coordinate
-from domain.errors.domain_error import DomainError, DomainErrorType
 from PIL import Image, ImageDraw
 from PIL.Image import Image as ImageType
+
+from server.config.const import INSIDE_PARTICLE_COLOR
+from server.domain.dataclasses import Color, Coordinate
+from server.domain.errors.domain_error import DomainError, DomainErrorType
 
 
 class FloorMap:

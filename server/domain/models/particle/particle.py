@@ -2,7 +2,7 @@ import math
 import secrets
 from collections.abc import Callable
 
-from domain.dataclasses import Color, Coordinate
+from server.domain.dataclasses import Color, Coordinate
 
 
 class Particle:

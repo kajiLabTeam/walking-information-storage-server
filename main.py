@@ -1,18 +1,18 @@
-# noqa: INP001
-from application.errors import ApplicationError
-from domain.errors import DomainError
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from infrastructure.errors import InfrastructureError
-from presentation.handlers import (
+from starlette.requests import Request
+
+from server.application.errors import ApplicationError
+from server.domain.errors import DomainError
+from server.infrastructure.errors import InfrastructureError
+from server.presentation.handlers import (
     finish_walking_router,
     get_image_router,
     health_check_router,
     move_pedestrian_router,
     start_walking_router,
 )
-from starlette.requests import Request
 
 app = FastAPI()
 

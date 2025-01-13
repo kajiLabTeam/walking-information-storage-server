@@ -1,9 +1,10 @@
 from abc import ABCMeta, abstractmethod
 
-from domain.dataclasses import Pose
-from domain.models.particle_collection.particle_collection import ParticleCollection
-from domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
 from psycopg2.extensions import connection
+
+from server.domain.dataclasses import Pose
+from server.domain.models.particle_collection.particle_collection import ParticleCollection
+from server.domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
 
 
 class WalkingSampleRepositoryImpl(metaclass=ABCMeta):

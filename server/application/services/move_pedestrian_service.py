@@ -1,10 +1,10 @@
-from application.dto import MovePedestrianServiceDto
-from application.errors import ApplicationError, ApplicationErrorType
-from config.const import STEP
-from domain.models.estimated_particle.estimated_particle import EstimatedParticle
-from domain.models.floor_map.floor_map import FloorMap
-from domain.models.walking_parameter.walking_parameter import WalkingParameter
-from domain.repository_impl import (
+from server.application.dto import MovePedestrianServiceDto
+from server.application.errors import ApplicationError, ApplicationErrorType
+from server.config.const import STEP
+from server.domain.models.estimated_particle.estimated_particle import EstimatedParticle
+from server.domain.models.floor_map.floor_map import FloorMap
+from server.domain.models.walking_parameter.walking_parameter import WalkingParameter
+from server.domain.repository_impl import (
     AccelerometerRepositoryImpl,
     AtmosphericPressureRepositoryImpl,
     FloorInformationRepositoryImpl,
@@ -19,13 +19,13 @@ from domain.repository_impl import (
     WalkingInformationRepositoryImpl,
     WalkingSampleRepositoryImpl,
 )
-from infrastructure.connection import DBConnection, MinIOConnection
-from infrastructure.errors.infrastructure_error import (
+from server.infrastructure.connection import DBConnection, MinIOConnection
+from server.infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from infrastructure.external.services import FileService
-from utils import (
+from server.infrastructure.external.services import FileService
+from server.utils import (
     get_accelerometer_bucket_name,
     get_atmospheric_pressure_bucket_name,
     get_floor_map_bucket_name,

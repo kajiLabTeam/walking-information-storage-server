@@ -1,7 +1,8 @@
-from application.services import FinishWalkingService
 from fastapi import APIRouter, HTTPException
-from infrastructure.persistence.repository import TrajectoryRepository
 from pydantic import BaseModel
+
+from server.application.services import FinishWalkingService
+from server.infrastructure.persistence.repository import TrajectoryRepository
 
 
 class FinishWalkingRequest(BaseModel):

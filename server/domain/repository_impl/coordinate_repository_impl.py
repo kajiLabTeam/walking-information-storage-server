@@ -1,11 +1,12 @@
 from abc import ABCMeta, abstractmethod
 
-from domain.repository_impl.dto.infrastructure_dto import (
+from psycopg2.extensions import connection
+
+from server.domain.repository_impl.dto.infrastructure_dto import (
     CoordinateRepositoryDto,
     GeomagneticRepositoryDto,
     WifiFingerprintingRepositoryDto,
 )
-from psycopg2.extensions import connection
 
 
 class CoordinateRepositoryImpl(metaclass=ABCMeta):

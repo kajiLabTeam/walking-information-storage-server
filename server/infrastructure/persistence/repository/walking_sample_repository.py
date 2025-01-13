@@ -1,18 +1,19 @@
-from domain.dataclasses import Coordinate, Pose
-from domain.models.particle.particle import Particle
-from domain.models.particle_collection.particle_collection import ParticleCollection
-from domain.repository_impl import (
+from psycopg2.extensions import connection
+from ulid import ULID
+
+from server.domain.dataclasses import Coordinate, Pose
+from server.domain.models.particle.particle import Particle
+from server.domain.models.particle_collection.particle_collection import ParticleCollection
+from server.domain.repository_impl import (
     ParticleRepositoryImpl,
     PoseRepositoryImpl,
     WalkingSampleRepositoryImpl,
 )
-from domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
-from infrastructure.errors.infrastructure_error import (
+from server.domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
+from server.infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
 )
-from psycopg2.extensions import connection
-from ulid import ULID
 
 
 class WalkingSampleRepository(WalkingSampleRepositoryImpl):

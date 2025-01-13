@@ -1,9 +1,10 @@
 from io import BytesIO
 from typing import Annotated
 
-from application.services import HealthCheckService
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
+
+from server.application.services import HealthCheckService
 
 health_check_service = HealthCheckService()
 

@@ -1,9 +1,10 @@
 import numpy as np
-from config.const.amount import X_MEANS_CLUSTER_AMOUNT
-from domain.models.estimated_particle.cluster import Cluster
 from numpy.typing import NDArray
 from scipy import stats
 from sklearn.cluster import KMeans
+
+from server.config.const.amount import X_MEANS_CLUSTER_AMOUNT
+from server.domain.models.estimated_particle.cluster import Cluster
 
 
 class ConvergenceJudgment:

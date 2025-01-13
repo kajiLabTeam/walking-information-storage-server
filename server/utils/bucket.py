@@ -1,4 +1,4 @@
-from config.const import (
+from server.config.const import (
     ACCELEROMETER_BUCKET_NAME,
     ACCELEROMETER_EXTENSION,
     ATMOSPHERIC_PRESSURE_BUCKET_NAME,

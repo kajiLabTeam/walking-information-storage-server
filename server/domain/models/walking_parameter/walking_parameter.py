@@ -2,7 +2,8 @@ from io import BytesIO
 
 import numpy as np
 import pandas as pd
-from domain.errors import DomainError, DomainErrorType
+
+from server.domain.errors import DomainError, DomainErrorType
 
 
 class WalkingParameter:

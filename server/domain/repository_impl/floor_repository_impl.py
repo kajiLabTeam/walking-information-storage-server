@@ -1,12 +1,13 @@
 from abc import ABCMeta, abstractmethod
 
-from domain.repository_impl.dto.infrastructure_dto import (
+from psycopg2.extensions import connection
+
+from server.domain.repository_impl.dto.infrastructure_dto import (
     FloorInformationDto,
     FloorMapRepositoryDto,
     FloorRepositoryDto,
     FpModelRepositoryDto,
 )
-from psycopg2.extensions import connection
 
 
 class FloorRepositoryImpl(metaclass=ABCMeta):

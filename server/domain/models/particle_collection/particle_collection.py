@@ -2,8 +2,9 @@ import random
 from collections.abc import Iterator
 
 import numpy as np
-from domain.dataclasses import Color, Coordinate
-from domain.models.particle.particle import Particle
+
+from server.domain.dataclasses import Color, Coordinate
+from server.domain.models.particle.particle import Particle
 
 
 class ParticleCollection:
