@@ -1,5 +1,6 @@
-\c indoor_location_estimation; -- noqa
-
+-- noqa: disable=all
+\c indoor_location_estimation;
+-- noqa: disable=all
 
 CREATE TABLE coordinates (
     id SERIAL

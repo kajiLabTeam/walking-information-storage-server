@@ -27,13 +27,13 @@ VALUES
 ('01JET6M5N79HZ92CFZQZVKFCPZ', '01JET6KMY6558FGHD34XFJZ2VN');
 
 
-INSERT INTO trajectories (id, is_walking, pedestrian_id, floor_information_id)
+INSERT INTO trajectories (id, is_walking, pedestrian_id, floor_id)
 VALUES
 (
     '01JET1DV4WJ2EP78B8HAKK5SP0'
     , TRUE
     , '01F8VYXK67BGC1F9RP1E4S9YAK'
-    , '01J5MT4907RHS5Q8QT583YXB96'
+    , '01F8VYXK67BGC1F9RP1E4S9YTV'
 );
 
 
