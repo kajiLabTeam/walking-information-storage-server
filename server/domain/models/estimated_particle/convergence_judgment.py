@@ -1,7 +1,14 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
-from config.const.amount import X_MEANS_CLUSTER_AMOUNT
 from domain.models.estimated_particle.cluster import Cluster
-from numpy.typing import NDArray
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
+
+from config.const.amount import X_MEANS_CLUSTER_AMOUNT
 from scipy import stats
 from sklearn.cluster import KMeans
 
@@ -10,7 +17,7 @@ class ConvergenceJudgment:
     def __init__(
         self,
         k_init: int = 1,
-        **k_means_args,  # noqa: ANN003
+        **k_means_args,
     ) -> None:
         """k_init : The initial number of clusters applied to KMeans()."""
         self.__k_init = k_init
@@ -18,32 +25,32 @@ class ConvergenceJudgment:
 
     @staticmethod
     def calculate_cluster_amount(
-        matrix_x: NDArray[np.float64],
+        X: NDArray[np.float64],
     ) -> int:
         """## クラスタ数を計算し、クラスタごとのサイズを返す."""
-        matrix_x_standardized = stats.zscore(matrix_x)
+        X_standardized = stats.zscore(X)
 
-        clusters = ConvergenceJudgment(random_state=1).fit(matrix_x_standardized).cluster_sizes_
+        clusters = ConvergenceJudgment(random_state=1).fit(X_standardized).cluster_sizes_
 
         return len(clusters)
 
     def fit(
         self,
-        matrix_x: NDArray[np.float64],
-    ) -> "ConvergenceJudgment":
+        X: NDArray[np.float64],
+    ) -> ConvergenceJudgment:
         self.__clusters: list[Cluster] = []
 
         clusters = Cluster.build(
-            matrix_x,
+            X,
             KMeans(
                 self.__k_init,
                 **self.__k_means_args,
-            ).fit(matrix_x),
+            ).fit(X),
         )
         self.__recursively_split(clusters)
 
         self.labels_ = np.empty(
-            matrix_x.shape[0],
+            X.shape[0],
             dtype=np.intp,
         )
         for (

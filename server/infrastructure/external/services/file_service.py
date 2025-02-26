@@ -2,10 +2,7 @@ from io import BytesIO
 
 from botocore.client import BaseClient
 from config.const import BUCKET_NAME
-from infrastructure.errors.infrastructure_error import (
-    InfrastructureError,
-    InfrastructureErrorType,
-)
+from infrastructure.errors.infrastructure_error import InfrastructureError, InfrastructureErrorType
 
 
 class FileService:

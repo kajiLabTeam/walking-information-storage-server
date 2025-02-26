@@ -2,7 +2,7 @@ FROM python:3.10
 
 WORKDIR /server
 
-COPY ./requirements.txt /server/requirements.txt
+COPY ./docker/server/requirements.txt /server/requirements.txt
 
 RUN pip install --upgrade pip && pip install --no-cache-dir --upgrade -r /server/requirements.txt
 

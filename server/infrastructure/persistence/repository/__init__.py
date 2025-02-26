@@ -1,8 +1,4 @@
-from .floor_repository import (
-    FloorInformationRepository,
-    FloorMapRepository,
-    FloorRepository,
-)
+from .floor_repository import FloorInformationRepository, FloorMapRepository, FloorRepository
 from .trajectory_repository import TrajectoryRepository
 from .walking_information_repository import (
     AccelerometerRepository,
@@ -12,11 +8,7 @@ from .walking_information_repository import (
     RatioWaveRepository,
     WalkingInformationRepository,
 )
-from .walking_sample_repository import (
-    ParticleRepository,
-    PoseRepository,
-    WalkingSampleRepository,
-)
+from .walking_sample_repository import ParticleRepository, PoseRepository, WalkingSampleRepository
 
 __all__ = [
     "AccelerometerRepository",

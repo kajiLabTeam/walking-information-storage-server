@@ -1,11 +1,17 @@
+from __future__ import annotations
+
 import math
 from io import BytesIO
+from typing import TYPE_CHECKING
 
 from config.const import INSIDE_PARTICLE_COLOR
-from domain.dataclasses import Color, Coordinate
+from domain.dataclasses import Coordinate
 from domain.errors.domain_error import DomainError, DomainErrorType
 from PIL import Image, ImageDraw
-from PIL.Image import Image as ImageType
+
+if TYPE_CHECKING:
+    from domain.dataclasses import Color
+    from PIL.Image import Image as ImageType
 
 
 class FloorMap:
@@ -23,7 +29,7 @@ class FloorMap:
             self.__map_height,
         ) = self.__floor_map.size
 
-    def clone(self) -> "FloorMap":
+    def clone(self) -> FloorMap:
         return FloorMap(
             floor_map_image_bytes=self.__floor_map.tobytes(),
         )
@@ -84,11 +90,14 @@ class FloorMap:
             coordinate.y,
         )
 
-        return (
+        if (
             0 <= x < self.__map_width
             and 0 <= y < self.__map_height
             and self.__floor_map.getpixel((x, y)) == INSIDE_PARTICLE_COLOR
-        )
+        ):
+            return True
+
+        return False
 
     def get_nearest_inside_coordinate(
         self,

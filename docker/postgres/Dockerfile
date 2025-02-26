@@ -1,4 +1,4 @@
-FROM postgres:17.2
+FROM postgres:16.4
 
-COPY ./docker/postgres/sql/migration /docker-entrypoint-initdb.d
-COPY ./docker/postgres/sql/demo /docker-entrypoint-initdb.d
+COPY ./docker/postgres/init /docker-entrypoint-initdb.d
+# COPY ./docker/postgres/init/7-insert_coordinates /docker-entrypoint-initdb.d

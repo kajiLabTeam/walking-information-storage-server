@@ -20,10 +20,7 @@ from domain.repository_impl import (
     WalkingSampleRepositoryImpl,
 )
 from infrastructure.connection import DBConnection, MinIOConnection
-from infrastructure.errors.infrastructure_error import (
-    InfrastructureError,
-    InfrastructureErrorType,
-)
+from infrastructure.errors.infrastructure_error import InfrastructureError, InfrastructureErrorType
 from infrastructure.external.services import FileService
 from utils import (
     get_accelerometer_bucket_name,
@@ -174,7 +171,7 @@ class MovePedestrianService:
             current_walking_parameter=walking_parameter,
         )
         move_estimation_particles.remove_by_floor_map()
-        # move_estimation_particles.remove_by_ratio_wave(ratio_wave_file=wifi_file)  # noqa: ERA001
+        # move_estimation_particles.remove_by_ratio_wave(ratio_wave_file=wifi_file)
         move_estimation_particles.remove_by_direction(step=walking_parameter.get_step())
         move_estimation_particles.resampling(step=walking_parameter.get_step())
 

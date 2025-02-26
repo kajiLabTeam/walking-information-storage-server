@@ -7,10 +7,7 @@ from domain.repository_impl import (
     WalkingSampleRepositoryImpl,
 )
 from domain.repository_impl.dto.infrastructure_dto import WalkingSampleRepositoryDto
-from infrastructure.errors.infrastructure_error import (
-    InfrastructureError,
-    InfrastructureErrorType,
-)
+from infrastructure.errors.infrastructure_error import InfrastructureError, InfrastructureErrorType
 from psycopg2.extensions import connection
 from ulid import ULID
 

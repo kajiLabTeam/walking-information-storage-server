@@ -1,4 +1,3 @@
-# noqa: INP001
 from application.errors import ApplicationError
 from domain.errors import DomainError
 from fastapi import FastAPI, HTTPException

@@ -1,22 +1,28 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
-from numpy.typing import NDArray
 from scipy import stats
-from sklearn.cluster import KMeans
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
+    from sklearn.cluster import KMeans
 
 
 class Cluster:
     @staticmethod
     def build(
-        matrix_x: NDArray,
+        X: NDArray,
         k_means: KMeans,
         index: NDArray | None = None,
-    ) -> list["Cluster"]:
+    ) -> list[Cluster]:
         if index is None:
-            index = np.arange(matrix_x.shape[0])
+            index = np.arange(X.shape[0])
 
         return [
             Cluster(
-                matrix_x,
+                X,
                 index,
                 k_means,
                 label,
@@ -26,12 +32,12 @@ class Cluster:
 
     def __init__(
         self,
-        matrix_x: NDArray,
+        X: NDArray,
         index: NDArray,
         k_means: KMeans,
         label: int,
     ) -> None:
-        self.data: NDArray = matrix_x[k_means.labels_ == label]
+        self.data: NDArray = X[k_means.labels_ == label]
         self.index = index[k_means.labels_ == label]
         self.size = self.data.shape[0]
         self.df = self.data.shape[1] * (self.data.shape[1] + 3) / 2

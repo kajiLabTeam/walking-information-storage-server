@@ -19,9 +19,7 @@ from domain.models.estimated_particle.convergence_judgment import ConvergenceJud
 from domain.models.floor_map.floor_map import FloorMap
 from domain.models.particle.particle import Particle
 from domain.models.particle_collection.particle_collection import ParticleCollection
-from domain.models.radio_wave_fingerprint.radio_wave_fingerprint import (
-    RatioWaveFingerprint,
-)
+from domain.models.radio_wave_fingerprint.radio_wave_fingerprint import RatioWaveFingerprint
 from domain.models.walking_parameter.walking_parameter import WalkingParameter
 from utils import get_random_angle
 
@@ -153,7 +151,7 @@ class EstimatedParticle:
         self,
     ) -> bool:
         """## パーティクルのクラスタ数を計算する."""
-        matrix_x = np.array(
+        X = np.array(
             [
                 [
                     particle.get_coordinate().x,
@@ -162,12 +160,15 @@ class EstimatedParticle:
                 for particle in self.__particle_collection
             ],
         )
-        cluster_amount = ConvergenceJudgment.calculate_cluster_amount(matrix_x=matrix_x)
+        cluster_amount = ConvergenceJudgment.calculate_cluster_amount(X=X)
 
-        return (
+        if (
             cluster_amount <= CLUSTER_AMOUNT_THRESHOLD
             and self.get_convergence_ratio() >= CONVERGENCE_DECENTRALIZATION_THRESHOLD
-        )
+        ):
+            return True
+
+        return False
 
     def get_particles_within_radius(
         self,

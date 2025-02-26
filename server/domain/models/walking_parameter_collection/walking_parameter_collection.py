@@ -1,6 +1,11 @@
-from collections.abc import Iterator
+from __future__ import annotations
 
-from domain.models.walking_parameter.walking_parameter import WalkingParameter
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from domain.models.walking_parameter.walking_parameter import WalkingParameter
 
 
 class WalkingParameterCollection:

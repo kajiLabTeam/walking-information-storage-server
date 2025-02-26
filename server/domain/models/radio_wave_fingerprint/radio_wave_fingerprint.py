@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from io import BytesIO
 
 import pandas as pd
@@ -9,11 +11,11 @@ class RatioWaveFingerprint:
         self.ratio_wave_df = pd.read_csv(BytesIO(ratio_wave_file))
 
     def is_include_mac_address(self, mac_address: str) -> bool:
-        return mac_address in self.ratio_wave_df["mac_address"].to_numpy()
+        return mac_address in self.ratio_wave_df["mac_address"].values
 
     def aggregate_rssi_by_mac_address(self, df: pd.DataFrame) -> pd.DataFrame:
         result = df.groupby("mac_address", as_index=False).agg(
-            {"gets": "first", "rssi": "mean", "type": "first"},
+            {"gets": "first", "rssi": "mean", "type": "first"}
         )
 
         result["rssi"] = result["rssi"].round().astype(int)

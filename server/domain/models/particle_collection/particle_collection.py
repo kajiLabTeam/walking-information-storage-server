@@ -1,9 +1,14 @@
+from __future__ import annotations
+
 import random
 from collections.abc import Iterator
+from typing import TYPE_CHECKING
 
 import numpy as np
-from domain.dataclasses import Color, Coordinate
-from domain.models.particle.particle import Particle
+
+if TYPE_CHECKING:
+    from domain.dataclasses import Color, Coordinate
+    from domain.models.particle.particle import Particle
 
 
 class ParticleCollection:
@@ -17,12 +22,11 @@ class ParticleCollection:
     ) -> list[Particle]:
         return self.__particles
 
-    @staticmethod
     def clone(
-        particles: list[Particle],
-    ) -> "ParticleCollection":
+        self,
+    ) -> ParticleCollection:
         clone = ParticleCollection()
-        clone.add_all(particles)
+        clone.add_all(self.__particles)
         return clone
 
     def get_weights(

@@ -19,6 +19,7 @@ finish_walking_service = FinishWalkingService(trajectory_repo=TrajectoryReposito
 
 @router.post(
     "/api/walking/finish",
+    response_model=FinishWalkingRequest,
     status_code=201,
 )
 async def finish_walking(
