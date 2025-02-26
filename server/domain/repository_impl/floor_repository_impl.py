@@ -2,9 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 from domain.repository_impl.dto.infrastructure_dto import (
     FloorInformationDto,
-    FloorMapRepositoryDto,
     FloorRepositoryDto,
-    FpModelRepositoryDto,
 )
 from psycopg2.extensions import connection
 
@@ -14,7 +12,8 @@ class FloorRepositoryImpl(metaclass=ABCMeta):
     def save(
         self,
         conn: connection,
-        floor_name: str,
+        name: str,
+        level: int,
         building_id: str,
     ) -> FloorRepositoryDto:
         pass
@@ -24,7 +23,7 @@ class FloorRepositoryImpl(metaclass=ABCMeta):
         self,
         conn: connection,
         floor_id: str,
-    ) -> FloorRepositoryDto:
+    ) -> FloorRepositoryDto | None:
         pass
 
     @abstractmethod
@@ -50,42 +49,12 @@ class FloorInformationRepositoryImpl(metaclass=ABCMeta):
         self,
         conn: connection,
         floor_information_id: str,
-    ) -> FloorInformationDto:
+    ) -> FloorInformationDto | None:
         pass
 
     @abstractmethod
     def find_latest(
         self,
         conn: connection,
-    ) -> FloorInformationDto:
-        pass
-
-
-class FloorMapRepositoryImpl(metaclass=ABCMeta):
-    @abstractmethod
-    def save(
-        self,
-        conn: connection,
-        floor_information_id: str,
-        floor_map: bytes,
-    ) -> FloorMapRepositoryDto:
-        pass
-
-    @abstractmethod
-    def find_for_floor_information_id(
-        self,
-        conn: connection,
-        floor_information_id: str,
-    ) -> FloorMapRepositoryDto:
-        pass
-
-
-class FpModelRepositoryImpl(metaclass=ABCMeta):
-    @abstractmethod
-    def save(
-        self,
-        conn: connection,
-        fp_model_id: str,
-        fp_model: bytes,
-    ) -> FpModelRepositoryDto:
+    ) -> FloorInformationDto | None:
         pass

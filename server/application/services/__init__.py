@@ -1,11 +1,7 @@
-from .finish_walking_service import FinishWalkingService
+from .generate_trajectory import GenerateTrajectoryService
 from .health_check_service import HealthCheckService
-from .move_pedestrian_service import MovePedestrianService
-from .start_walking_service import StartWalkingService
 
 __all__ = [
-    "FinishWalkingService",
+    "GenerateTrajectoryService",
     "HealthCheckService",
-    "MovePedestrianService",
-    "StartWalkingService",
 ]

@@ -53,3 +53,17 @@ class FileService:
                 500,
                 "Failed to upload file",
             ) from e
+
+    def upload_all(
+        self,
+        files: list[tuple[str, bytes]],
+    ) -> None:
+        try:
+            for key, file_data in files:
+                self.upload(key, file_data)
+        except Exception as e:
+            raise InfrastructureError(
+                InfrastructureErrorType.FILE_UPLOAD_ERROR,
+                500,
+                "Failed to upload file",
+            ) from e

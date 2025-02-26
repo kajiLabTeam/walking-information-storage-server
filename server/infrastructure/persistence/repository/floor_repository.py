@@ -1,11 +1,9 @@
 from domain.repository_impl import (
     FloorInformationRepositoryImpl,
-    FloorMapRepositoryImpl,
     FloorRepositoryImpl,
 )
 from domain.repository_impl.dto.infrastructure_dto import (
     FloorInformationDto,
-    FloorMapRepositoryDto,
     FloorRepositoryDto,
 )
 from infrastructure.errors.infrastructure_error import (
@@ -21,36 +19,28 @@ class FloorRepository(FloorRepositoryImpl):
     def save(
         self,
         conn: connection,
-        floor_name: str,
+        name: str,
+        level: int,
         building_id: str,
     ) -> FloorRepositoryDto:
         with conn:
             try:
                 with conn.cursor() as cursor:
-                    ulid = ULID()
+                    ulid = str(ULID())
                     cursor.execute(
                         "INSERT INTO floors (id, floor_name, building_id) "
                         "VALUES (%s, %s, %s) RETURNING id",
                         (
-                            str(ulid),
-                            floor_name,
+                            ulid,
+                            name,
                             building_id,
                         ),
                     )
 
-                    result = cursor.fetchone()
-                    if result is not None:
-                        floor_id = result[0]
-                    else:
-                        raise InfrastructureError(
-                            InfrastructureErrorType.NOT_FOUND_FLOOR,
-                            detail="Floor not found",
-                            status_code=404,
-                        )
-
                     return FloorRepositoryDto(
-                        floor_id=floor_id,
-                        floor_name=floor_name,
+                        id=ulid,
+                        name=name,
+                        level=level,
                         building_id=building_id,
                     )
 
@@ -65,30 +55,26 @@ class FloorRepository(FloorRepositoryImpl):
         self,
         conn: connection,
         floor_id: str,
-    ) -> FloorRepositoryDto:
+    ) -> FloorRepositoryDto | None:
         with conn, conn.cursor() as cursor:
             try:
                 # クエリを実行
                 cursor.execute(
-                    "SELECT floor_name, building_id FROM floors WHERE id = %s",
+                    "SELECT name, level, building_id FROM floors WHERE id = %s",
                     (floor_id,),
                 )
                 result = cursor.fetchone()
 
-                # データが見つからない場合のエラーハンドリング
                 if result is None:
-                    raise InfrastructureError(
-                        InfrastructureErrorType.NOT_FOUND_FLOOR,
-                        detail=f"Floor with ID {floor_id} not found.",
-                        status_code=404,
-                    )
+                    return None
 
                 # クエリ結果からデータを取得
-                floor_name, building_id = result
+                floor_name, level, building_id = result
 
                 return FloorRepositoryDto(
-                    floor_id=floor_id,
-                    floor_name=floor_name,
+                    id=floor_id,
+                    name=floor_name,
+                    level=level,
                     building_id=building_id,
                 )
 
@@ -144,7 +130,7 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                 )
 
                 return FloorInformationDto(
-                    floor_information_id=floor_information_id,
+                    id=floor_information_id,
                     floor_id=floor_id,
                 )
 
@@ -159,7 +145,7 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
         self,
         conn: connection,
         floor_information_id: str,
-    ) -> FloorInformationDto:
+    ) -> FloorInformationDto | None:
         with conn, conn.cursor() as cursor:
             cursor.execute(
                 "SELECT floor_id FROM floor_information WHERE id = %s",
@@ -167,24 +153,19 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
             )
 
             result = cursor.fetchone()
-            if result is not None:
-                floor_id = result[0]
-            else:
-                raise InfrastructureError(
-                    InfrastructureErrorType.NOT_FOUND_FLOOR_INFORMATION,
-                    detail="Floor information not found",
-                    status_code=404,
-                )
+            if result is None:
+                return None
+            floor_id = result[0]
 
             return FloorInformationDto(
-                floor_information_id=floor_information_id,
+                id=floor_information_id,
                 floor_id=floor_id,
             )
 
     def find_latest(
         self,
         conn: connection,
-    ) -> FloorInformationDto:
+    ) -> FloorInformationDto | None:
         with conn, conn.cursor() as cursor:
             try:
                 cursor.execute(
@@ -192,101 +173,19 @@ class FloorInformationRepository(FloorInformationRepositoryImpl):
                 )
 
                 result = cursor.fetchone()
-                if result is not None:
-                    floor_information_id = result[0]
-                    floor_id = result[1]
-                else:
-                    raise InfrastructureError(
-                        InfrastructureErrorType.NOT_FOUND_FLOOR_INFORMATION,
-                        detail="Floor information not found",
-                        status_code=404,
-                    )
+                if result is None:
+                    return None
+                floor_information_id = result[0]
+                floor_id = result[1]
 
                 return FloorInformationDto(
-                    floor_information_id=floor_information_id,
+                    id=floor_information_id,
                     floor_id=floor_id,
                 )
 
             except Exception as e:
                 raise InfrastructureError(
                     InfrastructureErrorType.FLOOR_INFORMATION_DB_ERROR,
-                    detail="Error occurred in floor database",
-                    status_code=500,
-                ) from e
-
-
-class FloorMapRepository(FloorMapRepositoryImpl):
-    def save(
-        self,
-        conn: connection,
-        floor_information_id: str,
-        floor_map: bytes,
-    ) -> FloorMapRepositoryDto:
-        with conn, conn.cursor() as cursor:
-            try:
-                floor_map_id = ULID()
-                cursor.execute(
-                    "INSERT INTO floor_maps (id, floor_information_id, floor_map) "
-                    "VALUES (%s, %s, %s) RETURNING id",
-                    (
-                        floor_map_id,
-                        floor_information_id,
-                        floor_map,
-                    ),
-                )
-
-                result = cursor.fetchone()
-                if result is not None:
-                    floor_map_id = result[0]
-                else:
-                    raise InfrastructureError(
-                        InfrastructureErrorType.NOT_FOUND_FLOOR_MAP,
-                        detail="Floor map not found",
-                        status_code=404,
-                    )
-
-                return FloorMapRepositoryDto(
-                    floor_map_id=floor_map_id,
-                    floor_information_id=floor_information_id,
-                )
-
-            except Exception as e:
-                raise InfrastructureError(
-                    InfrastructureErrorType.FLOOR_MAP_DB_ERROR,
-                    detail="Error occurred in floor database",
-                    status_code=500,
-                ) from e
-
-    def find_for_floor_information_id(
-        self,
-        conn: connection,
-        floor_information_id: str,
-    ) -> FloorMapRepositoryDto:
-        with conn, conn.cursor() as cursor:
-            try:
-                cursor.execute(
-                    "SELECT id FROM floor_maps WHERE floor_information_id = %s",
-                    (floor_information_id,),
-                )
-
-                result = cursor.fetchone()
-                if result is not None:
-                    floor_id = result[0]
-                else:
-                    raise InfrastructureError(
-                        InfrastructureErrorType.NOT_FOUND_FLOOR_MAP,
-                        detail="Floor map not found",
-                        status_code=404,
-                    )
-
-                return FloorMapRepositoryDto(
-                    floor_map_id=floor_id,
-                    floor_information_id=floor_information_id,
-                )
-
-            except Exception as e:
-                raise InfrastructureError(
-                    InfrastructureErrorType.FLOOR_MAP_DB_ERROR,
                     detail="Error occurred in floor database",
                     status_code=500,
                 ) from e

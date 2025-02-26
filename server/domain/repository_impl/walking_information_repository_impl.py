@@ -1,11 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
 from domain.repository_impl.dto.infrastructure_dto import (
-    AccelerometerRepositoryDto,
-    AtmosphericPressureRepositoryDto,
-    GpsRepositoryDto,
-    GyroscopeRepositoryDto,
-    RatioWaveRepositoryDto,
     WalkingInformationRepositoryDto,
 )
 from psycopg2.extensions import connection
@@ -20,52 +15,18 @@ class WalkingInformationRepositoryImpl(metaclass=ABCMeta):
     ) -> WalkingInformationRepositoryDto:
         pass
 
-
-class GyroscopeRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save(
+    def find_for_id(
         self,
         conn: connection,
         walking_information_id: str,
-    ) -> GyroscopeRepositoryDto:
+    ) -> WalkingInformationRepositoryDto | None:
         pass
 
-
-class AccelerometerRepositoryImpl(metaclass=ABCMeta):
     @abstractmethod
-    def save(
+    def find_for_pedestrian_id(
         self,
         conn: connection,
-        walking_information_id: str,
-    ) -> AccelerometerRepositoryDto:
-        pass
-
-
-class RatioWaveRepositoryImpl(metaclass=ABCMeta):
-    @abstractmethod
-    def save(
-        self,
-        conn: connection,
-        walking_information_id: str,
-    ) -> RatioWaveRepositoryDto:
-        pass
-
-
-class AtmosphericPressureRepositoryImpl(metaclass=ABCMeta):
-    @abstractmethod
-    def save(
-        self,
-        conn: connection,
-        walking_information_id: str,
-    ) -> AtmosphericPressureRepositoryDto:
-        pass
-
-
-class GpsRepositoryImpl(metaclass=ABCMeta):
-    @abstractmethod
-    def save(
-        self,
-        conn: connection,
-        walking_information_id: str,
-    ) -> GpsRepositoryDto:
+        pedestrian_id: str,
+    ) -> WalkingInformationRepositoryDto | None:
         pass

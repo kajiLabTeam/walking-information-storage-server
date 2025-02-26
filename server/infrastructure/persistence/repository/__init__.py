@@ -1,35 +1,23 @@
 from .floor_repository import (
     FloorInformationRepository,
-    FloorMapRepository,
     FloorRepository,
 )
-from .trajectory_repository import TrajectoryRepository
-from .walking_information_repository import (
-    AccelerometerRepository,
-    AtmosphericPressureRepository,
-    GpsRepository,
-    GyroscopeRepository,
-    RatioWaveRepository,
-    WalkingInformationRepository,
+from .pedestrian_repository import PedestrianRepository
+from .trajectory_repository import (
+    CorrectPositionRepository,
+    EstimatedPositionRepository,
+    TrajectoryRepository,
 )
-from .walking_sample_repository import (
-    ParticleRepository,
-    PoseRepository,
-    WalkingSampleRepository,
+from .walking_information_repository import (
+    WalkingInformationRepository,
 )
 
 __all__ = [
-    "AccelerometerRepository",
-    "AtmosphericPressureRepository",
+    "CorrectPositionRepository",
+    "EstimatedPositionRepository",
     "FloorInformationRepository",
-    "FloorMapRepository",
     "FloorRepository",
-    "GpsRepository",
-    "GyroscopeRepository",
-    "ParticleRepository",
-    "PoseRepository",
-    "RatioWaveRepository",
+    "PedestrianRepository",
     "TrajectoryRepository",
     "WalkingInformationRepository",
-    "WalkingSampleRepository",
 ]
