@@ -2,6 +2,7 @@
 
 > [!IMPORTANT]
 > 環境変数は[こちらから](https://kjlb.esa.io/posts/6068)確認してください
+> 事前準備：https://kjlb.esa.io/posts/7326
 
 ## 実行方法
 
