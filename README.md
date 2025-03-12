@@ -13,21 +13,7 @@
 brew install uv
 ```
 
-#### 1. `db`コンテナの立ち上げ
-
-このコマンドは`docker-compose.yml`が存在するディレクトリで実行してください
-
-```shell
-make app-up
-```
-
-#### 2. `server`ディレクトリに移動
-
-```shell
-cd server
-```
-
-#### 3. サーバの起動
+#### 1. サーバの起動
 
 ```shell
 uv run uvicorn main:app --reload
