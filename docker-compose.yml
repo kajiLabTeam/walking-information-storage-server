@@ -1,23 +1,9 @@
 services:
-  postgres:
-    container_name: postgres
-    build: 
-      context: .
-      dockerfile: ./docker/postgres/Dockerfile
-    volumes:
-      - ./docker/postgres/data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-
   server:
-    container_name: server
+    container_name: walking-information-walking-trajectory-storage-server
     build:
       context: .
-      dockerfile: ./docker/server/Dockerfile
+      dockerfile: ./docker/app/Dockerfile
     stdin_open: true
     ports:
       - 8000:8000
