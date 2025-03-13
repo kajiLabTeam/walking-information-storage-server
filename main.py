@@ -5,11 +5,13 @@ from starlette.requests import Request
 
 from app.application.errors import ApplicationError
 from app.domain.errors import DomainError
+from app.infrastructure import DBConnection
 from app.infrastructure.errors import InfrastructureError
 from app.presentation.handlers import generate_trajectory_router, health_check_router
 
-app = FastAPI()
+DBConnection.init_db()
 
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,7 +20,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 app.include_router(generate_trajectory_router)
 app.include_router(health_check_router)
