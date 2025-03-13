@@ -9,7 +9,6 @@ class FloorRepository:
 
     def save(self, floor: Floor) -> Floor:
         self.session.add(floor)
-        self.session.commit()
         self.session.refresh(floor)
         return floor
 
@@ -24,7 +23,6 @@ class FloorInformationRepository:
 
     def save(self, floor_information: FloorInformation) -> FloorInformation:
         self.session.add(floor_information)
-        self.session.commit()
         self.session.refresh(floor_information)
         return floor_information
 

@@ -1,9 +1,9 @@
-from .floor_repository import (
+from .floor import (
     FloorInformationRepository,
     FloorRepository,
 )
-from .pedestrian_repository import PedestrianRepository, WalkingInformationRepository
-from .trajectory_repository import (
+from .pedestrian import PedestrianRepository, WalkingInformationRepository
+from .trajectory import (
     CorrectPositionRepository,
     EstimatedPositionRepository,
     TrajectoryRepository,

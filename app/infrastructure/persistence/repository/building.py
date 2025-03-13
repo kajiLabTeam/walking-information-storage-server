@@ -9,7 +9,6 @@ class BuildingRepository:
 
     def save(self, building: Building) -> Building:
         self.session.add(building)
-        self.session.commit()
         return building
 
     def get_all(self) -> list[Building]:

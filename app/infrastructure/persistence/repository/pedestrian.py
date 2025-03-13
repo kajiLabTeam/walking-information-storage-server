@@ -9,7 +9,6 @@ class PedestrianRepository:
 
     def save(self, pedestrian: Pedestrian) -> Pedestrian:
         self.session.add(pedestrian)
-        self.session.commit()
         return pedestrian
 
 
@@ -19,7 +18,6 @@ class WalkingInformationRepository:
 
     def save(self, walking_information: WalkingInformation) -> WalkingInformation:
         self.session.add(walking_information)
-        self.session.commit()
         return walking_information
 
     def get_by_pedestrian_id(self, pedestrian_id: int) -> list[WalkingInformation]:
