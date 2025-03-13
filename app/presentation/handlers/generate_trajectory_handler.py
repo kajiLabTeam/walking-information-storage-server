@@ -13,6 +13,7 @@ router = APIRouter()
     status_code=201,
 )
 async def generate_trajectory_handler(
+    floorId: Annotated[str, Form()],  # noqa: N803
     pedestrianId: Annotated[str, Form()],  # noqa: N803
     gpsFile: Annotated[UploadFile, File()],  # noqa: N803
     wifiFile: Annotated[UploadFile, File()],  # noqa: N803
@@ -24,7 +25,7 @@ async def generate_trajectory_handler(
     try:
         generate_trajectory_service.run(
             pedestrian_id=pedestrianId,
-            floor_information_id="",
+            floor_id=floorId,
             gps_file=await gpsFile.read(),
             wifi_file=await wifiFile.read(),
             gyroscope_file=await gyroscopeFile.read(),
