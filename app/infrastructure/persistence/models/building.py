@@ -6,10 +6,12 @@ from sqlmodel import Field, Relationship, SQLModel
 from app.utils import timestamp
 
 if TYPE_CHECKING:
-    from app.infrastructure.persistence.models import Floor
+    from .floor import Floor
 
 
 class Building(SQLModel, table=True):
+    __tablename__: str = "buildings"  # type: ignore  # noqa: PGH003
+
     id: str = Field(default=None, primary_key=True)
     name: str = Field(max_length=255, nullable=False)
     latitude: float = Field(nullable=False)
