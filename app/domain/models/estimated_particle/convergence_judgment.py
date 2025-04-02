@@ -3,7 +3,7 @@ from numpy.typing import NDArray
 from scipy import stats
 from sklearn.cluster import KMeans
 
-from app.config.const.amount import X_MEANS_CLUSTER_AMOUNT
+from app.config.constants.amount import X_MEANS_CLUSTER_AMOUNT
 from app.domain.models.estimated_particle.cluster import Cluster
 
 

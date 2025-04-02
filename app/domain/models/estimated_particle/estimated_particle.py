@@ -3,7 +3,7 @@ from typing import Literal
 
 import numpy as np
 
-from app.config.const import (
+from app.config.constants import (
     BEACON_MAC_ADDRESS,
     CLUSTER_AMOUNT_THRESHOLD,
     CONVERGENCE_DECENTRALIZATION_THRESHOLD,

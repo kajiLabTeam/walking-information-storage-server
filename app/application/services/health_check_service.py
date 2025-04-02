@@ -1,4 +1,4 @@
-from app.config.const import HEALTH_CHECK_BUCKET_NAME
+from app.config.constants import HEALTH_CHECK_BUCKET_NAME
 from app.infrastructure.connection import MinIOConnection
 from app.infrastructure.external.services import FileService
 

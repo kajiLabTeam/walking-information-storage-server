@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 
-from app.config.const.amount import CONVERGENCE_JUDGEMENT_NUMBER
+from app.config.constants.amount import CONVERGENCE_JUDGEMENT_NUMBER
 from app.domain.dataclasses import Coordinate, Pose
 from app.domain.models.estimated_particle import EstimatedParticle
 from app.domain.models.floor_map.floor_map import FloorMap

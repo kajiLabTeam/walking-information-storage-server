@@ -1,4 +1,4 @@
-from app.config.const import (
+from app.config.constants import (
     ACCELEROMETER_FILE_NAME,
     ATMOSPHERIC_PRESSURE_FILE_NAME,
     FLOOR_BUCKET_NAME,
@@ -8,7 +8,7 @@ from app.config.const import (
     RATIO_WAVE_FILE_NAME,
     WALKING_INFORMATION_BUCKET_NAME,
 )
-from app.config.const.bucket import FLOOR_MAP_FILE_NAME
+from app.config.constants.bucket import FLOOR_MAP_FILE_NAME
 
 
 # floors/${floor_id}/floor-information/${floor_information_id}/floor-map.png

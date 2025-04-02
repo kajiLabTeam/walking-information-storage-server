@@ -2,7 +2,7 @@ from io import BytesIO
 
 from botocore.client import BaseClient
 
-from app.config.const import BUCKET_NAME
+from app.config.constants import BUCKET_NAME
 from app.infrastructure.errors.infrastructure_error import (
     InfrastructureError,
     InfrastructureErrorType,
