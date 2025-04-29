@@ -5,4 +5,3 @@ up:
 
 logs:
 	docker compose logs -f
-

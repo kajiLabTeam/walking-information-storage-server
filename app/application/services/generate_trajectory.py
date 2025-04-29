@@ -1,10 +1,14 @@
+from typing import TYPE_CHECKING
+
 from app.application.dto import GenerateTrajectoryServiceDto
 from app.application.errors.application_error import ApplicationError, ApplicationErrorType
 from app.domain.models.floor_map.floor_map import FloorMap
-from app.domain.models.tracking_particle.tracking_particle import TrackingParticle  # noqa: F401
+from app.domain.models.tracking_particle.tracking_particle import TrackingParticle
+from app.domain.models.walking_parameter.walking_parameter import WalkingParameter
 from app.infrastructure.connection import DBConnection, MinIOConnection
 from app.infrastructure.external.services import FileService
 from app.infrastructure.persistence.models import Trajectory, WalkingInformation
+from app.infrastructure.persistence.models.trajectory import EstimatedPosition
 from app.infrastructure.persistence.repository import (
     EstimatedPositionRepository,
     FloorInformationRepository,
@@ -20,6 +24,9 @@ from app.utils import (
     get_ratio_wave_bucket_name,
 )
 from app.utils.bucket import get_floor_map_bucket_name
+
+if TYPE_CHECKING:
+    from app.domain.dataclasses.coordinate import Pose
 
 
 class GenerateTrajectoryService:
@@ -44,7 +51,7 @@ class GenerateTrajectoryService:
         file_service = FileService(s3)
         floor_information_repo = FloorInformationRepository(session)
         trajectory_repo = TrajectoryRepository(session)
-        estimated_position_repo = EstimatedPositionRepository(session)  # noqa: F841
+        estimated_position_repo = EstimatedPositionRepository(session)
         walking_information_repo = WalkingInformationRepository(session)
         trajectory_record = trajectory_repo.save(
             Trajectory(
@@ -90,10 +97,37 @@ class GenerateTrajectoryService:
                 floor_id=floor_id, floor_information_id=floor_information_record.id
             )
         )
-        floor_map = FloorMap(floor_map_image_bytes=floor_map_image)  # noqa: F841
+        floor_map = FloorMap(floor_map_image_bytes=floor_map_image)
+
+        # TODO: ここで歩行パラメータを取得する
+        walking_parameter_collection: list[WalkingParameter] = []
 
         # パーティクルフィルタによるトラッキングを実行
-        # tracking_particle = TrackingParticle(floor_map=floor_map)  # noqa: ERA001
+        tracking_particle = TrackingParticle(
+            floor_map=floor_map,
+            walking_parameter_collection=walking_parameter_collection,
+        )
+
+        tracking_particle.get_estimation_particles()
+
+        estimated_pose_collection: list[Pose] = [
+            estimation_particle.get_estimated_pose()
+            for estimation_particle in tracking_particle.get_estimation_particles()
+        ]
+
+        # トラッキング結果を保存
+        for estimated_pose in estimated_pose_collection:
+            estimated_position_repo.save(
+                EstimatedPosition(
+                    id=str(generate_ulid()),
+                    x=estimated_pose.coordinate.x,
+                    y=estimated_pose.coordinate.y,
+                    is_converged=False,
+                    direction=int(estimated_pose.direction),
+                    trajectory_id=trajectory_record.id,
+                    walking_information_id=walking_information_record.id,
+                )
+            )
 
         s3.close()
         session.close()

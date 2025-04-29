@@ -4,6 +4,7 @@ from app.config.constants.amount import CONVERGENCE_JUDGEMENT_NUMBER
 from app.domain.dataclasses import Coordinate, Pose
 from app.domain.models.estimated_particle import EstimatedParticle
 from app.domain.models.floor_map.floor_map import FloorMap
+from app.domain.models.walking_parameter.walking_parameter import WalkingParameter
 from app.utils.angle import reverse_angle
 
 
@@ -11,9 +12,13 @@ class TrackingParticle:
     def __init__(
         self,
         floor_map: FloorMap,
+        walking_parameter_collection: list[WalkingParameter],
     ) -> None:
         self.__coverage_count = 0
-        self.__estimation_particles = EstimatedParticle.initialize(floor_map=floor_map)
+        self.__estimation_particles = EstimatedParticle.initialize(
+            floor_map=floor_map,
+            initial_walking_parameter=walking_parameter_collection[0],
+        )
         self.__coverage_position: Pose | None = None
 
     def get_estimation_particles(self) -> list[EstimatedParticle]:
@@ -42,7 +47,7 @@ class TrackingParticle:
         return self.__estimation_particles[-1]
 
     def last_estimated_position(self) -> Pose:
-        return self.last_estimation_particles().estimate_position()
+        return self.last_estimation_particles().get_estimated_pose()
 
     def reverse(self) -> None:
         self.__estimation_particles.reverse()
