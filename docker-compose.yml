@@ -8,8 +8,8 @@ services:
     ports:
       - 8000:8000
     networks:
-      - walking-trajectory-storage-network
+      - walking-information-walking-trajectory-storage-network
 
 networks:
-  walking-trajectory-storage-network:
+  walking-information-walking-trajectory-storage-network:
     external: true

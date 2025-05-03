@@ -23,6 +23,8 @@ uv run uvicorn main:app --reload
 
 > [!NOTE]
 > 梶研サーバで実行する場合の方法です
+>
+> 実行の際は、`walking-information-walking-trajectory-db`が起動していることを確認してください
 
 #### 1. サーバにログイン
 
@@ -34,24 +36,16 @@ uv run uvicorn main:app --reload
 cd src/walking-information-storage-server
 ```
 
-#### 3. docker コンテナの立ち上げ
+#### 3. Docker ネットワークの作成
+
+すでに作成してあるならこの手順は飛ばしてください
 
 ```
-sudo docker-compose build && sudo docker-compose up
+make create-network
 ```
 
-## その他
-
-### DB コンテナに入りたいとき
-
-```bash
-make db
-```
-
-### ER 図生成
+#### 4. docker コンテナの立ち上げ
 
 ```
-make spy-up
+make up
 ```
-
-`http://localhost:8080/public/relationships.html`にアクセスすると ER 図を閲覧できます
