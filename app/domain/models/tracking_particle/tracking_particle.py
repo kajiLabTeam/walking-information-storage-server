@@ -1,10 +1,10 @@
-from collections.abc import Iterator
-
 from app.config.constants.amount import CONVERGENCE_JUDGEMENT_NUMBER
 from app.domain.dataclasses import Coordinate, Pose
 from app.domain.models.estimated_particle import EstimatedParticle
 from app.domain.models.floor_map.floor_map import FloorMap
-from app.domain.models.walking_parameter.walking_parameter import WalkingParameter
+from app.domain.models.walking_parameter_collection.walking_parameter_collection import (
+    WalkingParameterCollection,
+)
 from app.utils.angle import reverse_angle
 
 
@@ -12,14 +12,17 @@ class TrackingParticle:
     def __init__(
         self,
         floor_map: FloorMap,
-        walking_parameter_collection: list[WalkingParameter],
+        walking_parameter_collection: WalkingParameterCollection,
     ) -> None:
         self.__coverage_count = 0
-        self.__estimation_particles = EstimatedParticle.initialize(
-            floor_map=floor_map,
-            initial_walking_parameter=walking_parameter_collection[0],
-        )
+        self.__estimation_particles: list[EstimatedParticle] = [
+            EstimatedParticle.initialize(
+                floor_map=floor_map,
+                initial_walking_parameter=walking_parameter_collection[0],
+            )
+        ]
         self.__coverage_position: Pose | None = None
+        self.__walking_parameter_collection = walking_parameter_collection
 
     def get_estimation_particles(self) -> list[EstimatedParticle]:
         return self.__estimation_particles
@@ -49,21 +52,20 @@ class TrackingParticle:
     def last_estimated_position(self) -> Pose:
         return self.last_estimation_particles().get_estimated_pose()
 
-    def reverse(self) -> None:
-        self.__estimation_particles.reverse()
-
     def add(self, estimation_particles: EstimatedParticle) -> None:
         self.__estimation_particles.append(estimation_particles)
 
     def track(self) -> None:
         """## パーティクルフィルタによるトラッキングを実行する"""
-        for i, position_sample in enumerate(self.__correct_trajectory):
+        for i, walking_parameter in enumerate(self.__walking_parameter_collection):
             estimation_particles = self.last_estimation_particles()
             estimation_particles.remove_by_floor_map()
-            move_estimation_particles = estimation_particles.move(current_position=position_sample)
+            move_estimation_particles = estimation_particles.move(
+                current_walking_parameter=walking_parameter
+            )
             move_estimation_particles.remove_by_floor_map()
-            move_estimation_particles.remove_by_direction(step=position_sample.get_step())
-            move_estimation_particles.resampling(step=position_sample.get_step(), mode="reversed")
+            move_estimation_particles.remove_by_direction(step=walking_parameter.get_step())
+            move_estimation_particles.resampling(step=walking_parameter.get_step(), mode="reversed")
 
             if i % 10 == 0:
                 move_estimation_particles.resampling_by_weight()
@@ -77,15 +79,9 @@ class TrackingParticle:
                 print("収束しました")  # noqa: T201
                 print(i)  # noqa: T201
                 self.__coverage_count = i
-                self.__coverage_position = move_estimation_particles.estimate_position()
+                self.__coverage_position = move_estimation_particles.get_estimated_pose()
 
             self.add(move_estimation_particles)
 
-    def __iter__(self) -> Iterator[EstimatedParticle]:
-        return iter(self.__estimation_particles)
-
     def __len__(self) -> int:
         return len(self.__estimation_particles)
-
-    def __getitem__(self, index: int) -> EstimatedParticle:
-        return self.__estimation_particles[index]

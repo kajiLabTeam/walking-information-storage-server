@@ -1,3 +1,3 @@
-from .walking_parameter_collection import WalkingParameter, WalkingParameterCollection
+from .walking_parameter_collection import WalkingParameterCollection
 
-__all__ = ["WalkingParameter", "WalkingParameterCollection"]
+__all__ = ["WalkingParameterCollection"]

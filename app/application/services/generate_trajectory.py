@@ -4,7 +4,9 @@ from app.application.dto import GenerateTrajectoryServiceDto
 from app.application.errors.application_error import ApplicationError, ApplicationErrorType
 from app.domain.models.floor_map.floor_map import FloorMap
 from app.domain.models.tracking_particle.tracking_particle import TrackingParticle
-from app.domain.models.walking_parameter.walking_parameter import WalkingParameter
+from app.domain.models.walking_parameter_collection.walking_parameter_collection import (
+    WalkingParameterCollection,
+)
 from app.infrastructure.connection import DBConnection, MinIOConnection
 from app.infrastructure.external.services import FileService
 from app.infrastructure.persistence.models import Trajectory, WalkingInformation
@@ -99,8 +101,10 @@ class GenerateTrajectoryService:
         )
         floor_map = FloorMap(floor_map_image_bytes=floor_map_image)
 
-        # TODO: ここで歩行パラメータを取得する
-        walking_parameter_collection: list[WalkingParameter] = []
+        walking_parameter_collection = WalkingParameterCollection(
+            gyroscope_file=gyroscope_file,
+            accelerometer_file=accelerometer_file,
+        )
 
         # パーティクルフィルタによるトラッキングを実行
         tracking_particle = TrackingParticle(
