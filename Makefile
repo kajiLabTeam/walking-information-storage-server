@@ -6,5 +6,8 @@ create-network:
 up:
 	docker compose build && docker compose up -d && docker compose logs -f
 
+format:
+	uv run ruff format . && uv run ruff check --fix
+
 logs:
 	docker compose logs -f
