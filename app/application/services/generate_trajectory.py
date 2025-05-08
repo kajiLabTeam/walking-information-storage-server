@@ -111,8 +111,7 @@ class GenerateTrajectoryService:
             floor_map=floor_map,
             walking_parameter_collection=walking_parameter_collection,
         )
-
-        tracking_particle.get_estimation_particles()
+        tracking_particle.track()
 
         estimated_pose_collection: list[Pose] = [
             estimation_particle.get_estimated_pose()

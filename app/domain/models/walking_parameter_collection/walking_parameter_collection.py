@@ -34,18 +34,18 @@ class WalkingParameterCollection:
 
         # ステップ検出
         peaks_norm, _ = find_peaks(acc_df["omega_norm"], height=0.3, distance=25)
-        step_times = acc_df["t"].iloc[peaks_norm].to_numpy()
+        step_times: list[float] = acc_df["t"].iloc[peaks_norm].to_numpy()
 
-        step_segments = []
+        step_segments: list[tuple[float, float]] = []
         if len(step_times) > 0:
             threshold = 0.5
             start_time = step_times[0]
             for i in range(1, len(step_times)):
                 if step_times[i] - step_times[i - 1] > threshold:
                     start_time = step_times[i]
-                    step_segments.append([step_times[i - 1], step_times[i]])
+                    step_segments.append((step_times[i - 1], step_times[i]))
 
-            step_segments.append([start_time, step_times[-1]])
+            step_segments.append((start_time, step_times[-1]))
 
         gyro_df = pd.read_csv(BytesIO(gyroscope_file))
         gyro_df["t"] = start_unix + gyro_df["t"]

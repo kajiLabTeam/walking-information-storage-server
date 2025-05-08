@@ -3,14 +3,12 @@ from io import BytesIO
 import numpy as np
 import pandas as pd
 
-from app.domain.errors import DomainError, DomainErrorType
-
 
 class WalkingParameter:
     def __init__(
         self,
         step: int,
-        walking_period: tuple[int, int],
+        walking_period: tuple[float, float],
         gyroscope_file: bytes,
     ) -> None:
         self.__walking_period = walking_period
@@ -31,24 +29,12 @@ class WalkingParameter:
         self,
         gyroscope_file: bytes,
     ) -> int:
-        try:
-            sample_freq = 100
-            window_gayo = 10
-            gyro_df = pd.read_csv(BytesIO(gyroscope_file))
-            gyro_df["time_unit"] = gyro_df["t"]
+        gyro_df = pd.read_csv(BytesIO(gyroscope_file))
+        gyro_df = gyro_df.copy()
+        gyro_df["dt"] = gyro_df["t"].diff().fillna(0)
 
-            gyro_df["norm"] = (gyro_df["x"] ** 2 + gyro_df["y"] ** 2 + gyro_df["z"] ** 2) ** (1 / 2)
-            gyro_df["angle"] = np.cumsum(gyro_df["x"]) / sample_freq
-            gyro_df["low_x"] = gyro_df["x"].rolling(window=window_gayo).mean()
-            gyro_df["angle_x"] = gyro_df["angle"].rolling(
-                window=window_gayo,
-                center=True,
-            ).mean() * (180 / np.pi)
+        gyro_df["delta_yaw_rad"] = gyro_df["z"] * gyro_df["dt"]
 
-            return int(gyro_df["angle_x"].max())
-        except Exception as err:
-            raise DomainError(
-                error_type=DomainErrorType.INVALID_GYROSCOPE_DATA,
-                status_code=400,
-                detail="gyroscope data is invalid",
-            ) from err
+        total_yaw_rad = gyro_df["delta_yaw_rad"].sum()
+
+        return np.degrees(total_yaw_rad)
