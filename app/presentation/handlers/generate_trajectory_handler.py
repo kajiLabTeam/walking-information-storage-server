@@ -30,7 +30,7 @@ async def generate_trajectory_handler(
     accelerometerFile: Annotated[UploadFile, File()],  # noqa: N803
     atmosphericPressureFile: Annotated[UploadFile, File()],  # noqa: N803
 ) -> GenerateTrajectoryResponse:
-    """MinIOサーバへのファイルアップロード及びダウンロードが正常に行えるかを確認するためのエンドポイント."""
+    """センサデータを元にパーティクルフィルタを用いて軌跡を生成する."""
     try:
         result = generate_trajectory_service.run(
             pedestrian_id=pedestrianId,
