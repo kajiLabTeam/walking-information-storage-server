@@ -5,26 +5,29 @@
 
 ## 実行方法
 
+> [!NOTE]
+> 開発・本番ともに実行の際は、`walking-information-walking-trajectory-db`が起動していることを確認してください
+
 ### 開発環境
 
-#### 0. `uv`のインストール
+#### 1. Docker ネットワークの作成
 
-```shell
-brew install uv
+すでに作成してあるならこの手順は飛ばしてください
+
+```
+make create-network
 ```
 
-#### 1. サーバの起動
+#### 2. サーバの起動
 
 ```shell
-uv run uvicorn main:app --reload
+make up
 ```
 
 ### 本番環境
 
 > [!NOTE]
 > 梶研サーバで実行する場合の方法です
->
-> 実行の際は、`walking-information-walking-trajectory-db`が起動していることを確認してください
 
 #### 1. サーバにログイン
 
