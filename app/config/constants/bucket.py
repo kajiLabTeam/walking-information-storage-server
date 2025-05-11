@@ -1,0 +1,13 @@
+BUCKET_NAME: str = "indoor-location-estimation"
+HEALTH_CHECK_BUCKET_NAME: str = "health-check"
+FLOOR_BUCKET_NAME: str = "floors"
+FLOOR_INFORMATION_BUCKET_NAME: str = "floor-information"
+PEDESTRIAN_BUCKET_NAME: str = "pedestrians"
+WALKING_INFORMATION_BUCKET_NAME: str = "walking-information"
+
+FLOOR_MAP_FILE_NAME: str = "floor-map.png"
+GPS_FILE_NAME: str = "gps.csv"
+GYROSCOPE_FILE_NAME: str = "gyroscope.csv"
+RATIO_WAVE_FILE_NAME: str = "ratio-wave.csv"
+ACCELEROMETER_FILE_NAME: str = "accelerometer.csv"
+ATMOSPHERIC_PRESSURE_FILE_NAME: str = "atmospheric-pressure.csv"

@@ -5,22 +5,22 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "boto3>=1.35.95",
-    "fastapi>=0.115.6",
-    "numpy>=2.2.1",
-    "opencv-python>=4.10.0.84",
+    "boto3>=1.38.13",
+    "fastapi>=0.115.12",
+    "numpy>=2.2.5",
+    "opencv-python>=4.11.0.86",
     "pandas>=2.2.3",
-    "pillow>=11.1.0",
+    "pillow>=11.2.1",
     "psycopg2-binary>=2.9.10",
-    "python-dotenv>=1.0.1",
+    "python-dotenv>=1.1.0",
     "python-multipart>=0.0.20",
     "python-ulid>=3.0.0",
-    "scikit-learn>=1.6.0",
-    "sqlfluff>=3.3.0",
-    "uvicorn>=0.34.0",
+    "scikit-learn>=1.6.1",
+    "sqlmodel>=0.0.24",
+    "uvicorn>=0.34.2",
 ]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.9.1",
+    "ruff>=0.9.10",
 ]

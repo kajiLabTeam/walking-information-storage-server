@@ -7,32 +7,23 @@
 
 ## 実行方法
 
+> [!NOTE]
+> 開発・本番ともに実行の際は、`walking-information-walking-trajectory-db`が起動していることを確認してください
+
 ### 開発環境
 
-#### 0. `uv`のインストール
+#### 1. Docker ネットワークの作成
 
-```shell
-brew install uv
+すでに作成してあるならこの手順は飛ばしてください
+
+```
+make create-network
 ```
 
-#### 1. `db`コンテナの立ち上げ
-
-このコマンドは`docker-compose.yml`が存在するディレクトリで実行してください
+#### 2. サーバの起動
 
 ```shell
-make app-up
-```
-
-#### 2. `server`ディレクトリに移動
-
-```shell
-cd server
-```
-
-#### 3. サーバの起動
-
-```shell
-uv run uvicorn main:app --reload
+make up
 ```
 
 ### 本番環境
@@ -50,24 +41,16 @@ uv run uvicorn main:app --reload
 cd src/walking-information-storage-server
 ```
 
-#### 3. docker コンテナの立ち上げ
+#### 3. Docker ネットワークの作成
+
+すでに作成してあるならこの手順は飛ばしてください
 
 ```
-sudo docker-compose build && sudo docker-compose up
+make create-network
 ```
 
-## その他
-
-### DB コンテナに入りたいとき
-
-```bash
-make db
-```
-
-### ER 図生成
+#### 4. docker コンテナの立ち上げ
 
 ```
-make spy-up
+make up
 ```
-
-`http://localhost:8080/public/relationships.html`にアクセスすると ER 図を閲覧できます
