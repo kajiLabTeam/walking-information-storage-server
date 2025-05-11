@@ -69,11 +69,21 @@ class GenerateTrajectoryService:
                 pedestrian_id=pedestrian_id,
             )
         )
+        floor_information_record = floor_information_repo.get_latest_by_floor_id(floor_id)
+        if floor_information_record is None:
+            raise ApplicationError(
+                ApplicationErrorType.NOT_FLOOR_INFORMATION, 404, "Not found floor information"
+            )
 
-        session.commit()
+        session.flush()
 
         session.refresh(trajectory_record)
+        session.refresh(floor_information_record)
         session.refresh(walking_information_record)
+
+        trajectory_id = trajectory_record.id
+        floor_information_id = floor_information_record.id
+        walking_information_id = walking_information_record.id
 
         # センサデータMinIOに保存
         key_file: list[tuple[str, bytes]] = [
@@ -88,16 +98,8 @@ class GenerateTrajectoryService:
         ]
         file_service.upload_all(key_file)
 
-        # フロア情報を取得
-        floor_information_record = floor_information_repo.get_latest_by_floor_id(floor_id)
-        if floor_information_record is None:
-            raise ApplicationError(
-                ApplicationErrorType.NOT_FLOOR_INFORMATION, 404, "Not found floor information"
-            )
         floor_map_image = file_service.download(
-            get_floor_map_bucket_name(
-                floor_id=floor_id, floor_information_id=floor_information_record.id
-            )
+            get_floor_map_bucket_name(floor_id=floor_id, floor_information_id=floor_information_id)
         )
         floor_map = FloorMap(floor_map_image_bytes=floor_map_image)
 
@@ -127,18 +129,20 @@ class GenerateTrajectoryService:
                     y=estimated_pose.coordinate.y,
                     is_converged=False,
                     direction=int(estimated_pose.direction),
-                    trajectory_id=trajectory_record.id,
-                    walking_information_id=walking_information_record.id,
+                    trajectory_id=trajectory_id,
+                    walking_information_id=walking_information_id,
                 )
             )
+
+        session.commit()
 
         s3.close()
         session.close()
 
         return GenerateTrajectoryServiceDto(
-            trajectory_id=trajectory_record.id,
-            walking_information_id=walking_information_record.id,
-            floor_information_id=floor_information_record.id,
+            trajectory_id=trajectory_id,
+            walking_information_id=walking_information_id,
+            floor_information_id=floor_information_id,
             pedestrian_id=pedestrian_id,
             is_walking=True,
         )
